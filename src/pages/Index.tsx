@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, FileText, Code2, ChevronRight, ArrowRight, Sparkles, Zap, Users, Lightbulb, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MessageSquare, FileText, BarChart3, ChevronRight, ArrowRight, Sparkles, Zap, Users, Lightbulb, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import sparkLogo from "@/assets/spark-logo.png";
 import heroImage from "@/assets/hero-innovation.jpg";
 import stepInterview from "@/assets/step-interview.jpg";
@@ -16,34 +16,34 @@ const steps = [
   {
     num: "01",
     icon: MessageSquare,
-    title: "AI-Guided Interview",
-    description: "Choose a category and answer tailored questions. Spark's AI digs deeper based on your responses to capture every detail of your idea.",
+    title: "AI-Guided Intake",
+    description: "Select your scenario — from AI Studio requests to automation support — and answer tailored questions. Spark's AI adapts its follow-ups based on your responses to capture every detail.",
     image: stepInterview,
-    alt: "AI chatbot interview illustration",
+    alt: "AI chatbot intake conversation",
   },
   {
     num: "02",
     icon: FileText,
-    title: "Auto-Generated Brief",
-    description: "Your answers are synthesized into a structured idea brief — complete with problem statement, proposed solution, target users, and success metrics.",
+    title: "Smart Recommendations",
+    description: "Before you submit, Spark surfaces existing accelerators and tools that match your idea. Reuse what's already built, or proceed with a new submission if nothing fits.",
     image: stepBrief,
-    alt: "Document brief illustration",
+    alt: "Recommendation cards with matching solutions",
   },
   {
     num: "03",
-    icon: Code2,
-    title: "Interactive Wireframe",
-    description: "A full wireframe is generated from your brief. Preview it live, request refinements, and iterate until the vision is right.",
+    icon: BarChart3,
+    title: "Scored Evaluation Report",
+    description: "Your idea is evaluated across strategic alignment, feasibility, innovation, and impact. A scored report is generated for the review board to make informed decisions.",
     image: stepWireframe,
-    alt: "Wireframe generation illustration",
+    alt: "Evaluation report with scores and charts",
   },
 ];
 
 const stats = [
-  { value: "6", label: "Idea Categories", icon: Sparkles },
-  { value: "AI", label: "Dual-Agent Analysis", icon: Zap },
-  { value: "Live", label: "Wireframe Preview", icon: Code2 },
-  { value: "Team", label: "Collaboration Ready", icon: Users },
+  { value: "5", label: "Intake Scenarios", icon: Sparkles },
+  { value: "AI", label: "Smart Recommendations", icon: Zap },
+  { value: "Scored", label: "Evaluation Reports", icon: BarChart3 },
+  { value: "Team", label: "Review Board Ready", icon: Users },
 ];
 
 const Index = () => {
@@ -97,8 +97,8 @@ const Index = () => {
             The AI-Driven Idea Engine
           </h1>
           <p className="text-white/80 mb-10 max-w-xl mx-auto">
-            Submit ideas through an adaptive AI interview. Get auto-generated briefs,
-            live wireframes, and data-driven impact scoring.
+            Submit ideas through an adaptive AI intake. Get matched to existing accelerators,
+            and receive scored evaluation reports for review board decisions.
           </p>
 
           <Link
