@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageSquare, FileText, BarChart3, ChevronRight, ArrowRight, Sparkles, Zap, Users, Lightbulb, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MessageSquare, FileText, BarChart3, ChevronRight, ArrowRight, Sparkles, Zap, Users, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import sparkLogo from "@/assets/spark-logo.png";
 import heroImage from "@/assets/hero-innovation.jpg";
 import stepInterview from "@/assets/step-interview.jpg";
@@ -133,25 +133,19 @@ const Index = () => {
                     {renamingId === idea.id ? (
                       <div className="block">
                         <div className="rounded-xl border border-secondary/40 bg-white/5 p-5 aspect-square flex flex-col">
-                          {idea.wireframeHtml ? (
-                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white/10 border border-white/5">
+                          {(idea.businessPlanHtml || idea.wireframeHtml) ? (
+                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white border border-white/5">
                               <iframe
-                                srcDoc={idea.wireframeHtml}
-                                title="Wireframe preview"
+                                srcDoc={idea.businessPlanHtml || idea.wireframeHtml}
+                                title="Document preview"
                                 className="w-full h-full pointer-events-none scale-[0.25] origin-top-left"
                                 style={{ width: '400%', height: '400%' }}
                                 sandbox=""
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/10 border border-white/5 p-3 flex flex-col gap-2">
-                              <div className="h-2 w-3/4 bg-white/15 rounded" />
-                              <div className="h-2 w-full bg-white/10 rounded" />
-                              <div className="h-2 w-5/6 bg-white/10 rounded" />
-                              <div className="h-2 w-2/3 bg-white/10 rounded" />
-                              <div className="mt-2 h-2 w-1/2 bg-white/15 rounded" />
-                              <div className="h-2 w-full bg-white/10 rounded" />
-                              <div className="h-2 w-4/5 bg-white/10 rounded" />
+                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
+                              <FileText className="w-6 h-6 text-white/20" />
                             </div>
                           )}
                           <div className="mb-2">
@@ -177,25 +171,19 @@ const Index = () => {
                     ) : (
                       <Link to={`/submit/${idea.id}`} className="block group">
                         <div className="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 hover:border-white/20 transition-all aspect-square flex flex-col">
-                          {idea.wireframeHtml ? (
-                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white/10 border border-white/5">
+                          {(idea.businessPlanHtml || idea.wireframeHtml) ? (
+                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white border border-white/5">
                               <iframe
-                                srcDoc={idea.wireframeHtml}
-                                title="Wireframe preview"
+                                srcDoc={idea.businessPlanHtml || idea.wireframeHtml}
+                                title="Document preview"
                                 className="w-full h-full pointer-events-none scale-[0.25] origin-top-left"
                                 style={{ width: '400%', height: '400%' }}
                                 sandbox=""
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/10 border border-white/5 p-3 flex flex-col gap-2">
-                              <div className="h-2 w-3/4 bg-white/15 rounded" />
-                              <div className="h-2 w-full bg-white/10 rounded" />
-                              <div className="h-2 w-5/6 bg-white/10 rounded" />
-                              <div className="h-2 w-2/3 bg-white/10 rounded" />
-                              <div className="mt-2 h-2 w-1/2 bg-white/15 rounded" />
-                              <div className="h-2 w-full bg-white/10 rounded" />
-                              <div className="h-2 w-4/5 bg-white/10 rounded" />
+                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
+                              <FileText className="w-6 h-6 text-white/20" />
                             </div>
                           )}
                           <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2 mb-2">
