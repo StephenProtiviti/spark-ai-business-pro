@@ -1,0 +1,1 @@
+ALTER TABLE public.ideas ADD COLUMN business_plan_html TEXT DEFAULT NULL;
