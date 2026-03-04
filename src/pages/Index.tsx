@@ -144,8 +144,14 @@ const Index = () => {
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
-                              <Lightbulb className="w-6 h-6 text-white/20" />
+                            <div className="w-full flex-1 mb-3 rounded-md bg-white/10 border border-white/5 p-3 flex flex-col gap-2">
+                              <div className="h-2 w-3/4 bg-white/15 rounded" />
+                              <div className="h-2 w-full bg-white/10 rounded" />
+                              <div className="h-2 w-5/6 bg-white/10 rounded" />
+                              <div className="h-2 w-2/3 bg-white/10 rounded" />
+                              <div className="mt-2 h-2 w-1/2 bg-white/15 rounded" />
+                              <div className="h-2 w-full bg-white/10 rounded" />
+                              <div className="h-2 w-4/5 bg-white/10 rounded" />
                             </div>
                           )}
                           <div className="mb-2">
@@ -182,8 +188,14 @@ const Index = () => {
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
-                              <Lightbulb className="w-6 h-6 text-white/20" />
+                            <div className="w-full flex-1 mb-3 rounded-md bg-white/10 border border-white/5 p-3 flex flex-col gap-2">
+                              <div className="h-2 w-3/4 bg-white/15 rounded" />
+                              <div className="h-2 w-full bg-white/10 rounded" />
+                              <div className="h-2 w-5/6 bg-white/10 rounded" />
+                              <div className="h-2 w-2/3 bg-white/10 rounded" />
+                              <div className="mt-2 h-2 w-1/2 bg-white/15 rounded" />
+                              <div className="h-2 w-full bg-white/10 rounded" />
+                              <div className="h-2 w-4/5 bg-white/10 rounded" />
                             </div>
                           )}
                           <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2 mb-2">
