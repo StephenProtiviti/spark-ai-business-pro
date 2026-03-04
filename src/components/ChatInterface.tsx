@@ -1,93 +1,83 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Plus, Sparkles, CheckCircle2, FileText, Users, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Code2, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff } from "lucide-react";
-// Accordion no longer needed in canvas — deliverables toggled via chat links
+import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import ReactMarkdown from "react-markdown";
 import { useIdeas, RecentIdea } from "@/contexts/IdeasContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getRecommendations, Accelerator } from "@/data/mockAccelerators";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
-const promptSuggestions = [
-  { label: "Process Optimization", icon: Workflow, description: "Streamline how your team works" },
-  { label: "New Product Feature", icon: Lightbulb, description: "Propose a new capability" },
-  { label: "Cost Savings", icon: TrendingUp, description: "Reduce waste and expenses" },
-  { label: "Customer Experience", icon: Zap, description: "Delight users and clients" },
-  { label: "Data & Analytics", icon: BarChart3, description: "Unlock insights from data" },
-  { label: "Security Improvement", icon: Shield, description: "Harden systems and processes" },
+// ── Intake Scenarios ──
+const intakeScenarios = [
+  { label: "AI Studio Support", icon: Cpu, description: "POC showcase, build support, or client visit" },
+  { label: "Agent Development", icon: Bot, description: "Internal ops, client delivery, or Copilot agents" },
+  { label: "Enabler Development", icon: Wrench, description: "Build on Atlas or other platforms" },
+  { label: "Automation Support", icon: Workflow, description: "Workflow or process automation" },
+  { label: "Generic Idea", icon: Lightbulb, description: "Other innovation ideas" },
 ];
 
-const categoryFollowUps: Record<string, { greeting: string; questions: string[] }> = {
-  "Process Optimization": {
-    greeting: "Process optimization — great choice! Let's map out how to make things run smoother.",
+// ── Scenario-Specific Follow-Up Questions ──
+const scenarioQuestions: Record<string, { greeting: string; questions: string[] }> = {
+  "AI Studio Support": {
+    greeting: "AI Studio — great choice! Let's understand what support you need.",
     questions: [
-      "**Which process are you looking to optimize?** Describe the current workflow or operation that feels slow, manual, or error-prone.",
-      "**Who is involved in this process today?** Which teams or roles touch it, and where do the biggest bottlenecks or handoffs occur?",
-      "**What does an optimized version look like?** Think about the key metric — time saved, errors reduced, throughput increased — and what 'good' looks like.",
-      "Last one: **What are the business benefits?** How will this optimization create value — cost savings, revenue growth, competitive advantage, or improved employee productivity?",
+      "**What type of AI Studio support do you need?** (e.g., showcasing a POC on AI Showcase, help building a POC, scheduling a client visit to AI Studio)",
+      "**Describe the AI use case or proof of concept.** What problem does it solve and who is the target audience?",
+      "**What's the current state?** Do you have an existing prototype, data set, or is this starting from scratch?",
+      "**What's the timeline and urgency?** Is there a client demo date or internal deadline driving this?",
+      "Last one: **What does success look like?** A working demo, a client commitment, internal buy-in, or something else?",
     ],
   },
-  "New Product Feature": {
-    greeting: "A new product feature — exciting! Let's define what it should do and why it matters.",
+  "Agent Development": {
+    greeting: "Agent development — let's scope out what you're building!",
     questions: [
-      "**What problem does this feature solve for users?** Describe the pain point or unmet need it addresses.",
-      "**Who is the target user?** Describe the persona — their role, how they'd discover this feature, and what they'd expect from it.",
-      "**How will we know this feature is successful?** Think about adoption rate, engagement metric, or user feedback signal.",
-      "Last one: **What are the business benefits?** How will this feature drive business value — increased revenue, user retention, market differentiation, or operational efficiency?",
+      "**What is the agent's purpose?** Describe what it should do in 1-2 sentences.",
+      "**Who will use this agent?** Is this for internal operations, to accelerate client delivery, or both?",
+      "**Will this agent use Copilot?** If yes, describe the Copilot integration points. If no, what will drive its intelligence?",
+      "**What systems or data does the agent need to interact with?** (e.g., CRM, ticketing systems, knowledge bases, APIs)",
+      "Last one: **What's the expected impact?** Time saved, tickets deflected, revenue influenced — quantify if possible.",
     ],
   },
-  "Cost Savings": {
-    greeting: "Cost savings — always impactful! Let's figure out where the money is going and how to keep more of it.",
+  "Enabler Development": {
+    greeting: "Enabler development — let's define what you want to build!",
     questions: [
-      "**Where is the cost coming from?** Describe the expense category — tooling, headcount, infrastructure, vendor spend, etc.",
-      "**What's driving the cost today?** Is it inefficiency, over-provisioning, manual work, or something else?",
-      "**What savings target are you aiming for?** A percentage reduction, a dollar amount, or a process change that eliminates the cost entirely?",
-      "Last one: **What are the broader business benefits?** Beyond cost reduction, how does this initiative create strategic value — improved margins, scalability, or competitive positioning?",
+      "**What enabler are you looking to build?** Describe the capability or tool in 1-2 sentences.",
+      "**Will this be built on Atlas or another platform/technology?** Specify the platform and any key dependencies.",
+      "**Who is the target user of this enabler?** Internal teams, clients, or both?",
+      "**What existing tools or processes does this replace or enhance?** Describe the current state.",
+      "Last one: **How will you measure adoption and success?** Number of users, integrations, or business outcomes?",
     ],
   },
-  "Customer Experience": {
-    greeting: "Customer experience — the heart of every great product! Let's explore how to delight your users.",
+  "Automation Support": {
+    greeting: "Automation — let's identify what to streamline!",
     questions: [
-      "**Which part of the customer journey needs improvement?** Is it onboarding, support, purchasing, retention, or something else?",
-      "**What are customers saying today?** Any specific complaints, NPS feedback, or churn reasons that point to the problem?",
-      "**What would a great experience look like?** Describe the ideal interaction — how should customers *feel* after engaging with this?",
-      "Last one: **What are the business benefits?** How will improving the customer experience translate to business value — higher retention, increased NPS, revenue growth, or brand loyalty?",
+      "**What process or workflow do you want to automate?** Describe the current manual steps.",
+      "**Is this workflow automation (multi-step orchestration) or process automation (single-task optimization)?**",
+      "**Who performs this work today?** Which teams or roles, and roughly how much time do they spend?",
+      "**What systems are involved?** List the tools, platforms, or data sources that need to be connected.",
+      "Last one: **What's the expected ROI?** Time saved, error reduction, cost savings — estimate the impact.",
     ],
   },
-  "Data & Analytics": {
-    greeting: "Data & analytics — let's unlock some insights! Tell me more about what you're trying to understand.",
+  "Generic Idea": {
+    greeting: "Thanks for sharing! Let's shape this idea into something actionable.",
     questions: [
-      "**What question are you trying to answer with data?** Describe the business decision or insight you're after.",
-      "**What data sources are available today?** Think about databases, APIs, spreadsheets, or third-party tools that hold relevant data.",
-      "**Who will consume these insights?** Executives, analysts, ops teams — and how do they prefer to see data (dashboards, reports, alerts)?",
-      "Last one: **What are the business benefits?** How will better data and analytics drive business value — smarter decisions, faster response times, new revenue opportunities, or risk reduction?",
-    ],
-  },
-  "Security Improvement": {
-    greeting: "Security improvement — critical work! Let's identify the vulnerabilities and plan the hardening.",
-    questions: [
-      "**What's the security concern?** Describe the threat, vulnerability, or compliance gap you're looking to address.",
-      "**What systems or data are at risk?** Which applications, infrastructure, or data sets need protection?",
-      "**What does 'secure enough' look like?** A compliance standard (SOC2, GDPR), a risk reduction target, or a specific control to implement?",
-      "Last one: **What are the business benefits?** How does improving security create business value — regulatory compliance, customer trust, risk mitigation, or competitive advantage?",
+      "**What is the primary objective?** In one sentence, what should this idea accomplish?",
+      "**Who benefits from this and how?** Describe the people affected and the outcome they'd experience.",
+      "**What does success look like?** Think about the measurable outcome — a metric, milestone, or before/after proof.",
+      "**What resources or support would you need?** Teams, technology, budget, or expertise.",
+      "Last one: **What's the business value?** Revenue impact, cost savings, competitive advantage, or strategic positioning?",
     ],
   },
 };
 
-const defaultFollowUps = {
-  greeting: "Thanks for sharing! Let's dig in and shape this idea.",
-  questions: [
-    "**What is the primary objective?** In one sentence, what should this idea accomplish when it's fully realized?",
-    "**Who benefits from this and how?** Describe the people affected and the outcome they'd experience — what changes for them day-to-day?",
-    "**What does success look like?** Think about the measurable outcome — a metric, a milestone, or a before/after that proves this worked.",
-    "Last one: **What are the business benefits?** How will this idea create value for the organization — revenue impact, cost savings, competitive advantage, or strategic positioning?",
-  ],
-};
+// Triage mapping — which scenarios go directly to IT/AI Studio
+const directTriageScenarios = ["AI Studio Support"];
 
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
@@ -99,33 +89,31 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [conversationDone, setConversationDone] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submittedIdea, setSubmittedIdea] = useState<RecentIdea | null>(null);
-  const [generatedPrompt, setGeneratedPrompt] = useState("");
-  const [editingPrompt, setEditingPrompt] = useState(false);
-  const [editedPrompt, setEditedPrompt] = useState("");
-  const [promptApproved, setPromptApproved] = useState(false);
-  const [wireframeHtml, setWireframeHtml] = useState("");
-  const [businessPlanHtml, setBusinessPlanHtml] = useState("");
-  const [isGeneratingWireframe, setIsGeneratingWireframe] = useState(false);
-  const [isGeneratingBusinessPlan, setIsGeneratingBusinessPlan] = useState(false);
-  const [wireframeReady, setWireframeReady] = useState(false);
-  const [businessPlanReady, setBusinessPlanReady] = useState(false);
+
+  // Recommendations
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [recommendations, setRecommendations] = useState<Accelerator[]>([]);
+  const [recommendationsDismissed, setRecommendationsDismissed] = useState(false);
+  const [selectedAccelerator, setSelectedAccelerator] = useState<Accelerator | null>(null);
+
+  // Evaluation document
+  const [evaluationHtml, setEvaluationHtml] = useState("");
+  const [isGeneratingEvaluation, setIsGeneratingEvaluation] = useState(false);
+  const [evaluationReady, setEvaluationReady] = useState(false);
+
   const [viewingMessages, setViewingMessages] = useState<Message[]>([]);
-  const [wireframeElapsed, setWireframeElapsed] = useState(0);
-  const [isRefinement, setIsRefinement] = useState(false);
-  const [canvasView, setCanvasView] = useState<"wireframe" | "business-plan">("wireframe");
   const [isListening, setIsListening] = useState(false);
+  const [canvasView, setCanvasView] = useState<"recommendations" | "evaluation">("recommendations");
   const recognitionRef = useRef<any>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const wireframeHtmlRef = useRef(wireframeHtml);
-  const generationRunRef = useRef<number | null>(null);
-  const isGeneratingRef = useRef(false);
-  const wireframeTargetIdRef = useRef<string | null>(null);
-  wireframeHtmlRef.current = wireframeHtml;
+  const evaluationHtmlRef = useRef(evaluationHtml);
+  evaluationHtmlRef.current = evaluationHtml;
+  const evaluationTargetIdRef = useRef<string | null>(null);
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
@@ -134,18 +122,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       toast.error("Speech recognition is not supported in this browser.");
       return;
     }
-
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
       setIsListening(false);
       return;
     }
-
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
-
     recognition.onresult = (event: any) => {
       let transcript = "";
       for (let i = 0; i < event.results.length; i++) {
@@ -153,10 +138,8 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       }
       setInput(transcript);
     };
-
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
-
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
@@ -165,36 +148,23 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const isViewing = !!viewingIdea;
   const displayMessages = isViewing ? viewingMessages : messages;
 
-  // Sync viewing messages when viewingIdea changes
   useEffect(() => {
-    generationRunRef.current = null;
-    isGeneratingRef.current = false;
-    wireframeTargetIdRef.current = null;
-    setIsGeneratingWireframe(false);
-    setWireframeElapsed(0);
-
     if (viewingIdea) {
       setViewingMessages([...viewingIdea.messages]);
-      const existingHtml = viewingIdea.wireframeHtml || "";
-      setWireframeHtml(existingHtml);
-      setWireframeReady(Boolean(existingHtml));
-      setPromptApproved(Boolean(existingHtml));
-      const existingBp = viewingIdea.businessPlanHtml || "";
-      setBusinessPlanHtml(existingBp);
-      setBusinessPlanReady(Boolean(existingBp));
+      const existingHtml = viewingIdea.businessPlanHtml || "";
+      setEvaluationHtml(existingHtml);
+      setEvaluationReady(Boolean(existingHtml));
+      if (existingHtml) setCanvasView("evaluation");
     } else {
       setViewingMessages([]);
-      setWireframeHtml("");
-      setWireframeReady(false);
-      setPromptApproved(false);
-      setBusinessPlanHtml("");
-      setBusinessPlanReady(false);
+      setEvaluationHtml("");
+      setEvaluationReady(false);
     }
   }, [viewingIdea?.id]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [displayMessages, conversationDone, submitted, generatedPrompt, promptApproved, wireframeReady]);
+  }, [displayMessages, conversationDone, submitted, showRecommendations, evaluationReady]);
 
   useEffect(() => {
     if (!isViewing && draftIdeaId) {
@@ -208,44 +178,45 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     }
   }, [isViewing, viewingMessages]);
 
+  // Save evaluation to idea
+  useEffect(() => {
+    if (evaluationReady && evaluationHtml && evaluationTargetIdRef.current) {
+      updateIdea(evaluationTargetIdRef.current, { businessPlanHtml: evaluationHtml });
+    }
+  }, [evaluationReady, evaluationHtml]);
+
   const resetChat = () => {
     setMessages([]);
     setInput("");
-    setSelectedCategory(null);
+    setSelectedScenario(null);
     setQuestionIndex(0);
     setConversationDone(false);
     setSubmitted(false);
     setSubmittedIdea(null);
-    setGeneratedPrompt("");
-    setEditingPrompt(false);
-    setEditedPrompt("");
-    setPromptApproved(false);
-    setWireframeHtml("");
-    setIsGeneratingWireframe(false);
-    setWireframeReady(false);
-    setBusinessPlanHtml("");
-    setIsGeneratingBusinessPlan(false);
-    setBusinessPlanReady(false);
+    setShowRecommendations(false);
+    setRecommendations([]);
+    setRecommendationsDismissed(false);
+    setSelectedAccelerator(null);
+    setEvaluationHtml("");
+    setIsGeneratingEvaluation(false);
+    setEvaluationReady(false);
     setDraftIdeaId(null);
-    wireframeTargetIdRef.current = null;
-    generationRunRef.current = null;
-    isGeneratingRef.current = false;
+    evaluationTargetIdRef.current = null;
   };
 
-  const extractAnswers = () => {
+  const extractAnswers = (): Record<string, string> => {
     const userMsgs = messages.filter((m) => m.role === "user");
-    return {
-      idea: userMsgs[0]?.content || "",
-      objective: userMsgs[1]?.content || "",
-      beneficiaries: userMsgs[2]?.content || "",
-      success: userMsgs[3]?.content || "",
-      businessBenefits: userMsgs[4]?.content || "",
-    };
-  };
-
-  const generateMvpPrompt = () => {
-    const a = extractAnswers();
-    return `## MVP Build Prompt\n\n**Project:** ${a.idea}\n\n**Role:** You are a Senior Full-Stack Engineer. Build a working MVP for the following idea.\n\n**Primary Objective:** ${a.objective}\n\n**Target Users & Outcome:** ${a.beneficiaries}\n\n**Success Criteria:** ${a.success}\n\n**Business Benefits & Value Proposition:** ${a.businessBenefits}\n\n### Requirements\n1. Build a functional prototype that demonstrates the core value proposition described above.\n2. Focus on the primary user flow — from entry point to the key outcome.\n3. Use a modern stack (React, TypeScript, Tailwind CSS).\n4. Include realistic mock data where backend integration isn't available.\n5. Prioritize usability and clarity over feature completeness.\n\n### Deliverables\n- A working single-page or multi-page application\n- Clean, well-structured code ready for iteration\n- A brief README explaining how to run and extend the MVP`;
+    const scenario = selectedScenario || "Generic Idea";
+    const qs = scenarioQuestions[scenario]?.questions || [];
+    const result: Record<string, string> = {};
+    // First user message is the idea itself
+    result["Idea Description"] = userMsgs[0]?.content || "";
+    // Remaining are answers to follow-up questions
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i].replace(/\*\*/g, "").replace(/Last one: /g, "");
+      result[q] = userMsgs[i + 1]?.content || "";
+    }
+    return result;
   };
 
   const handleSend = (text?: string) => {
@@ -255,30 +226,52 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     const userMsg: Message = { role: "user", content: value };
     const isFirstMessage = messages.length === 0;
 
-    let category = selectedCategory;
+    let scenario = selectedScenario;
     if (isFirstMessage) {
-      const matchedCategory = categoryFollowUps[value] ? value : null;
-      category = matchedCategory;
-      setSelectedCategory(matchedCategory);
+      const matchedScenario = scenarioQuestions[value] ? value : null;
+      scenario = matchedScenario;
+      setSelectedScenario(matchedScenario);
     }
 
-    const followUps = category && categoryFollowUps[category]
-      ? categoryFollowUps[category]
-      : defaultFollowUps;
+    const followUps = scenario && scenarioQuestions[scenario]
+      ? scenarioQuestions[scenario]
+      : scenarioQuestions["Generic Idea"];
 
     if (isFirstMessage) {
+      const isScenarioClick = !!scenarioQuestions[value];
       const greeting: Message = {
         role: "assistant",
-        content: followUps.greeting + ` Let me help you shape **\"${value}\"** into a structured submission.`,
+        content: isScenarioClick
+          ? followUps.greeting + " I'll ask you a few questions to understand your needs."
+          : followUps.greeting + ` Let me help you shape **"${value}"** into a structured submission.`,
       };
-      const initialMessages = [userMsg, greeting];
-      setMessages(initialMessages);
-      const draft = createDraftIdea(value, initialMessages);
-      setDraftIdeaId(draft.id);
-    } else {
-      const updatedMessages = [...messages, userMsg];
-      setMessages(updatedMessages);
+      const firstQuestion: Message = {
+        role: "assistant",
+        content: followUps.questions[0],
+      };
+
+      if (isScenarioClick) {
+        // Scenario was clicked — show greeting + first question, wait for idea
+        const initialMessages = [userMsg, greeting, firstQuestion];
+        setMessages(initialMessages);
+        const draft = createDraftIdea(value, initialMessages);
+        setDraftIdeaId(draft.id);
+        setQuestionIndex(1);
+      } else {
+        // Free-text idea — show greeting + first question
+        const initialMessages = [userMsg, greeting, firstQuestion];
+        setMessages(initialMessages);
+        const draft = createDraftIdea(value, initialMessages);
+        setDraftIdeaId(draft.id);
+        setQuestionIndex(1);
+      }
+      setInput("");
+      return;
     }
+
+    // Not first message — add answer and ask next question
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput("");
     setIsTyping(true);
 
@@ -290,219 +283,85 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
-        const prompt = generateMvpPrompt();
-        setGeneratedPrompt(prompt);
-        setEditedPrompt(prompt);
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant" as const,
-            content:
-              "Excellent — I have everything I need! I've generated a **Technical MVP Prompt** based on your answers. When you approve, I'll generate both a **wireframe prototype** and a **single-page business plan** highlighting benefits, risks, and an implementation roadmap.\n\nPlease review it below — you can **edit** it or **approve** it as-is.",
-          },
-        ]);
+        // All questions answered — show recommendations
+        const answers = extractAnswers();
+        const ideaText = Object.values(answers).join(" ");
+        const recs = getRecommendations(ideaText, scenario || "Generic Idea");
+        setRecommendations(recs);
+        setShowRecommendations(true);
+        setCanvasView("recommendations");
+
+        if (recs.length > 0) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant" as const,
+              content: `I've found **${recs.length} existing solution${recs.length > 1 ? "s" : ""}** that might match your needs. Take a look at the recommendations panel on the right.\n\nYou can **open a recommended solution** to explore it, or **proceed with your submission** to generate a full evaluation report for the review board.`,
+            },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant" as const,
+              content: "I didn't find any closely matching existing solutions. Let me generate a full **Evaluation Report** for the review board to assess your idea.",
+            },
+          ]);
+          // Auto-proceed to evaluation
+          handleProceedWithSubmission(updatedMessages);
+        }
         setConversationDone(true);
       }
       setIsTyping(false);
-    }, 1200 + Math.random() * 800);
+    }, 1000 + Math.random() * 600);
   };
 
-  const streamWireframe = useCallback(async (prompt: string, refinement?: string, currentHtml?: string, retryCount = 0, runId?: number, targetId?: string) => {
-    if (retryCount === 0 && isGeneratingRef.current) return;
+  const handleProceedWithSubmission = (msgOverride?: Message[]) => {
+    setRecommendationsDismissed(true);
+    setCanvasView("evaluation");
 
-    const activeRunId = runId ?? Date.now();
-    if (retryCount === 0) {
-      generationRunRef.current = activeRunId;
-      isGeneratingRef.current = true;
-      if (targetId) wireframeTargetIdRef.current = targetId;
-      setIsGeneratingWireframe(true);
-      setWireframeElapsed(0);
-      setIsRefinement(!!refinement);
-      if (!refinement) setWireframeHtml("");
-      setWireframeReady(false);
-    }
+    const proceedMsg: Message = {
+      role: "assistant",
+      content: "Generating your **Idea Evaluation Report** — this will include scores, risk analysis, and a recommendation for the review board...",
+    };
+    const msgsToUse = msgOverride || messages;
+    setMessages((prev) => [...prev, proceedMsg]);
 
-    const previousHtml = wireframeHtmlRef.current;
+    const targetId = draftIdeaId || undefined;
+    evaluationTargetIdRef.current = targetId || null;
+    generateEvaluation(targetId);
+  };
 
-    try {
-      const body: Record<string, string> = {};
-      if (refinement && currentHtml) {
-        body.refinement = refinement;
-        body.currentHtml = currentHtml;
-      } else {
-        body.prompt = prompt;
-      }
+  const generateEvaluation = useCallback(async (targetId?: string, refinement?: string, currentHtml?: string) => {
+    setIsGeneratingEvaluation(true);
+    setEvaluationReady(false);
 
-      let { data, error } = await supabase.functions.invoke("generate-wireframe", {
-        body,
-      });
-
-      if (error) {
-        try {
-          const fallbackResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-wireframe`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            },
-            body: JSON.stringify(body),
-          });
-
-          const fallbackJson = await fallbackResponse.json().catch(() => ({}));
-          if (fallbackResponse.ok) {
-            data = fallbackJson;
-            error = null;
-          } else {
-            error = {
-              ...error,
-              context: { status: fallbackResponse.status },
-              message: typeof fallbackJson?.error === "string" ? fallbackJson.error : "Failed to generate wireframe",
-            } as typeof error;
-          }
-        } catch {
-          // keep original invoke error path
-        }
-      }
-
-      if (generationRunRef.current !== activeRunId) return;
-
-      if (error) {
-        const status = (error as { context?: { status?: number } })?.context?.status;
-        const transient = status === 408 || status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
-
-        if (transient && retryCount < 1) {
-          toast.message("Generation was interrupted. Retrying once...");
-          await streamWireframe(prompt, refinement, currentHtml, retryCount + 1, activeRunId);
-          return;
-        }
-
-        if (status === 429) {
-          toast.error("Rate limit exceeded. Please wait a moment and try again.");
-        } else if (status === 402) {
-          toast.error("AI usage limit reached. Please add credits to continue.");
-        } else {
-          toast.error("Failed to generate wireframe");
-        }
-
-        if (refinement && previousHtml) {
-          setWireframeHtml(previousHtml);
-          setWireframeReady(true);
-        }
-        return;
-      }
-
-      let parsedData = data;
-      if (typeof data === "string") {
-        try { parsedData = JSON.parse(data); } catch { parsedData = data; }
-      }
-      const rawHtml = typeof parsedData?.html === "string" ? parsedData.html : (typeof parsedData === "string" ? parsedData : "");
-      let finalHtml = rawHtml;
-      const htmlMatch = finalHtml.match(/```html\s*([\s\S]*?)```/);
-      if (htmlMatch) {
-        finalHtml = htmlMatch[1].trim();
-      } else if (finalHtml.includes("<!DOCTYPE") || finalHtml.includes("<html")) {
-        const startIdx = finalHtml.indexOf("<!DOCTYPE");
-        if (startIdx === -1) {
-          const altStart = finalHtml.indexOf("<html");
-          if (altStart > -1) finalHtml = finalHtml.slice(altStart);
-        } else {
-          finalHtml = finalHtml.slice(startIdx);
-        }
-      }
-
-      if (generationRunRef.current !== activeRunId) return;
-
-      if (!finalHtml.trim() && refinement && previousHtml) {
-        setWireframeHtml(previousHtml);
-        setWireframeReady(true);
-        toast.error("Wireframe update returned empty. Previous version restored.");
-      } else if (!finalHtml.trim()) {
-        if (retryCount < 1) {
-          toast.message("Received empty wireframe. Retrying once...");
-          await streamWireframe(prompt, refinement, currentHtml, retryCount + 1, activeRunId);
-          return;
-        }
-        toast.error("Wireframe generation returned empty content.");
-      } else {
-        setWireframeHtml(finalHtml);
-        setWireframeReady(true);
-      }
-    } catch (e) {
-      if (generationRunRef.current !== activeRunId) return;
-      console.error("Wireframe generation failed:", e);
-      if (retryCount < 1) {
-        toast.message("Generation failed unexpectedly. Retrying once...");
-        await streamWireframe(prompt, refinement, currentHtml, retryCount + 1, activeRunId);
-        return;
-      }
-      toast.error("Failed to generate wireframe. Please try again.");
-      if (refinement && previousHtml) {
-        setWireframeHtml(previousHtml);
-        setWireframeReady(true);
-      }
-    } finally {
-      if (generationRunRef.current === activeRunId) {
-        generationRunRef.current = null;
-        isGeneratingRef.current = false;
-        setIsGeneratingWireframe(false);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isGeneratingWireframe) return;
-    const interval = setInterval(() => setWireframeElapsed((t) => t + 1), 1000);
-    return () => clearInterval(interval);
-  }, [isGeneratingWireframe]);
-
-  useEffect(() => {
-    if (wireframeReady && wireframeHtml && wireframeTargetIdRef.current) {
-      updateIdea(wireframeTargetIdRef.current, { wireframeHtml });
-    }
-  }, [wireframeReady, wireframeHtml]);
-
-  useEffect(() => {
-    if (businessPlanReady && businessPlanHtml && wireframeTargetIdRef.current) {
-      updateIdea(wireframeTargetIdRef.current, { businessPlanHtml });
-    }
-  }, [businessPlanReady, businessPlanHtml]);
-
-  const businessPlanHtmlRef = useRef(businessPlanHtml);
-  businessPlanHtmlRef.current = businessPlanHtml;
-
-  const generateBusinessPlan = useCallback(async (targetId?: string, refinement?: string, currentHtml?: string) => {
-    setIsGeneratingBusinessPlan(true);
-    setBusinessPlanReady(false);
-    setCanvasView("business-plan");
-
-    const previousHtml = businessPlanHtmlRef.current;
+    const previousHtml = evaluationHtmlRef.current;
 
     try {
-      let body: Record<string, string>;
+      let body: Record<string, any>;
       if (refinement && currentHtml) {
         body = { refinement, currentHtml };
       } else {
         const answers = extractAnswers();
         body = {
-          idea: answers.idea,
-          objective: answers.objective,
-          beneficiaries: answers.beneficiaries,
-          success: answers.success,
-          businessBenefits: answers.businessBenefits,
+          scenario: selectedScenario || "Generic Idea",
+          idea: answers["Idea Description"] || messages.find((m) => m.role === "user")?.content || "",
+          answers,
+          recommendations: recommendations.map((r) => ({ name: r.name, category: r.category })),
         };
       }
 
       let data: any = null;
       let error: any = null;
 
-      const result = await supabase.functions.invoke("generate-business-plan", { body });
+      const result = await supabase.functions.invoke("generate-evaluation", { body });
       data = result.data;
       error = result.error;
 
       if (error) {
         try {
-          const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-business-plan`, {
+          const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-evaluation`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -513,15 +372,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
           });
           const json = await resp.json().catch(() => ({}));
           if (resp.ok) { data = json; error = null; }
-        } catch { /* keep original error */ }
+        } catch { /* keep original */ }
       }
 
       if (error) {
-        console.error("Business plan generation failed:", error);
-        toast.error("Failed to generate business plan");
+        console.error("Evaluation generation failed:", error);
+        toast.error("Failed to generate evaluation report");
         if (refinement && previousHtml) {
-          setBusinessPlanHtml(previousHtml);
-          setBusinessPlanReady(true);
+          setEvaluationHtml(previousHtml);
+          setEvaluationReady(true);
         }
         return;
       }
@@ -535,138 +394,71 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       if (htmlMatch) html = htmlMatch[1].trim();
 
       if (html.trim()) {
-        setBusinessPlanHtml(html);
-        setBusinessPlanReady(true);
+        setEvaluationHtml(html);
+        setEvaluationReady(true);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant" as const,
+            content: "Your **Evaluation Report** is ready! Review it on the right panel. You can request changes or submit for review.",
+          },
+        ]);
       } else if (refinement && previousHtml) {
-        setBusinessPlanHtml(previousHtml);
-        setBusinessPlanReady(true);
-        toast.error("Business plan update returned empty. Previous version restored.");
+        setEvaluationHtml(previousHtml);
+        setEvaluationReady(true);
+        toast.error("Evaluation update returned empty. Previous version restored.");
       } else {
-        toast.error("Business plan generation returned empty content.");
+        toast.error("Evaluation generation returned empty content.");
       }
     } catch (e) {
-      console.error("Business plan generation error:", e);
-      toast.error("Failed to generate business plan. Please try again.");
+      console.error("Evaluation generation error:", e);
+      toast.error("Failed to generate evaluation. Please try again.");
       if (refinement && previousHtml) {
-        setBusinessPlanHtml(previousHtml);
-        setBusinessPlanReady(true);
+        setEvaluationHtml(previousHtml);
+        setEvaluationReady(true);
       }
     } finally {
-      setIsGeneratingBusinessPlan(false);
+      setIsGeneratingEvaluation(false);
     }
-  }, [messages]);
-
-  const handleApprovePrompt = () => {
-    setPromptApproved(true);
-    setGeneratedPrompt(editedPrompt);
-    setEditingPrompt(false);
-    const targetId = isViewing && viewingIdea ? viewingIdea.id : draftIdeaId;
-    wireframeTargetIdRef.current = targetId;
-    streamWireframe(editedPrompt, undefined, undefined, 0, undefined, targetId || undefined);
-    generateBusinessPlan(targetId || undefined);
-  };
+  }, [messages, selectedScenario, recommendations]);
 
   const handleRefinement = (text: string) => {
-    if (!text.trim() || isGeneratingWireframe || isGeneratingBusinessPlan) return;
+    if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-
-    const isBusinessPlanEdit = canvasView === "business-plan";
-    const assistantMsg: Message = {
-      role: "assistant",
-      content: isBusinessPlanEdit
-        ? "Got it! Updating the business plan with your changes..."
-        : "Got it! Updating the wireframe with your changes...",
-    };
+    const assistantMsg: Message = { role: "assistant", content: "Got it! Updating the evaluation report..." };
 
     if (isViewing && viewingIdea) {
       setViewingMessages((prev) => [...prev, userMsg, assistantMsg]);
       setInput("");
-      const targetId = viewingIdea.id;
-
-      if (isBusinessPlanEdit) {
-        const currentBpHtml = businessPlanHtmlRef.current || viewingIdea.businessPlanHtml || "";
-        wireframeTargetIdRef.current = targetId;
-        generateBusinessPlan(targetId, text, currentBpHtml);
-      } else {
-        const currentHtml = wireframeHtmlRef.current || viewingIdea.wireframeHtml || "";
-        wireframeTargetIdRef.current = targetId;
-        streamWireframe(generatedPrompt || "Refine this wireframe", text, currentHtml, 0, undefined, targetId);
-      }
+      const currentHtml = evaluationHtmlRef.current || viewingIdea.businessPlanHtml || "";
+      evaluationTargetIdRef.current = viewingIdea.id;
+      generateEvaluation(viewingIdea.id, text, currentHtml);
     } else {
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
       setInput("");
+      const currentHtml = evaluationHtmlRef.current;
       const targetId = draftIdeaId || undefined;
-      if (targetId) wireframeTargetIdRef.current = targetId;
-
-      if (isBusinessPlanEdit) {
-        const currentBpHtml = businessPlanHtmlRef.current;
-        generateBusinessPlan(targetId, text, currentBpHtml);
-      } else {
-        const currentHtml = wireframeHtmlRef.current;
-        streamWireframe(generatedPrompt, text, currentHtml, 0, undefined, targetId);
-      }
+      if (targetId) evaluationTargetIdRef.current = targetId;
+      generateEvaluation(targetId, text, currentHtml);
     }
   };
 
   const handleSubmit = () => {
     if (draftIdeaId) {
-      updateIdea(draftIdeaId, { messages, wireframeHtml: wireframeHtml || undefined, businessPlanHtml: businessPlanHtml || undefined });
+      updateIdea(draftIdeaId, { messages, businessPlanHtml: evaluationHtml || undefined });
       const existingIdea = recentIdeas.find((i) => i.id === draftIdeaId);
-      if (existingIdea) {
-        setSubmittedIdea(existingIdea);
-      }
+      if (existingIdea) setSubmittedIdea(existingIdea);
     } else {
       const userMessages = messages.filter((m) => m.role === "user");
       const title = userMessages[0]?.content || "Untitled Idea";
-      const idea = submitIdea(title, messages, wireframeHtml || undefined);
+      const idea = submitIdea(title, messages, undefined, evaluationHtml || undefined);
       setSubmittedIdea(idea);
     }
     setSubmitted(true);
   };
 
-  // Determine if canvas has content to show
-  const hasCanvasContent = wireframeHtml || businessPlanHtml || isGeneratingWireframe || isGeneratingBusinessPlan || 
-    (isViewing && viewingIdea && (viewingIdea.wireframeHtml || viewingIdea.businessPlanHtml));
-
-  // Loading spinner component
-  const WireframeLoader = ({ estimated = 35 }: { estimated?: number }) => (
-    <div className="text-center space-y-4">
-      <div className="relative w-16 h-16 mx-auto">
-        <svg className="absolute inset-0 w-16 h-16 animate-spin" style={{ animationDuration: '2s' }} viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--primary) / 0.15)" strokeWidth="3" />
-          <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeDasharray="176" strokeDashoffset="132" />
-        </svg>
-        <div className="absolute inset-2 rounded-full bg-primary/10 flex items-center justify-center">
-          <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-        </div>
-      </div>
-      <div>
-        <p className="text-sm font-semibold text-foreground">
-          {isRefinement ? "Updating wireframe..." : "Building wireframe..."}
-        </p>
-        <p className="text-xs text-muted-foreground mt-1">
-          {wireframeElapsed < 5 ? "Analyzing your requirements"
-            : wireframeElapsed < 15 ? "Generating layout & components"
-            : wireframeElapsed < 30 ? "Refining design details"
-            : "Almost there..."}
-        </p>
-        {(() => {
-          const remaining = Math.max(0, estimated - wireframeElapsed);
-          const progress = Math.min(95, (wireframeElapsed / estimated) * 100);
-          return (
-            <div className="mt-3 w-48 mx-auto">
-              <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full rounded-full bg-primary transition-all duration-1000 ease-out" style={{ width: `${progress}%` }} />
-              </div>
-              <p className="text-xs font-mono text-muted-foreground/60 mt-1.5">
-                {remaining > 0 ? `~${remaining}s remaining` : "Finishing up..."}
-              </p>
-            </div>
-          );
-        })()}
-      </div>
-    </div>
-  );
+  const hasCanvasContent = evaluationHtml || isGeneratingEvaluation || showRecommendations ||
+    (isViewing && viewingIdea?.businessPlanHtml);
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -685,7 +477,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               <p className="text-[11px] text-sidebar-foreground/60 truncate">
                 {isViewing
                   ? `Assigned to ${viewingIdea.assignedTo.name}`
-                  : "AI-guided idea interview"}
+                  : "AI-guided idea intake & evaluation"}
               </p>
             </div>
           </div>
@@ -731,38 +523,34 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               </motion.div>
             )}
 
-            {/* Deliverable links in chat */}
-            {(wireframeReady || businessPlanReady || (isViewing && (viewingIdea?.wireframeHtml || viewingIdea?.businessPlanHtml))) && (
+            {/* Canvas view toggle links */}
+            {(evaluationReady || (isViewing && viewingIdea?.businessPlanHtml)) && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
                 <div className="bg-sidebar-accent rounded-lg px-3 py-2.5 text-sm space-y-1.5">
                   <p className="text-xs font-medium text-sidebar-foreground/70 mb-1">View in canvas:</p>
                   <div className="flex flex-col gap-1">
-                    {(wireframeReady || wireframeHtml || (isViewing && viewingIdea?.wireframeHtml)) && (
+                    {recommendations.length > 0 && (
                       <button
-                        onClick={() => setCanvasView("wireframe")}
-                        className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "wireframe" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
+                        onClick={() => setCanvasView("recommendations")}
+                        className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "recommendations" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                        Wireframe Preview
-                        {canvasView === "wireframe" && <span className="text-[10px] ml-1">(viewing)</span>}
+                        <Package className="w-3.5 h-3.5" />
+                        Recommendations
                       </button>
                     )}
-                    {(businessPlanReady || businessPlanHtml || (isViewing && viewingIdea?.businessPlanHtml)) && (
-                      <button
-                        onClick={() => setCanvasView("business-plan")}
-                        className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "business-plan" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
-                      >
-                        <FileText className="w-3.5 h-3.5" />
-                        Business Plan
-                        {canvasView === "business-plan" && <span className="text-[10px] ml-1">(viewing)</span>}
-                      </button>
-                    )}
+                    <button
+                      onClick={() => setCanvasView("evaluation")}
+                      className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "evaluation" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      Evaluation Report
+                    </button>
                   </div>
                 </div>
               </motion.div>
             )}
 
-            {/* Welcome Screen — shown in chat panel when empty */}
+            {/* Welcome Screen */}
             {!isViewing && !hasStarted && !isTyping && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -773,97 +561,46 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What's your next big idea?</h2>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">How can we help?</h2>
                 <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  Pick a category or type your idea directly.
+                  Select your scenario or describe your idea directly.
                 </p>
-                <div className="grid grid-cols-2 gap-2 w-full">
-                  {promptSuggestions.map(({ label, icon: Icon, description }) => (
+                <div className="grid grid-cols-1 gap-2 w-full">
+                  {intakeScenarios.map(({ label, icon: Icon, description }) => (
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
-                      className="flex flex-col items-start gap-1.5 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                     >
-                      <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-                      <span className="text-xs font-medium text-sidebar-foreground">{label}</span>
-                      <span className="text-[10px] text-sidebar-foreground/50 leading-tight">{description}</span>
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-medium text-sidebar-foreground block">{label}</span>
+                        <span className="text-[10px] text-sidebar-foreground/50 leading-tight">{description}</span>
+                      </div>
                     </button>
                   ))}
                 </div>
               </motion.div>
             )}
 
-            {/* Generated MVP Prompt Card — in chat */}
-            {!isViewing && conversationDone && !submitted && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-4">
-                <div className="rounded-lg border-2 border-primary/30 bg-sidebar-accent p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Code2 className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-sidebar-foreground">Technical MVP Prompt</h3>
-                    </div>
-                    {!promptApproved && (
-                      <button
-                        onClick={() => setEditingPrompt(!editingPrompt)}
-                        className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                      >
-                        <Pencil className="w-3 h-3" />
-                        {editingPrompt ? "Preview" : "Edit"}
-                      </button>
-                    )}
-                  </div>
-
-                  {editingPrompt && !promptApproved ? (
-                    <textarea
-                      value={editedPrompt}
-                      onChange={(e) => setEditedPrompt(e.target.value)}
-                      className="w-full h-60 p-3 rounded-lg border border-sidebar-border bg-sidebar text-xs font-mono text-sidebar-foreground resize-y focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  ) : (
-                    <div className="max-h-60 overflow-y-auto rounded-lg bg-sidebar p-3">
-                      <ReactMarkdown
-                        components={{
-                          h2: ({ children }) => <h2 className="text-sm font-bold text-sidebar-foreground mb-1">{children}</h2>,
-                          h3: ({ children }) => <h3 className="text-xs font-semibold text-sidebar-foreground mt-2 mb-1">{children}</h3>,
-                          strong: ({ children }) => <strong className="font-semibold text-sidebar-foreground">{children}</strong>,
-                          p: ({ children }) => <p className="text-xs text-sidebar-foreground/80 mb-1.5 last:mb-0">{children}</p>,
-                          ol: ({ children }) => <ol className="text-xs text-sidebar-foreground/80 list-decimal pl-4 space-y-0.5 mb-1.5">{children}</ol>,
-                          li: ({ children }) => <li>{children}</li>,
-                          ul: ({ children }) => <ul className="text-xs text-sidebar-foreground/80 list-disc pl-4 space-y-0.5 mb-1.5">{children}</ul>,
-                        }}
-                      >
-                        {promptApproved ? generatedPrompt : editedPrompt}
-                      </ReactMarkdown>
-                    </div>
-                  )}
-
-                  {!promptApproved ? (
-                    <button
-                      onClick={handleApprovePrompt}
-                      className="w-full mt-3 py-2.5 rounded-lg bg-secondary text-white font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ThumbsUp className="w-4 h-4" />
-                      Approve & Generate
-                    </button>
-                  ) : (
-                    <div className="mt-3 flex items-center gap-2 text-xs text-accent font-medium">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Prompt approved — generating...
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Submitted confirmation in chat */}
+            {/* Submitted confirmation */}
             {!isViewing && submitted && submittedIdea && (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-4">
                 <div className="rounded-lg border-2 border-accent/40 bg-sidebar-accent p-4 text-center">
                   <CheckCircle2 className="w-10 h-10 text-accent mx-auto mb-2" />
-                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">Idea Submitted!</h3>
+                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">Submitted for Review!</h3>
                   <p className="text-xs text-sidebar-foreground/60 mb-3">
-                    Your idea has been submitted and a support partner assigned.
+                    Your idea has been submitted with an evaluation report. The review board will assess it.
                   </p>
+                  {selectedScenario && directTriageScenarios.includes(selectedScenario) && (
+                    <div className="rounded-lg border border-accent/30 bg-accent/10 p-2 mb-3">
+                      <p className="text-[11px] text-accent font-medium">
+                        ⚡ This submission has been auto-routed to IT & AI Studio for direct support.
+                      </p>
+                    </div>
+                  )}
                   <div className="rounded-lg border border-sidebar-border bg-sidebar p-3 text-left">
                     <div className="flex items-center gap-2 mb-1">
                       <MessageSquare className="w-4 h-4 text-primary" />
@@ -880,7 +617,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
           </div>
 
           {/* Input Bar */}
-          {(isViewing || !conversationDone || promptApproved) && (
+          {(isViewing || (!conversationDone) || (conversationDone && evaluationReady)) && !submitted && (
             <div className="px-3 pb-3 pt-2 border-t border-sidebar-border shrink-0">
               <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
                 <input
@@ -889,29 +626,25 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       if (isViewing) handleRefinement(input);
-                      else if (promptApproved && (wireframeReady || businessPlanReady)) handleRefinement(input);
+                      else if (conversationDone && evaluationReady) handleRefinement(input);
                       else if (!conversationDone) handleSend();
                     }
                   }}
                   placeholder={
                     isViewing
-                      ? canvasView === "business-plan"
-                        ? "Describe changes to the business plan..."
-                        : "Describe changes to the wireframe..."
-                      : promptApproved && (wireframeReady || businessPlanReady)
-                      ? canvasView === "business-plan"
-                        ? "Describe changes to the business plan..."
-                        : "Describe changes to the wireframe..."
+                      ? "Describe changes to the evaluation..."
+                      : conversationDone && evaluationReady
+                      ? "Request changes to the evaluation..."
                       : hasStarted
                       ? "Type your answer..."
                       : "Describe your idea..."
                   }
                   className="flex-1 bg-transparent outline-none text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/40"
-                  disabled={isGeneratingWireframe || isGeneratingBusinessPlan}
+                  disabled={isGeneratingEvaluation}
                 />
                 <button
                   onClick={toggleListening}
-                  disabled={isGeneratingWireframe}
+                  disabled={isGeneratingEvaluation}
                   className={`p-2 rounded-lg transition-colors ${isListening ? "bg-destructive text-destructive-foreground animate-pulse" : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent"}`}
                   title={isListening ? "Stop listening" : "Voice input"}
                 >
@@ -924,10 +657,10 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                       setIsListening(false);
                     }
                     if (isViewing) handleRefinement(input);
-                    else if (promptApproved && (wireframeReady || businessPlanReady)) handleRefinement(input);
+                    else if (conversationDone && evaluationReady) handleRefinement(input);
                     else if (!conversationDone) handleSend();
                   }}
-                  disabled={!input.trim() || isTyping || isGeneratingWireframe || isGeneratingBusinessPlan}
+                  disabled={!input.trim() || isTyping || isGeneratingEvaluation}
                   className="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
@@ -948,122 +681,226 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               {/* Canvas toolbar */}
               <div className="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
                 <div className="flex items-center gap-2">
-                  {canvasView === "wireframe" ? (
+                  {canvasView === "recommendations" ? (
                     <>
-                      <Eye className="w-4 h-4 text-accent" />
-                      <h3 className="font-semibold text-sm text-foreground">Wireframe Preview</h3>
+                      <Package className="w-4 h-4 text-secondary" />
+                      <h3 className="font-semibold text-sm text-foreground">Existing Solutions</h3>
                     </>
                   ) : (
                     <>
                       <FileText className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-foreground">Business Plan</h3>
+                      <h3 className="font-semibold text-sm text-foreground">Evaluation Report</h3>
                     </>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  {canvasView === "wireframe" && isGeneratingWireframe && (
+                  {canvasView === "evaluation" && isGeneratingEvaluation && (
                     <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Loader2 className="w-3 h-3 animate-spin" />
                       Generating...
                     </span>
                   )}
-                  {canvasView === "business-plan" && isGeneratingBusinessPlan && (
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      Generating...
-                    </span>
-                  )}
-                  <button
-                    onClick={() => {
-                      const html = canvasView === "wireframe"
-                        ? (wireframeHtml || viewingIdea?.wireframeHtml || "")
-                        : (businessPlanHtml || viewingIdea?.businessPlanHtml || "");
-                      if (html) {
-                        const blob = new Blob([html], { type: "text/html" });
-                        window.open(URL.createObjectURL(blob), "_blank");
-                      }
-                    }}
-                    className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    New Tab
-                  </button>
-                  {canvasView === "wireframe" && wireframeReady && !submitted && !isViewing && (
+                  {canvasView === "evaluation" && evaluationReady && (
                     <button
-                      onClick={() => streamWireframe(generatedPrompt, undefined, undefined, 0, undefined, wireframeTargetIdRef.current || draftIdeaId || undefined)}
+                      onClick={() => {
+                        const html = evaluationHtml || viewingIdea?.businessPlanHtml || "";
+                        if (html) {
+                          const blob = new Blob([html], { type: "text/html" });
+                          window.open(URL.createObjectURL(blob), "_blank");
+                        }
+                      }}
                       className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                     >
-                      <RefreshCw className="w-3 h-3" />
-                      Regenerate
+                      <ExternalLink className="w-3 h-3" />
+                      New Tab
                     </button>
                   )}
                 </div>
               </div>
 
               {/* Canvas content */}
-              <div className="flex-1 relative">
-                {canvasView === "wireframe" && (
-                  <>
-                    {isGeneratingWireframe && (
-                      <div className="absolute inset-0 z-10 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-                        <WireframeLoader estimated={isRefinement ? 20 : 35} />
-                      </div>
-                    )}
-                    {(wireframeHtml || (isViewing && viewingIdea?.wireframeHtml)) ? (
-                      <iframe
-                        srcDoc={wireframeHtml || viewingIdea?.wireframeHtml}
-                        title="Wireframe Preview"
-                        className="w-full h-full border-0"
-                        sandbox="allow-scripts allow-forms allow-modals allow-popups"
-                      />
+              <div className="flex-1 relative overflow-auto">
+                {canvasView === "recommendations" && (
+                  <div className="p-6 space-y-4">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-bold text-foreground mb-1">Recommended Existing Solutions</h3>
+                      <p className="text-sm text-muted-foreground">
+                        These solutions may already address your needs. Explore them or proceed with your new submission.
+                      </p>
+                    </div>
+
+                    {recommendations.length > 0 ? (
+                      <>
+                        {recommendations.map((acc) => (
+                          <motion.div
+                            key={acc.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="rounded-lg border border-border bg-card p-4 hover:shadow-md transition-shadow"
+                          >
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h4 className="font-semibold text-foreground text-sm">{acc.name}</h4>
+                                <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1 ${
+                                  acc.status === "active" ? "bg-accent/10 text-accent" :
+                                  acc.status === "beta" ? "bg-secondary/10 text-secondary" :
+                                  "bg-muted text-muted-foreground"
+                                }`}>
+                                  {acc.status.toUpperCase()} • {acc.category.replace("-", " ").toUpperCase()}
+                                </span>
+                              </div>
+                              <button
+                                onClick={() => setSelectedAccelerator(acc)}
+                                className="text-xs font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors shrink-0"
+                              >
+                                Open <ArrowRight className="w-3 h-3" />
+                              </button>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">{acc.description}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {acc.tags.slice(0, 4).map((tag) => (
+                                <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="mt-2 pt-2 border-t border-border">
+                              <p className="text-[10px] text-muted-foreground font-medium mb-1">Key Use Cases:</p>
+                              <ul className="text-[10px] text-muted-foreground space-y-0.5">
+                                {acc.useCases.map((uc) => (
+                                  <li key={uc}>• {uc}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </motion.div>
+                        ))}
+
+                        {!recommendationsDismissed && (
+                          <div className="flex gap-3 pt-2">
+                            <button
+                              onClick={() => handleProceedWithSubmission()}
+                              className="flex-1 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+                            >
+                              <Rocket className="w-4 h-4" />
+                              Proceed with New Submission
+                            </button>
+                          </div>
+                        )}
+                      </>
                     ) : (
-                      <div className="h-full flex items-center justify-center">
-                        <WireframeLoader />
+                      <div className="text-center py-12">
+                        <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                        <p className="text-sm text-muted-foreground">No matching solutions found.</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">Your idea will be evaluated as a new submission.</p>
                       </div>
                     )}
-                  </>
+
+                    {/* Selected accelerator detail */}
+                    {selectedAccelerator && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="fixed inset-0 z-50 bg-foreground/50 flex items-center justify-center p-4"
+                        onClick={() => setSelectedAccelerator(null)}
+                      >
+                        <motion.div
+                          initial={{ scale: 0.95 }}
+                          animate={{ scale: 1 }}
+                          className="bg-card rounded-xl shadow-xl max-w-lg w-full p-6 relative"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={() => setSelectedAccelerator(null)}
+                            className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                          <h3 className="text-lg font-bold text-foreground mb-1">{selectedAccelerator.name}</h3>
+                          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mb-3 ${
+                            selectedAccelerator.status === "active" ? "bg-accent/10 text-accent" :
+                            selectedAccelerator.status === "beta" ? "bg-secondary/10 text-secondary" :
+                            "bg-muted text-muted-foreground"
+                          }`}>
+                            {selectedAccelerator.status.toUpperCase()} • {selectedAccelerator.category.replace("-", " ").toUpperCase()}
+                          </span>
+                          <p className="text-sm text-foreground/80 mb-4">{selectedAccelerator.description}</p>
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold text-foreground mb-2">Team: {selectedAccelerator.team}</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {selectedAccelerator.tags.map((tag) => (
+                                <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{tag}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-foreground mb-2">Use Cases</p>
+                            <ul className="space-y-1">
+                              {selectedAccelerator.useCases.map((uc) => (
+                                <li key={uc} className="text-sm text-muted-foreground flex items-start gap-2">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+                                  {uc}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </div>
                 )}
-                {canvasView === "business-plan" && (
+
+                {canvasView === "evaluation" && (
                   <>
-                    {isGeneratingBusinessPlan ? (
+                    {isGeneratingEvaluation ? (
                       <div className="h-full flex items-center justify-center">
-                        <div className="text-center space-y-3">
-                          <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto" />
-                          <p className="text-sm text-muted-foreground">Generating business plan...</p>
+                        <div className="text-center space-y-4">
+                          <div className="relative w-16 h-16 mx-auto">
+                            <svg className="absolute inset-0 w-16 h-16 animate-spin" style={{ animationDuration: '2s' }} viewBox="0 0 64 64">
+                              <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--primary) / 0.15)" strokeWidth="3" />
+                              <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeDasharray="176" strokeDashoffset="132" />
+                            </svg>
+                            <div className="absolute inset-2 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">Generating evaluation report...</p>
+                            <p className="text-xs text-muted-foreground mt-1">Scoring and analyzing your submission</p>
+                          </div>
                         </div>
                       </div>
-                    ) : (businessPlanHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
+                    ) : (evaluationHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
                       <iframe
-                        srcDoc={businessPlanHtml || viewingIdea?.businessPlanHtml}
-                        title="Business Plan"
+                        srcDoc={evaluationHtml || viewingIdea?.businessPlanHtml}
+                        title="Evaluation Report"
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">Business plan not yet generated.</p>
+                        <p className="text-sm text-muted-foreground">Evaluation report will appear here after you proceed.</p>
                       </div>
                     )}
                   </>
                 )}
               </div>
 
-              {/* Submit / Actions bar */}
-              {wireframeReady && !submitted && !isViewing && (
+              {/* Submit bar */}
+              {evaluationReady && !submitted && !isViewing && (
                 <div className="px-4 py-3 border-t border-border shrink-0 flex gap-3">
                   <button
                     onClick={handleSubmit}
-                    className="flex-1 py-2.5 rounded-lg bg-secondary text-white font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
                   >
                     <CheckCircle2 className="w-4 h-4" />
-                    Approve & Submit
+                    Submit for Review
                   </button>
                   <button
-                    onClick={() => streamWireframe(generatedPrompt, undefined, undefined, 0, undefined, wireframeTargetIdRef.current || draftIdeaId || undefined)}
+                    onClick={() => generateEvaluation(evaluationTargetIdRef.current || draftIdeaId || undefined)}
                     className="py-2.5 px-5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-2"
                   >
                     <RefreshCw className="w-4 h-4" />
-                    Try Again
+                    Regenerate
                   </button>
                 </div>
               )}
@@ -1084,7 +921,6 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               )}
             </div>
           ) : (
-            /* Empty canvas placeholder */
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
@@ -1092,7 +928,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
                 <p className="text-sm text-muted-foreground max-w-xs">
-                  Your wireframe and business plan will appear here once generated.
+                  Recommendations and your evaluation report will appear here.
                 </p>
               </div>
             </div>
