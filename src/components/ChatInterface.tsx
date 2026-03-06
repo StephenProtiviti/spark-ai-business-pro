@@ -527,7 +527,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
                 <button
                   onClick={() => handleProceedWithSubmission()}
-                  className="flex items-center gap-2 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
+                  className="flex items-center gap-2 rounded-lg bg-secondary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
                 >
                   <Rocket className="w-4 h-4" />
                   Proceed with New Submission
@@ -628,78 +628,84 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
             )}
           </div>
 
-          {/* Input Bar */}
-          {(isViewing || (!conversationDone) || (conversationDone && evaluationReady)) && !submitted && (
-            <div className="px-3 pb-3 pt-2 border-t border-sidebar-border shrink-0">
-              <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      if (isViewing) handleRefinement(input);
-                      else if (conversationDone && evaluationReady) handleRefinement(input);
-                      else if (!conversationDone) handleSend();
-                    }
-                  }}
-                  placeholder={
-                    isViewing
-                      ? "Describe changes to the evaluation..."
-                      : conversationDone && evaluationReady
-                      ? "Request changes to the evaluation..."
-                      : hasStarted
-                      ? "Type your answer..."
-                      : "Describe your idea..."
-                  }
-                  className="flex-1 bg-transparent outline-none text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/40"
-                  disabled={isGeneratingEvaluation}
-                />
-                <button
-                  onClick={toggleListening}
-                  disabled={isGeneratingEvaluation}
-                  className={`p-2 rounded-lg transition-colors ${isListening ? "bg-destructive text-destructive-foreground animate-pulse" : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent"}`}
-                  title={isListening ? "Stop listening" : "Voice input"}
-                >
-                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </button>
-                <button
-                  onClick={() => {
-                    if (isListening && recognitionRef.current) {
-                      recognitionRef.current.stop();
-                      setIsListening(false);
-                    }
+          {/* Submit and Regenerate buttons above chat */}
+          {evaluationReady && !submitted && !isViewing && (
+            <div className="flex gap-2 px-3 pt-2 border-t border-sidebar-border shrink-0">
+              <button
+                onClick={handleSubmit}
+                className="flex-1 py-2 rounded-lg bg-secondary text-primary-foreground font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Submit for Review
+              </button>
+              <button
+                onClick={() => generateEvaluation(evaluationTargetIdRef.current || draftIdeaId || undefined)}
+                className="py-2 px-4 rounded-lg border border-sidebar-border text-sidebar-foreground font-medium text-sm hover:bg-sidebar-accent transition-colors flex items-center justify-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Regenerate
+              </button>
+            </div>
+          )}
+
+          {/* Input Bar — always visible */}
+          <div className="px-3 pb-3 pt-2 border-t border-sidebar-border shrink-0">
+            <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (submitted) { resetChat(); return; }
                     if (isViewing) handleRefinement(input);
                     else if (conversationDone && evaluationReady) handleRefinement(input);
                     else if (!conversationDone) handleSend();
-                  }}
-                  disabled={!input.trim() || isTyping || isGeneratingEvaluation}
-                  className="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-               </div>
-              
-              {/* Submit and Regenerate buttons */}
-              {evaluationReady && !submitted && !isViewing && (
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={handleSubmit}
-                    className="flex-1 py-2 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    Submit for Review
-                  </button>
-                  <button
-                    onClick={() => generateEvaluation(evaluationTargetIdRef.current || draftIdeaId || undefined)}
-                    className="py-2 px-4 rounded-lg border border-sidebar-border text-sidebar-foreground font-medium text-sm hover:bg-sidebar-accent transition-colors flex items-center justify-center gap-2"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    Regenerate
-                  </button>
-                </div>
-              )}
+                  }
+                }}
+                placeholder={
+                  submitted
+                    ? "Start a new idea..."
+                    : isGeneratingEvaluation
+                    ? "Generating evaluation..."
+                    : isViewing
+                    ? "Describe changes to the evaluation..."
+                    : conversationDone && evaluationReady
+                    ? "Request changes to the evaluation..."
+                    : conversationDone && !evaluationReady
+                    ? "Generating evaluation report..."
+                    : hasStarted
+                    ? "Type your answer..."
+                    : "Describe your idea..."
+                }
+                className="flex-1 bg-transparent outline-none text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/40"
+                disabled={isGeneratingEvaluation || (conversationDone && !evaluationReady && !isViewing)}
+              />
+              <button
+                onClick={toggleListening}
+                disabled={isGeneratingEvaluation || submitted}
+                className={`p-2 rounded-lg transition-colors ${isListening ? "bg-destructive text-destructive-foreground animate-pulse" : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent"}`}
+                title={isListening ? "Stop listening" : "Voice input"}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+              <button
+                onClick={() => {
+                  if (isListening && recognitionRef.current) {
+                    recognitionRef.current.stop();
+                    setIsListening(false);
+                  }
+                  if (submitted) { resetChat(); return; }
+                  if (isViewing) handleRefinement(input);
+                  else if (conversationDone && evaluationReady) handleRefinement(input);
+                  else if (!conversationDone) handleSend();
+                }}
+                disabled={(!input.trim() && !submitted) || isTyping || isGeneratingEvaluation}
+                className="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <Send className="w-4 h-4" />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </ResizablePanel>
 
