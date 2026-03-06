@@ -15,9 +15,7 @@ interface Message {
 
 // ── Intake Scenarios ──
 const intakeScenarios = [
-  { label: "AI Studio Support", icon: Cpu, description: "POC showcase, build support, or client visit" },
   { label: "Agent Development", icon: Bot, description: "Internal ops, client delivery, or Copilot agents" },
-  { label: "Enabler Development", icon: Wrench, description: "Build on Atlas or other platforms" },
   { label: "Automation Support", icon: Workflow, description: "Workflow or process automation" },
   { label: "Generic Idea", icon: Lightbulb, description: "Other innovation ideas" },
 ];
