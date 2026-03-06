@@ -677,7 +677,27 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 >
                   <Send className="w-4 h-4" />
                 </button>
-              </div>
+               </div>
+              
+              {/* Submit and Regenerate buttons */}
+              {evaluationReady && !submitted && !isViewing && (
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={handleSubmit}
+                    className="flex-1 py-2 rounded-lg bg-orange-500 text-white font-semibold text-sm hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    Submit for Review
+                  </button>
+                  <button
+                    onClick={() => generateEvaluation(evaluationTargetIdRef.current || draftIdeaId || undefined)}
+                    className="py-2 px-4 rounded-lg border border-sidebar-border text-sidebar-foreground font-medium text-sm hover:bg-sidebar-accent transition-colors flex items-center justify-center gap-2"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    Regenerate
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
