@@ -527,7 +527,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
                 <button
                   onClick={() => handleProceedWithSubmission()}
-                  className="flex items-center gap-2 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
+                  className="flex items-center gap-2 rounded-lg bg-secondary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
                 >
                   <Rocket className="w-4 h-4" />
                   Proceed with New Submission
