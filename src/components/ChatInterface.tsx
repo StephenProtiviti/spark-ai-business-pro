@@ -656,16 +656,13 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    if (submitted) { resetChat(); return; }
                     if (isViewing) handleRefinement(input);
                     else if (conversationDone && evaluationReady) handleRefinement(input);
                     else if (!conversationDone) handleSend();
                   }
                 }}
                 placeholder={
-                  submitted
-                    ? "Start a new idea..."
-                    : isGeneratingEvaluation
+                  isGeneratingEvaluation
                     ? "Generating evaluation..."
                     : isViewing
                     ? "Describe changes to the evaluation..."
