@@ -931,25 +931,6 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 )}
               </div>
 
-              {/* Submit bar */}
-              {evaluationReady && !submitted && !isViewing && (
-                <div className="px-4 py-3 border-t border-border shrink-0 flex gap-3">
-                  <button
-                    onClick={handleSubmit}
-                    className="flex-1 py-2.5 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    Submit for Review
-                  </button>
-                  <button
-                    onClick={() => generateEvaluation(evaluationTargetIdRef.current || draftIdeaId || undefined)}
-                    className="py-2.5 px-5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-2"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    Regenerate
-                  </button>
-                </div>
-              )}
 
               {/* Assigned member */}
               {((submittedIdea && submitted) || (isViewing && viewingIdea)) && (
