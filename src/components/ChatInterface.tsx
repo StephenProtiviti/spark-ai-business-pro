@@ -16,6 +16,7 @@ interface Message {
 // ── Intake Scenarios ──
 const intakeScenarios = [
   { label: "Agent Development", icon: Bot, description: "Internal ops, client delivery, or Copilot agents" },
+  { label: "Enabler Development", icon: Package, description: "Build tools, capabilities, or platforms" },
   { label: "Automation Support", icon: Workflow, description: "Workflow or process automation" },
   { label: "Generic Idea", icon: Lightbulb, description: "Other innovation ideas" },
 ];
