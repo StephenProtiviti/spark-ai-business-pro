@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X } from "lucide-react";
+import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X, Download } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import ReactMarkdown from "react-markdown";
 import { useIdeas, RecentIdea } from "@/contexts/IdeasContext";
@@ -714,19 +714,44 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                     </span>
                   )}
                   {canvasView === "evaluation" && evaluationReady && (
-                    <button
-                      onClick={() => {
-                        const html = evaluationHtml || viewingIdea?.businessPlanHtml || "";
-                        if (html) {
-                          const blob = new Blob([html], { type: "text/html" });
-                          window.open(URL.createObjectURL(blob), "_blank");
-                        }
-                      }}
-                      className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      New Tab
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const html = evaluationHtml || viewingIdea?.businessPlanHtml || "";
+                          if (html) {
+                            const blob = new Blob([html], { type: "text/html" });
+                            window.open(URL.createObjectURL(blob), "_blank");
+                          }
+                        }}
+                        className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        New Tab
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const html = evaluationHtml || viewingIdea?.businessPlanHtml || "";
+                          if (html) {
+                            const { default: html2pdf } = await import("html2pdf.js");
+                            const container = document.createElement("div");
+                            container.innerHTML = html;
+                            document.body.appendChild(container);
+                            await html2pdf().set({
+                              margin: 0.5,
+                              filename: `${recentIdeas.find(i => i.id === draftIdeaId)?.title || viewingIdea?.title || "evaluation-report"}.pdf`,
+                              image: { type: "jpeg", quality: 0.98 },
+                              html2canvas: { scale: 2 },
+                              jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+                            }).from(container).save();
+                            document.body.removeChild(container);
+                          }
+                        }}
+                        className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                      >
+                        <Download className="w-3 h-3" />
+                        Download PDF
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
