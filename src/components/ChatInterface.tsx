@@ -629,7 +629,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
           </div>
 
           {/* Submit and Regenerate buttons above chat */}
-          {evaluationReady && !submitted && !isViewing && (
+          {evaluationReady && !isViewing && (
             <div className="flex gap-2 px-3 pt-2 border-t border-sidebar-border shrink-0">
               <button
                 onClick={handleSubmit}
@@ -656,16 +656,13 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    if (submitted) { resetChat(); return; }
                     if (isViewing) handleRefinement(input);
                     else if (conversationDone && evaluationReady) handleRefinement(input);
                     else if (!conversationDone) handleSend();
                   }
                 }}
                 placeholder={
-                  submitted
-                    ? "Start a new idea..."
-                    : isGeneratingEvaluation
+                  isGeneratingEvaluation
                     ? "Generating evaluation..."
                     : isViewing
                     ? "Describe changes to the evaluation..."
@@ -694,12 +691,11 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                     recognitionRef.current.stop();
                     setIsListening(false);
                   }
-                  if (submitted) { resetChat(); return; }
                   if (isViewing) handleRefinement(input);
                   else if (conversationDone && evaluationReady) handleRefinement(input);
                   else if (!conversationDone) handleSend();
                 }}
-                disabled={(!input.trim() && !submitted) || isTyping || isGeneratingEvaluation}
+                disabled={!input.trim() || isTyping || isGeneratingEvaluation}
                 className="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
