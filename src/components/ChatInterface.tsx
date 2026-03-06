@@ -628,8 +628,8 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
             )}
           </div>
 
-          {/* Submit and Regenerate buttons above chat */}
-          {evaluationReady && !isViewing && (
+{/* Submit and Regenerate buttons above chat */}
+          {evaluationReady && !isViewing && !submitted && (
             <div className="flex gap-2 px-3 pt-2 border-t border-sidebar-border shrink-0">
               <button
                 onClick={handleSubmit}
