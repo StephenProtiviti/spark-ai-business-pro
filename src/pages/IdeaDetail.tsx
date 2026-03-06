@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, ThumbsUp, AlertTriangle, Tag, MessageSquare, Eye, ExternalLink, FileText } from "lucide-react";
+import { ArrowLeft, ThumbsUp, AlertTriangle, Tag, MessageSquare, Eye, ExternalLink, FileText, Download } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import NexusScoreBadge from "@/components/NexusScoreBadge";
 import MermaidDiagram from "@/components/MermaidDiagram";
@@ -113,7 +113,21 @@ const IdeaDetail = () => {
 
                 {hasWireframe && (
                   <TabsContent value="wireframe">
-                    <div className="flex items-center justify-end mb-2">
+                    <div className="flex items-center justify-end gap-2 mb-2">
+                      <button
+                        onClick={async () => {
+                          const { default: html2pdf } = await import("html2pdf.js");
+                          const container = document.createElement("div");
+                          container.innerHTML = recentIdea.wireframeHtml!;
+                          document.body.appendChild(container);
+                          await html2pdf().set({ margin: 0.5, filename: `${recentIdea.title}-wireframe.pdf`, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: "in", format: "a4", orientation: "portrait" } }).from(container).save();
+                          document.body.removeChild(container);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border bg-card text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download PDF
+                      </button>
                       <button
                         onClick={() => handleOpenInNewWindow(recentIdea.wireframeHtml!)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border bg-card text-foreground hover:bg-muted transition-colors"
@@ -136,7 +150,21 @@ const IdeaDetail = () => {
 
                 {hasBusinessPlan && (
                   <TabsContent value="business-plan">
-                    <div className="flex items-center justify-end mb-2">
+                    <div className="flex items-center justify-end gap-2 mb-2">
+                      <button
+                        onClick={async () => {
+                          const { default: html2pdf } = await import("html2pdf.js");
+                          const container = document.createElement("div");
+                          container.innerHTML = recentIdea.businessPlanHtml!;
+                          document.body.appendChild(container);
+                          await html2pdf().set({ margin: 0.5, filename: `${recentIdea.title}-business-plan.pdf`, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: "in", format: "a4", orientation: "portrait" } }).from(container).save();
+                          document.body.removeChild(container);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border bg-card text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download PDF
+                      </button>
                       <button
                         onClick={() => handleOpenInNewWindow(recentIdea.businessPlanHtml!)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border bg-card text-foreground hover:bg-muted transition-colors"
