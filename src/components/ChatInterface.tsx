@@ -282,7 +282,11 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     let scenario = selectedScenario;
     if (isFirstMessage) {
       // Map the selection through the decision tree to a scenario
-      const mappedScenario = selectionToScenario[value] || null;
+      // Category-aware override: "Other" under Client Delivery uses "Client Other"
+      let mappedScenario = selectionToScenario[value] || null;
+      if (value === "Other" && ideaCategory === "Client Delivery") {
+        mappedScenario = "Client Other";
+      }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
