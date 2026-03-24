@@ -564,8 +564,52 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               </motion.div>
             )}
 
-            {/* Welcome Screen */}
-            {!isViewing && !hasStarted && !isTyping && (
+            {/* Welcome Screen — Step 1: Category Selection */}
+            {!isViewing && !hasStarted && !isTyping && !ideaCategory && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center py-8"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What type of idea is this?</h2>
+                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
+                  Select a category to get started.
+                </p>
+                <div className="grid grid-cols-1 gap-3 w-full">
+                  <button
+                    onClick={() => setIdeaCategory("Client Delivery")}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <TrendingUp className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Client Delivery Idea</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Solutions, tools, or innovations for client engagements</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setIdeaCategory("Internal Operations")}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Shield className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Internal Protiviti Operations Idea</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Improve internal processes, tools, or workflows</span>
+                    </div>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Welcome Screen — Step 2: Scenario Selection */}
+            {!isViewing && !hasStarted && !isTyping && ideaCategory && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -577,7 +621,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 </div>
                 <h2 className="text-lg font-bold text-sidebar-foreground mb-1">How can we help?</h2>
                 <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  Select your scenario or describe your idea directly.
+                  <span className="font-medium text-primary">{ideaCategory}</span> — Select your scenario or describe your idea directly.
                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {intakeScenarios.map(({ label, icon: Icon, description }) => (
@@ -596,6 +640,12 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                     </button>
                   ))}
                 </div>
+                <button
+                  onClick={() => setIdeaCategory(null)}
+                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+                >
+                  ← Back to category selection
+                </button>
               </motion.div>
             )}
 
