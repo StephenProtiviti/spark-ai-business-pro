@@ -201,6 +201,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setIsGeneratingEvaluation(false);
     setEvaluationReady(false);
     setDraftIdeaId(null);
+    setIdeaCategory(null);
     evaluationTargetIdRef.current = null;
   };
 
