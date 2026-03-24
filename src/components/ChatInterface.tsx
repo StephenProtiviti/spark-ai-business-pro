@@ -13,13 +13,54 @@ interface Message {
   content: string;
 }
 
-// ── Intake Scenarios ──
-const intakeScenarios = [
-  { label: "Agent Development", icon: Bot, description: "Internal ops, client delivery, or Copilot agents" },
-  { label: "Enabler Development", icon: Package, description: "Build tools, capabilities, or platforms" },
-  { label: "Automation Support", icon: Workflow, description: "Workflow or process automation" },
-  { label: "Generic Idea", icon: Lightbulb, description: "Other innovation ideas" },
+// ── Decision Tree Areas ──
+const clientAreas = [
+  { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Other", icon: Lightbulb, description: "Other client delivery ideas" },
 ];
+
+const internalAreas = [
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Other", icon: Lightbulb, description: "Other internal operations ideas" },
+];
+
+const subAreas: Record<string, { label: string; icon: any; description: string }[]> = {
+  "AI Studio": [
+    { label: "Client Workshop", icon: TrendingUp, description: "Schedule or run a client workshop" },
+    { label: "Prototype Development", icon: Wrench, description: "Build a proof of concept or prototype" },
+    { label: "Idea for an AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
+  ],
+  "Protiviti Atlas": [
+    { label: "Use Case Development", icon: Lightbulb, description: "Develop a new use case on Atlas" },
+    { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Atlas API" },
+    { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Provision an existing Atlas API" },
+  ],
+  "Custom Agent": [
+    { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
+    { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
+    { label: "Explore Existing Tools (ProGPT & Power Automate)", icon: Cpu, description: "Explore ProGPT, Power Automate, and other tools" },
+  ],
+};
+
+// Map final selections to scenario question keys
+const selectionToScenario: Record<string, string> = {
+  "Client Workshop": "AI Studio Support",
+  "Prototype Development": "AI Studio Support",
+  "Idea for an AI Showcase": "AI Studio Support",
+  "Use Case Development": "Enabler Development",
+  "New Protiviti Atlas API Provisioning": "Enabler Development",
+  "Existing Protiviti Atlas API Provisioning": "Enabler Development",
+  "New Agent Development": "Agent Development",
+  "Support in Promoting & Publishing Enablers": "Enabler Development",
+  "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
+  "Support in Promoting Enablers": "Enabler Development",
+  "Other": "Generic Idea",
+};
 
 // ── Scenario-Specific Follow-Up Questions ──
 const scenarioQuestions: Record<string, { greeting: string; questions: string[] }> = {
@@ -114,6 +155,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   evaluationHtmlRef.current = evaluationHtml;
   const evaluationTargetIdRef = useRef<string | null>(null);
   const [ideaCategory, setIdeaCategory] = useState<string | null>(null);
+  const [ideaArea, setIdeaArea] = useState<string | null>(null);
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
@@ -202,6 +244,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setEvaluationReady(false);
     setDraftIdeaId(null);
     setIdeaCategory(null);
+    setIdeaArea(null);
     evaluationTargetIdRef.current = null;
   };
 
@@ -229,7 +272,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
 
     let scenario = selectedScenario;
     if (isFirstMessage) {
-      const matchedScenario = scenarioQuestions[value] ? value : null;
+      // Map the selection through the decision tree to a scenario
+      const mappedScenario = selectionToScenario[value] || null;
+      const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
     }
@@ -608,8 +653,8 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               </motion.div>
             )}
 
-            {/* Welcome Screen — Step 2: Scenario Selection */}
-            {!isViewing && !hasStarted && !isTyping && ideaCategory && (
+            {/* Welcome Screen — Step 2: Area Selection */}
+            {!isViewing && !hasStarted && !isTyping && ideaCategory && !ideaArea && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -619,12 +664,66 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">How can we help?</h2>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What area best aligns with your idea?</h2>
                 <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory}</span> — Select your scenario or describe your idea directly.
+                  <span className="font-medium text-primary">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
-                  {intakeScenarios.map(({ label, icon: Icon, description }) => (
+                  {(ideaCategory === "Client Delivery" ? clientAreas : internalAreas).map(({ label, icon: Icon, description }) => {
+                    const hasSubArea = !!subAreas[label];
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => {
+                          if (hasSubArea) {
+                            setIdeaArea(label);
+                          } else {
+                            // Terminal selection — start conversation
+                            setIdeaArea(label);
+                            handleSend(label);
+                          }
+                        }}
+                        className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-medium text-sidebar-foreground block">{label}</span>
+                          <span className="text-[10px] text-sidebar-foreground/50 leading-tight">{description}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  onClick={() => setIdeaCategory(null)}
+                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+                >
+                  ← Back to category selection
+                </button>
+              </motion.div>
+            )}
+
+            {/* Welcome Screen — Step 3: Sub-Area Selection */}
+            {!isViewing && !hasStarted && !isTyping && ideaCategory && ideaArea && subAreas[ideaArea] && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center py-8"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">
+                  {ideaArea === "AI Studio" ? "Is this a..." : ideaArea === "Protiviti Atlas" ? "Is this for..." : "Is this..."}
+                </h2>
+                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
+                  <span className="font-medium text-primary">{ideaCategory}</span> → <span className="font-medium text-primary">{ideaArea}</span>
+                </p>
+                <div className="grid grid-cols-1 gap-2 w-full">
+                  {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
@@ -641,10 +740,10 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setIdeaCategory(null)}
+                  onClick={() => setIdeaArea(null)}
                   className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
                 >
-                  ← Back to category selection
+                  ← Back to area selection
                 </button>
               </motion.div>
             )}
