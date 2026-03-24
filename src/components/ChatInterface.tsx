@@ -59,7 +59,7 @@ const selectionToScenario: Record<string, string> = {
   "Support in Promoting & Publishing Enablers": "Enabler Development",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
-  "Other": "Generic Idea",
+  "Other": "Generic Idea", // fallback; overridden by category-aware logic below
 };
 
 // ── Scenario-Specific Follow-Up Questions ──
@@ -112,6 +112,15 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What does success look like?** Think about the measurable outcome — a metric, milestone, or before/after proof.",
       "**What resources or support would you need?** Teams, technology, budget, or expertise.",
       "Last one: **What's the business value?** Revenue impact, cost savings, competitive advantage, or strategic positioning?",
+    ],
+  },
+  "Client Other": {
+    greeting: "Great — let's capture your idea! I'll walk you through a few consolidated questions to gather everything we need for the review board.",
+    questions: [
+      "**Tell us about your idea.** What's the name, what problem does it solve, and what needs does it fulfill? Give us the elevator pitch.",
+      "**Proposed solution & expected outcomes.** Describe your proposed approach and what success looks like — what changes for the end user when this is delivered?",
+      "**Stakeholders & target users.** Who is the end user of this idea? Do you have a potential MD sponsor? Which **C-suite solution teams** and **industry teams** does this apply to?",
+      "Last one: **Market context & validation.** Are there any competitors or similar solutions? Do you have any client validation (and which client)? Roughly how many end users would be impacted?",
     ],
   },
 };
@@ -273,7 +282,11 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     let scenario = selectedScenario;
     if (isFirstMessage) {
       // Map the selection through the decision tree to a scenario
-      const mappedScenario = selectionToScenario[value] || null;
+      // Category-aware override: "Other" under Client Delivery uses "Client Other"
+      let mappedScenario = selectionToScenario[value] || null;
+      if (value === "Other" && ideaCategory === "Client Delivery") {
+        mappedScenario = "Client Other";
+      }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
