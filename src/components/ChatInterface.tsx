@@ -114,6 +114,15 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **What's the business value?** Revenue impact, cost savings, competitive advantage, or strategic positioning?",
     ],
   },
+  "Client Other": {
+    greeting: "Great — let's capture your idea! I'll walk you through a few consolidated questions to gather everything we need for the review board.",
+    questions: [
+      "**Tell us about your idea.** What's the name, what problem does it solve, and what needs does it fulfill? Give us the elevator pitch.",
+      "**Proposed solution & expected outcomes.** Describe your proposed approach and what success looks like — what changes for the end user when this is delivered?",
+      "**Stakeholders & target users.** Who is the end user of this idea? Do you have a potential MD sponsor? Which **C-suite solution teams** and **industry teams** does this apply to?",
+      "Last one: **Market context & validation.** Are there any competitors or similar solutions? Do you have any client validation (and which client)? Roughly how many end users would be impacted?",
+    ],
+  },
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
