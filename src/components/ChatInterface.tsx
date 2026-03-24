@@ -272,7 +272,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
 
     let scenario = selectedScenario;
     if (isFirstMessage) {
-      const matchedScenario = scenarioQuestions[value] ? value : null;
+      // Map the selection through the decision tree to a scenario
+      const mappedScenario = selectionToScenario[value] || null;
+      const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
     }
