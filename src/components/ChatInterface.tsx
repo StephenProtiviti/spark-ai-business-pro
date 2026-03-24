@@ -653,8 +653,8 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               </motion.div>
             )}
 
-            {/* Welcome Screen — Step 2: Scenario Selection */}
-            {!isViewing && !hasStarted && !isTyping && ideaCategory && (
+            {/* Welcome Screen — Step 2: Area Selection */}
+            {!isViewing && !hasStarted && !isTyping && ideaCategory && !ideaArea && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -664,12 +664,66 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">How can we help?</h2>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What area best aligns with your idea?</h2>
                 <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory}</span> — Select your scenario or describe your idea directly.
+                  <span className="font-medium text-primary">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
-                  {intakeScenarios.map(({ label, icon: Icon, description }) => (
+                  {(ideaCategory === "Client Delivery" ? clientAreas : internalAreas).map(({ label, icon: Icon, description }) => {
+                    const hasSubArea = !!subAreas[label];
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => {
+                          if (hasSubArea) {
+                            setIdeaArea(label);
+                          } else {
+                            // Terminal selection — start conversation
+                            setIdeaArea(label);
+                            handleSend(label);
+                          }
+                        }}
+                        className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-medium text-sidebar-foreground block">{label}</span>
+                          <span className="text-[10px] text-sidebar-foreground/50 leading-tight">{description}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  onClick={() => setIdeaCategory(null)}
+                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
+                >
+                  ← Back to category selection
+                </button>
+              </motion.div>
+            )}
+
+            {/* Welcome Screen — Step 3: Sub-Area Selection */}
+            {!isViewing && !hasStarted && !isTyping && ideaCategory && ideaArea && subAreas[ideaArea] && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center py-8"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">
+                  {ideaArea === "AI Studio" ? "Is this a..." : ideaArea === "Protiviti Atlas" ? "Is this for..." : "Is this..."}
+                </h2>
+                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
+                  <span className="font-medium text-primary">{ideaCategory}</span> → <span className="font-medium text-primary">{ideaArea}</span>
+                </p>
+                <div className="grid grid-cols-1 gap-2 w-full">
+                  {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
@@ -686,10 +740,10 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setIdeaCategory(null)}
+                  onClick={() => setIdeaArea(null)}
                   className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
                 >
-                  ← Back to category selection
+                  ← Back to area selection
                 </button>
               </motion.div>
             )}
