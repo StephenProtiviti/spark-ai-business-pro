@@ -244,6 +244,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setEvaluationReady(false);
     setDraftIdeaId(null);
     setIdeaCategory(null);
+    setIdeaArea(null);
     evaluationTargetIdRef.current = null;
   };
 
