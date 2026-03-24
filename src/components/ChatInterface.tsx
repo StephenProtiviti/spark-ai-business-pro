@@ -59,7 +59,7 @@ const selectionToScenario: Record<string, string> = {
   "Support in Promoting & Publishing Enablers": "Enabler Development",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
-  "Other": "Generic Idea",
+  "Other": "Generic Idea", // fallback; overridden by category-aware logic below
 };
 
 // ── Scenario-Specific Follow-Up Questions ──
