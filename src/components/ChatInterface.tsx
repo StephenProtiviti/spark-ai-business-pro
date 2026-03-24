@@ -13,13 +13,54 @@ interface Message {
   content: string;
 }
 
-// ── Intake Scenarios ──
-const intakeScenarios = [
-  { label: "Agent Development", icon: Bot, description: "Internal ops, client delivery, or Copilot agents" },
-  { label: "Enabler Development", icon: Package, description: "Build tools, capabilities, or platforms" },
-  { label: "Automation Support", icon: Workflow, description: "Workflow or process automation" },
-  { label: "Generic Idea", icon: Lightbulb, description: "Other innovation ideas" },
+// ── Decision Tree Areas ──
+const clientAreas = [
+  { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Other", icon: Lightbulb, description: "Other client delivery ideas" },
 ];
+
+const internalAreas = [
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Other", icon: Lightbulb, description: "Other internal operations ideas" },
+];
+
+const subAreas: Record<string, { label: string; icon: any; description: string }[]> = {
+  "AI Studio": [
+    { label: "Client Workshop", icon: TrendingUp, description: "Schedule or run a client workshop" },
+    { label: "Prototype Development", icon: Wrench, description: "Build a proof of concept or prototype" },
+    { label: "Idea for an AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
+  ],
+  "Protiviti Atlas": [
+    { label: "Use Case Development", icon: Lightbulb, description: "Develop a new use case on Atlas" },
+    { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Atlas API" },
+    { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Provision an existing Atlas API" },
+  ],
+  "Custom Agent": [
+    { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
+    { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
+    { label: "Explore Existing Tools (ProGPT & Power Automate)", icon: Cpu, description: "Explore ProGPT, Power Automate, and other tools" },
+  ],
+};
+
+// Map final selections to scenario question keys
+const selectionToScenario: Record<string, string> = {
+  "Client Workshop": "AI Studio Support",
+  "Prototype Development": "AI Studio Support",
+  "Idea for an AI Showcase": "AI Studio Support",
+  "Use Case Development": "Enabler Development",
+  "New Protiviti Atlas API Provisioning": "Enabler Development",
+  "Existing Protiviti Atlas API Provisioning": "Enabler Development",
+  "New Agent Development": "Agent Development",
+  "Support in Promoting & Publishing Enablers": "Enabler Development",
+  "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
+  "Support in Promoting Enablers": "Enabler Development",
+  "Other": "Generic Idea",
+};
 
 // ── Scenario-Specific Follow-Up Questions ──
 const scenarioQuestions: Record<string, { greeting: string; questions: string[] }> = {
