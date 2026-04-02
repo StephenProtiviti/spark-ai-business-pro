@@ -384,17 +384,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       };
 
       if (isScenarioClick) {
-        // Scenario was clicked — show greeting + first question, wait for idea
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
-        const draft = createDraftIdea(value, initialMessages);
+        const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || value);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
       } else {
-        // Free-text idea — show greeting + first question
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
-        const draft = createDraftIdea(value, initialMessages);
+        const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || undefined);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
       }
