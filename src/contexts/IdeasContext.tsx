@@ -121,7 +121,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     loadIdeas();
   }, []);
 
-  const createDraftIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[]) => {
+  const createDraftIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], ideaType?: string, ideaSubcategory?: string) => {
     const assigned = supportTeam[nextAssignIndex % supportTeam.length];
     nextAssignIndex++;
 
@@ -132,12 +132,12 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
       teamsChannel: `spark-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 30)}`,
       date: new Date().toISOString(),
       messages,
+      ideaType,
+      ideaSubcategory,
     };
 
     setRecentIdeas((prev) => [idea, ...prev]);
-    // Do NOT set activeIdeaId here — the chat is still in Q&A mode
 
-    // Persist to database (serialized to avoid lock-stealing)
     enqueueDbOp(async () => {
       const { error } = await supabase
         .from("ideas")
@@ -149,7 +149,9 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           assigned_avatar: assigned.avatar,
           teams_channel: idea.teamsChannel,
           messages: messages as any,
-        });
+          idea_type: ideaType || null,
+          idea_subcategory: ideaSubcategory || null,
+        } as any);
       if (error) {
         console.error("Failed to save draft idea:", error.message, error.code);
         toast.error(`Failed to save idea: ${error.message}`);
