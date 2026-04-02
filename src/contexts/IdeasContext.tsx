@@ -41,6 +41,8 @@ export interface RecentIdea {
   messages: { role: "user" | "assistant"; content: string }[];
   wireframeHtml?: string;
   businessPlanHtml?: string;
+  ideaType?: string;
+  ideaSubcategory?: string;
 }
 
 interface IdeasContextType {
