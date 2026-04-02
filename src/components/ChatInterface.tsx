@@ -259,6 +259,39 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     evaluationTargetIdRef.current = null;
   };
 
+  const handleGoBack = () => {
+    if (hasStarted && !conversationDone) {
+      // During Q&A: remove last user msg + last assistant question to go back one step
+      const lastUserIdx = messages.map((m, i) => ({ role: m.role, i })).filter(m => m.role === "user").pop()?.i;
+      if (lastUserIdx !== undefined && lastUserIdx > 0) {
+        // Remove messages from lastUserIdx onward, and the assistant question before it
+        const assistantBefore = messages.slice(0, lastUserIdx).map((m, i) => ({ role: m.role, i })).filter(m => m.role === "assistant").pop()?.i;
+        const cutPoint = assistantBefore !== undefined ? assistantBefore : lastUserIdx;
+        setMessages(messages.slice(0, cutPoint));
+        setQuestionIndex(Math.max(0, questionIndex - 1));
+      } else {
+        // Only one user message — go back to selection
+        setMessages([]);
+        setQuestionIndex(0);
+        setSelectedScenario(null);
+        setConversationDone(false);
+      }
+    } else if (ideaArea && subAreas[ideaArea]) {
+      // In sub-area selection — go back to area
+      setIdeaArea(null);
+    } else if (ideaArea) {
+      setIdeaArea(null);
+    } else if (ideaCategory) {
+      // In area selection — go back to category
+      setIdeaCategory(null);
+    }
+  };
+
+  const handleCancelSubmission = () => {
+    setShowCancelModal(false);
+    resetChat();
+  };
+
   const extractAnswers = (): Record<string, string> => {
     const userMsgs = messages.filter((m) => m.role === "user");
     const scenario = selectedScenario || "Generic Idea";
