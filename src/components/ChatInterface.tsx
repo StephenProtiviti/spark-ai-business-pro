@@ -166,6 +166,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const evaluationTargetIdRef = useRef<string | null>(null);
   const [ideaCategory, setIdeaCategory] = useState<string | null>(null);
   const [ideaArea, setIdeaArea] = useState<string | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
