@@ -406,6 +406,14 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setInput("");
     setIsTyping(true);
 
+    // Update idea title with the first real answer (the idea description)
+    const userMsgCount = updatedMessages.filter(m => m.role === "user").length;
+    if (userMsgCount === 2 && draftIdeaId) {
+      // Second user message is the first real answer — use as title
+      const betterTitle = value.slice(0, 60) || "Untitled Idea";
+      updateIdea(draftIdeaId, { title: betterTitle });
+    }
+
     setTimeout(() => {
       if (questionIndex < followUps.questions.length) {
         setMessages((prev) => [
