@@ -75,13 +75,15 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
   "Agent Development": {
-    greeting: "Agent development — let's scope out what you're building!",
+    greeting: "New Agent Development — let's scope out what you're building!",
     questions: [
-      "**What is the agent's purpose?** Describe what it should do in 1-2 sentences.",
-      "**Who will use this agent?** Is this for internal operations, to accelerate client delivery, or both?",
-      "**Will this agent use Copilot?** If yes, describe the Copilot integration points. If no, what will drive its intelligence?",
-      "**What systems or data does the agent need to interact with?** (e.g., CRM, ticketing systems, knowledge bases, APIs)",
-      "Last one: **What's the expected impact?** Time saved, tickets deflected, revenue influenced — quantify if possible.",
+      "**What is the expected benefit of developing this agent?** (e.g. time saving, currently relying on disparate systems and manual process steps, current client project etc.)",
+      "**What is the current approach to performing this task?**",
+      "**What will be the knowledge base for this agent?** Please specify PII, confidential client or company information if any that will be included in the knowledge base.",
+      "**Is it expected to be built in Protiviti's environment or client environment?**",
+      "**Do you have any preference on technology infrastructure to be used for the agent development?**",
+      "**Will this be an agent that should be available to use globally or for a specific region or engagement?**",
+      "Last one: **Please specify expected number of users who will be interacting with the agent.**",
     ],
   },
   "Enabler Development": {
