@@ -271,6 +271,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setDraftIdeaId(null);
     setIdeaCategory(null);
     setIdeaArea(null);
+    setAwaitingDifferentiationAnswer(false);
     evaluationTargetIdRef.current = null;
   };
 
