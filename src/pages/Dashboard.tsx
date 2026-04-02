@@ -1,22 +1,36 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, TrendingUp, Lightbulb, CheckCircle2, Eye, ArrowRight, Tag, MessageSquare } from "lucide-react";
+import { Search, TrendingUp, Lightbulb, CheckCircle2, ArrowRight, MessageSquare, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
-import NexusScoreBadge from "@/components/NexusScoreBadge";
 import { useIdeas } from "@/contexts/IdeasContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const CATEGORIES = ["All Ideas", "ADO Boards", "IT", "AI Studio", "Innovation", "My Ideas"] as const;
 
 const Dashboard = () => {
   const { recentIdeas } = useIdeas();
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<string>("All Ideas");
 
-  const filtered = recentIdeas.filter((idea) =>
-    idea.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = recentIdeas.filter((idea) => {
+    const matchesSearch = idea.title.toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+    if (category === "All Ideas") return true;
+    if (category === "My Ideas") return true; // TODO: filter by authenticated user
+    // Match category from the idea's teams channel or messages
+    return idea.teamsChannel.toLowerCase().includes(category.toLowerCase());
+  });
 
   const stats = [
     { label: "Total Spark Ideas", value: recentIdeas.length, icon: Lightbulb },
     { label: "Your Submitted", value: recentIdeas.length, icon: CheckCircle2 },
-    { label: "With Wireframes", value: recentIdeas.filter((i) => i.wireframeHtml).length, icon: Eye },
+    { label: "Active Categories", value: new Set(recentIdeas.map(i => i.teamsChannel)).size, icon: Filter },
     { label: "This Month", value: recentIdeas.filter((i) => {
       const d = new Date(i.date);
       const now = new Date();
@@ -51,34 +65,44 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Search */}
-        <div className="relative max-w-md mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search ideas..."
-            className="w-full pl-9 pr-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
-          />
+        {/* Search + Category Filter */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search ideas..."
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
+            />
+          </div>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              {CATEGORIES.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Ideas List */}
         {filtered.length > 0 ? (
           <div className="flex flex-col gap-4">
             {filtered.map((idea, i) => {
-              // Derive scores from message content
               const userMsgs = idea.messages.filter(m => m.role === "user");
               const totalWords = userMsgs.reduce((sum, m) => sum + m.content.split(/\s+/).length, 0);
-              const hasWireframe = !!idea.wireframeHtml;
               const questionCount = idea.messages.filter(m => m.role === "assistant").length;
               
-              // Feasibility: higher when more detail provided + wireframe exists
               const feasibility = Math.min(100, Math.round(
-                30 + (totalWords > 20 ? 20 : totalWords) + (hasWireframe ? 25 : 0) + (questionCount > 3 ? 15 : 5) + (userMsgs.length * 2)
+                30 + (totalWords > 20 ? 20 : totalWords) + (questionCount > 3 ? 15 : 5) + (userMsgs.length * 2)
               ));
-              // Complexity: based on message depth and content length
               const complexity = Math.min(100, Math.round(
-                15 + (totalWords > 50 ? 35 : totalWords * 0.7) + (userMsgs.length * 5) + (hasWireframe ? 15 : 0)
+                15 + (totalWords > 50 ? 35 : totalWords * 0.7) + (userMsgs.length * 5)
               ));
 
               const feasibilityColor = feasibility >= 70 ? "text-emerald-500" : feasibility >= 40 ? "text-amber-500" : "text-red-400";
@@ -95,17 +119,11 @@ const Dashboard = () => {
                   <Link to={`/idea/${idea.id}`} className="block">
                     <div className="spark-card p-6 hover:border-primary/30 transition-all duration-300 group">
                       <div className="flex items-start gap-6">
-                        {/* Main content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary border border-primary/30">
                               Spark Idea
                             </span>
-                            {idea.wireframeHtml && (
-                              <span className="text-xs font-medium text-accent flex items-center gap-1">
-                                <Eye className="w-3 h-3" /> Wireframe
-                              </span>
-                            )}
                           </div>
                           <h3 className="text-foreground font-semibold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
                             {idea.title}
@@ -157,7 +175,7 @@ const Dashboard = () => {
           <div className="text-center py-16">
             <Lightbulb className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground text-sm">
-              {search ? "No ideas match your search." : "No ideas yet. Submit your first idea through Spark!"}
+              {search || category !== "All Ideas" ? "No ideas match your filters." : "No ideas yet. Submit your first idea through Spark!"}
             </p>
           </div>
         )}
