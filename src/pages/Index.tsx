@@ -97,8 +97,7 @@ const Index = () => {
             The AI-Driven Idea Engine
           </h1>
           <p className="text-white/80 mb-10 max-w-xl mx-auto">
-            Submit ideas through an adaptive AI intake. Get matched to existing accelerators,
-            and receive scored evaluation reports for review board decisions.
+            Submit ideas through a conversational AI intake and proactively receive recommendations about existing solutions and enablers.
           </p>
 
           <Link
