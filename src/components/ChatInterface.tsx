@@ -77,6 +77,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Agent Development": {
     greeting: "New Agent Development — let's scope out what you're building!",
     questions: [
+      "**What is the agent's purpose?** Describe what it should do in 1-2 sentences.",
       "**What is the expected benefit of developing this agent?** (e.g. time saving, currently relying on disparate systems and manual process steps, current client project etc.)",
       "**What is the current approach to performing this task?**",
       "**What will be the knowledge base for this agent?** Please specify PII, confidential client or company information if any that will be included in the knowledge base.",
