@@ -218,13 +218,13 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   }, [displayMessages, conversationDone, submitted, showRecommendations, evaluationReady]);
 
   useEffect(() => {
-    if (!isViewing && draftIdeaId) {
+    if (!isViewing && draftIdeaId && messages.length > 0) {
       updateIdea(draftIdeaId, { messages });
     }
   }, [isViewing, draftIdeaId, messages]);
 
   useEffect(() => {
-    if (isViewing && viewingIdea?.id) {
+    if (isViewing && viewingIdea?.id && viewingMessages.length > 0) {
       updateIdea(viewingIdea.id, { messages: viewingMessages });
     }
   }, [isViewing, viewingMessages]);
