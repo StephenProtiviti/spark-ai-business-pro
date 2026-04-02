@@ -55,7 +55,8 @@ Rules:
 - Output ONLY valid HTML. No markdown, no code fences, no explanation text.
 - Output a COMPLETE document starting with <!DOCTYPE html>.
 - Use inline CSS with a professional, executive-ready design. Use system-ui font, clean typography, and a muted color palette (#1e3a5f navy, #f97316 accent orange, #f8fafc backgrounds).
-- The document should be structured as an IDEA EVALUATION REPORT containing these sections:
+- The main title/header of the document should be the specific idea title derived from the submission — NOT a generic "IDEA EVALUATION REPORT" heading. Use the idea name/title as the prominent H1 header at the top.
+- The document should be structured as an evaluation report containing these sections:
 
 1. **Submission Overview** — Scenario type, idea title, date, and a 2-3 sentence executive summary.
 2. **Evaluation Scores** — Score each dimension 1-10 with a visual bar/indicator:
