@@ -982,6 +982,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                       </button>
                     </div>
                   )}
+                  {!isViewing && !submitted && (
+                    <button
+                      onClick={() => setShowCancelModal(true)}
+                      className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors ml-2"
+                    >
+                      <Ban className="w-3 h-3" />
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
 
