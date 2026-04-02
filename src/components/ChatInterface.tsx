@@ -781,9 +781,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 <h2 className="text-lg font-bold text-sidebar-foreground mb-1">
                   {ideaArea === "AI Studio" ? "Is this a..." : ideaArea === "Protiviti Atlas" ? "Is this for..." : "Is this..."}
                 </h2>
-                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory}</span> → <span className="font-medium text-primary">{ideaArea}</span>
-                </p>
+                <p className="text-sidebar-foreground/40 mb-6 text-center text-xs max-w-xs">
+                   <span className="font-medium text-sidebar-foreground/50">{ideaCategory}</span> → <span className="font-medium text-sidebar-foreground/50">{ideaArea}</span>
+                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
                     <button
