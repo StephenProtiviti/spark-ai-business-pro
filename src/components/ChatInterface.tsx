@@ -44,7 +44,6 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
   "Custom Agent": [
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
-    { label: "Explore Existing Tools (ProGPT & Power Automate)", icon: Cpu, description: "Explore ProGPT, Power Automate, and other tools" },
   ],
 };
 
