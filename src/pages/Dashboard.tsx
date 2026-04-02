@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Search, TrendingUp, Lightbulb, CheckCircle2, ArrowRight, MessageSquare, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIdeas } from "@/contexts/IdeasContext";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -11,26 +12,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const CATEGORIES = ["All Ideas", "ADO Boards", "IT", "AI Studio", "Innovation", "My Ideas"] as const;
-
 const Dashboard = () => {
   const { recentIdeas } = useIdeas();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("All Ideas");
+  const [typeFilter, setTypeFilter] = useState<string>("All");
+  const [subcategoryFilter, setSubcategoryFilter] = useState<string>("All");
+
+  // Derive unique types and subcategories from ideas
+  const ideaTypes = Array.from(new Set(recentIdeas.map(i => i.ideaType).filter(Boolean))) as string[];
+  const ideaSubcategories = Array.from(
+    new Set(
+      recentIdeas
+        .filter(i => typeFilter === "All" || i.ideaType === typeFilter)
+        .map(i => i.ideaSubcategory)
+        .filter(Boolean)
+    )
+  ) as string[];
 
   const filtered = recentIdeas.filter((idea) => {
     const matchesSearch = idea.title.toLowerCase().includes(search.toLowerCase());
     if (!matchesSearch) return false;
-    if (category === "All Ideas") return true;
-    if (category === "My Ideas") return true; // TODO: filter by authenticated user
-    // Match category from the idea's teams channel or messages
-    return idea.teamsChannel.toLowerCase().includes(category.toLowerCase());
+    if (typeFilter !== "All" && idea.ideaType !== typeFilter) return false;
+    if (subcategoryFilter !== "All" && idea.ideaSubcategory !== subcategoryFilter) return false;
+    return true;
   });
 
   const stats = [
     { label: "Total Spark Ideas", value: recentIdeas.length, icon: Lightbulb },
-    { label: "Your Submitted", value: recentIdeas.length, icon: CheckCircle2 },
-    { label: "Active Categories", value: new Set(recentIdeas.map(i => i.teamsChannel)).size, icon: Filter },
+    { label: "Client Delivery", value: recentIdeas.filter(i => i.ideaType === "Client Delivery").length, icon: CheckCircle2 },
+    { label: "Internal Operations", value: recentIdeas.filter(i => i.ideaType === "Internal Operations").length, icon: Filter },
     { label: "This Month", value: recentIdeas.filter((i) => {
       const d = new Date(i.date);
       const now = new Date();
@@ -65,7 +75,7 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Search + Category Filter */}
+        {/* Search + Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -76,18 +86,30 @@ const Dashboard = () => {
               className="w-full pl-9 pr-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground"
             />
           </div>
-          <Select value={category} onValueChange={setCategory}>
+          <Select value={typeFilter} onValueChange={(v) => { setTypeFilter(v); setSubcategoryFilter("All"); }}>
             <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Filter by category" />
+              <SelectValue placeholder="Idea Type" />
             </SelectTrigger>
             <SelectContent>
-              {CATEGORIES.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
+              <SelectItem value="All">All Types</SelectItem>
+              {ideaTypes.map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {ideaSubcategories.length > 0 && (
+            <Select value={subcategoryFilter} onValueChange={setSubcategoryFilter}>
+              <SelectTrigger className="w-[220px]">
+                <SelectValue placeholder="Subcategory" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Subcategories</SelectItem>
+                {ideaSubcategories.map((s) => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         {/* Ideas List */}
@@ -120,10 +142,22 @@ const Dashboard = () => {
                     <div className="spark-card p-6 hover:border-primary/30 transition-all duration-300 group">
                       <div className="flex items-start gap-6">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary border border-primary/30">
-                              Spark Idea
-                            </span>
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            {idea.ideaType && (
+                              <Badge variant={idea.ideaType === "Client Delivery" ? "default" : "secondary"} className="text-[10px] px-2 py-0.5">
+                                {idea.ideaType === "Client Delivery" ? "Client" : "Internal"}
+                              </Badge>
+                            )}
+                            {idea.ideaSubcategory && (
+                              <Badge variant="outline" className="text-[10px] px-2 py-0.5">
+                                {idea.ideaSubcategory}
+                              </Badge>
+                            )}
+                            {!idea.ideaType && (
+                              <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary border border-primary/30">
+                                Spark Idea
+                              </span>
+                            )}
                           </div>
                           <h3 className="text-foreground font-semibold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-1 mb-1">
                             {idea.title}
@@ -175,7 +209,7 @@ const Dashboard = () => {
           <div className="text-center py-16">
             <Lightbulb className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground text-sm">
-              {search || category !== "All Ideas" ? "No ideas match your filters." : "No ideas yet. Submit your first idea through Spark!"}
+              {search || typeFilter !== "All" || subcategoryFilter !== "All" ? "No ideas match your filters." : "No ideas yet. Submit your first idea through Spark!"}
             </p>
           </div>
         )}
