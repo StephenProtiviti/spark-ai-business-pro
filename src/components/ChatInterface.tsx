@@ -128,12 +128,14 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
   "Client Other": {
-    greeting: "Great — let's capture your idea! I'll walk you through a few consolidated questions to gather everything we need for the review board.",
+    greeting: "Great — let's capture your idea! I'll walk you through a few questions to gather everything we need for the review board.",
     questions: [
-      "**Tell us about your idea.** What's the name, what problem does it solve, and what needs does it fulfill? Give us the elevator pitch.",
-      "**Proposed solution & expected outcomes.** Describe your proposed approach and what success looks like — what changes for the end user when this is delivered?",
-      "**Stakeholders & target users.** Who is the end user of this idea? Do you have a potential MD sponsor? Which **C-suite solution teams** and **industry teams** does this apply to?",
-      "Last one: **Market context & validation.** Are there any competitors or similar solutions? Do you have any client validation (and which client)? Roughly how many end users would be impacted?",
+      "**Describe your use case and the need this enabler is expected to fulfill?**",
+      "**What are the expected outcomes?**",
+      "**Do you have an MD sponsor for this idea?** If so, what is their name?",
+      "**What insights do you have about the current market demand?**",
+      "**Do you have a ready client on which you can use this?**",
+      "Last one: **What is the estimated efficiency gains and/or revenue impact from this use case?**",
     ],
   },
 };
@@ -162,6 +164,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const [recommendations, setRecommendations] = useState<Accelerator[]>([]);
   const [recommendationsDismissed, setRecommendationsDismissed] = useState(false);
   const [selectedAccelerator, setSelectedAccelerator] = useState<Accelerator | null>(null);
+  const [awaitingDifferentiationAnswer, setAwaitingDifferentiationAnswer] = useState(false);
 
   // Evaluation document
   const [evaluationHtml, setEvaluationHtml] = useState("");
@@ -268,6 +271,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setDraftIdeaId(null);
     setIdeaCategory(null);
     setIdeaArea(null);
+    setAwaitingDifferentiationAnswer(false);
     evaluationTargetIdRef.current = null;
   };
 
@@ -322,6 +326,29 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const handleSend = (text?: string) => {
     const value = text || input;
     if (!value.trim() || isTyping) return;
+
+    // Handle differentiation follow-up answer for "Client Other"
+    if (awaitingDifferentiationAnswer) {
+      const userMsg: Message = { role: "user", content: value };
+      setMessages((prev) => [...prev, userMsg]);
+      setInput("");
+      setAwaitingDifferentiationAnswer(false);
+      setIsTyping(true);
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your **Idea Evaluation Report** now..." },
+        ]);
+        setIsTyping(false);
+        // Now proceed with actual submission
+        setRecommendationsDismissed(true);
+        setCanvasView("evaluation");
+        const targetId = draftIdeaId || undefined;
+        evaluationTargetIdRef.current = targetId || null;
+        generateEvaluation(targetId);
+      }, 1000);
+      return;
+    }
 
     const userMsg: Message = { role: "user", content: value };
     const isFirstMessage = messages.length === 0;
@@ -423,6 +450,19 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   };
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
+    // For "Client Other" scenario, ask differentiation question first
+    if (selectedScenario === "Client Other" && !awaitingDifferentiationAnswer) {
+      setRecommendationsDismissed(true);
+      const followUpMsg: Message = {
+        role: "assistant",
+        content: "Ok, please **describe what's different in your idea from the recommended accelerators?** This helps us understand why your idea is unique from existing solutions.",
+      };
+      setMessages((prev) => [...prev, followUpMsg]);
+      setAwaitingDifferentiationAnswer(true);
+      setConversationDone(false); // Re-enable chat input
+      return;
+    }
+
     setRecommendationsDismissed(true);
     setCanvasView("evaluation");
 
