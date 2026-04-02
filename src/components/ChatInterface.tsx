@@ -1167,15 +1167,28 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Layout className="w-8 h-8 text-muted-foreground/40" />
+            <div className="flex-1 flex flex-col">
+              {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+                <div className="flex justify-end px-4 py-2 border-b border-border shrink-0">
+                  <button
+                    onClick={() => setShowCancelModal(true)}
+                    className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
+                  >
+                    <Ban className="w-3 h-3" />
+                    Cancel Submission
+                  </button>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
-                <p className="text-sm text-muted-foreground max-w-xs">
-                  Recommendations and your evaluation report will appear here.
-                </p>
+              )}
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+                    <Layout className="w-8 h-8 text-muted-foreground/40" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    Recommendations and your evaluation report will appear here.
+                  </p>
+                </div>
               </div>
             </div>
           )}
