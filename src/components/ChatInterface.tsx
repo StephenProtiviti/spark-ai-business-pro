@@ -337,7 +337,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your **Idea Evaluation Report** now..." },
+          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your idea to review for submission now..." },
         ]);
         setIsTyping(false);
         // Now proceed with actual submission
