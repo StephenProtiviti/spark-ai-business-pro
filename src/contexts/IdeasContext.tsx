@@ -212,7 +212,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const submitIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string) => {
+  const submitIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string, ideaType?: string, ideaSubcategory?: string) => {
     const assigned = supportTeam[nextAssignIndex % supportTeam.length];
     nextAssignIndex++;
 
@@ -225,12 +225,13 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
       messages,
       wireframeHtml,
       businessPlanHtml,
+      ideaType,
+      ideaSubcategory,
     };
 
     setRecentIdeas((prev) => [idea, ...prev]);
     setActiveIdeaId(idea.id);
 
-    // Persist to database (serialized)
     enqueueDbOp(async () => {
       const { error } = await supabase
         .from("ideas")
@@ -244,7 +245,9 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           messages: messages as any,
           wireframe_html: wireframeHtml || null,
           business_plan_html: businessPlanHtml || null,
-        });
+          idea_type: ideaType || null,
+          idea_subcategory: ideaSubcategory || null,
+        } as any);
       if (error) {
         console.error("Failed to save idea:", error.message, error.code);
         toast.error(`Failed to save idea: ${error.message}`);
