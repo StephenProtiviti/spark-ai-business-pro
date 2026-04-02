@@ -97,6 +97,8 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           messages: row.messages as { role: "user" | "assistant"; content: string }[],
           wireframeHtml: row.wireframe_html || undefined,
           businessPlanHtml: row.business_plan_html || undefined,
+          ideaType: row.idea_type || undefined,
+          ideaSubcategory: row.idea_subcategory || undefined,
         }));
 
         // Merge remote data with any optimistic local ideas to avoid first-message drafts disappearing.
