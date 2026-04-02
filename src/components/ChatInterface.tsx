@@ -450,6 +450,19 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   };
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
+    // For "Client Other" scenario, ask differentiation question first
+    if (selectedScenario === "Client Other" && !awaitingDifferentiationAnswer) {
+      setRecommendationsDismissed(true);
+      const followUpMsg: Message = {
+        role: "assistant",
+        content: "Ok, please **describe what's different in your idea from the recommended accelerators?** This helps us understand why your idea is unique from existing solutions.",
+      };
+      setMessages((prev) => [...prev, followUpMsg]);
+      setAwaitingDifferentiationAnswer(true);
+      setConversationDone(false); // Re-enable chat input
+      return;
+    }
+
     setRecommendationsDismissed(true);
     setCanvasView("evaluation");
 
