@@ -22,6 +22,8 @@ export type Database = {
           business_plan_html: string | null
           created_at: string
           id: string
+          idea_subcategory: string | null
+          idea_type: string | null
           messages: Json
           teams_channel: string
           title: string
@@ -34,6 +36,8 @@ export type Database = {
           business_plan_html?: string | null
           created_at?: string
           id?: string
+          idea_subcategory?: string | null
+          idea_type?: string | null
           messages?: Json
           teams_channel: string
           title: string
@@ -46,6 +50,8 @@ export type Database = {
           business_plan_html?: string | null
           created_at?: string
           id?: string
+          idea_subcategory?: string | null
+          idea_type?: string | null
           messages?: Json
           teams_channel?: string
           title?: string
