@@ -803,9 +803,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 </div>
                 <button
                   onClick={() => setIdeaArea(null)}
-                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
-                >
-                  ← Back to area selection
+                   className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
+                 >
+                   ← Back to area selection
                 </button>
               </motion.div>
             )}
