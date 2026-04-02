@@ -19,8 +19,11 @@ const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
   { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
+  { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
+  { label: "Design Thinking Support", icon: Lightbulb, description: "Design thinking facilitation and support" },
   { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
-  { label: "Other", icon: Lightbulb, description: "Other client delivery ideas" },
+  { label: "Other", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
 const internalAreas = [
@@ -59,7 +62,10 @@ const selectionToScenario: Record<string, string> = {
   "Support in Promoting & Publishing Enablers": "Enabler Development",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
-  "Other": "Generic Idea", // fallback; overridden by category-aware logic below
+  "Enabler Development": "Enabler Development",
+  "Copilot Agent Publishing Support": "Enabler Development",
+  "Design Thinking Support": "Generic Idea",
+  "Other": "Generic Idea",
 };
 
 // ── Scenario-Specific Follow-Up Questions ──
@@ -724,9 +730,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What area best aligns with your idea?</h2>
-                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
-                </p>
+                <p className="text-sidebar-foreground/40 mb-6 text-center text-xs max-w-xs">
+                   <span className="font-medium text-sidebar-foreground/50">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
+                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {(ideaCategory === "Client Delivery" ? clientAreas : internalAreas).map(({ label, icon: Icon, description }) => {
                     const hasSubArea = !!subAreas[label];
@@ -757,9 +763,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 </div>
                 <button
                   onClick={() => setIdeaCategory(null)}
-                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
-                >
-                  ← Back to category selection
+                   className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
+                 >
+                   ← Back to category selection
                 </button>
               </motion.div>
             )}
@@ -778,9 +784,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 <h2 className="text-lg font-bold text-sidebar-foreground mb-1">
                   {ideaArea === "AI Studio" ? "Is this a..." : ideaArea === "Protiviti Atlas" ? "Is this for..." : "Is this..."}
                 </h2>
-                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory}</span> → <span className="font-medium text-primary">{ideaArea}</span>
-                </p>
+                <p className="text-sidebar-foreground/40 mb-6 text-center text-xs max-w-xs">
+                   <span className="font-medium text-sidebar-foreground/50">{ideaCategory}</span> → <span className="font-medium text-sidebar-foreground/50">{ideaArea}</span>
+                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
                     <button
@@ -800,9 +806,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                 </div>
                 <button
                   onClick={() => setIdeaArea(null)}
-                  className="mt-4 text-xs text-sidebar-foreground/50 hover:text-sidebar-foreground transition-colors"
-                >
-                  ← Back to area selection
+                   className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
+                 >
+                   ← Back to area selection
                 </button>
               </motion.div>
             )}
