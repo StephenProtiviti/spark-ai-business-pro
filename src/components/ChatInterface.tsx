@@ -164,6 +164,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const [recommendations, setRecommendations] = useState<Accelerator[]>([]);
   const [recommendationsDismissed, setRecommendationsDismissed] = useState(false);
   const [selectedAccelerator, setSelectedAccelerator] = useState<Accelerator | null>(null);
+  const [awaitingDifferentiationAnswer, setAwaitingDifferentiationAnswer] = useState(false);
 
   // Evaluation document
   const [evaluationHtml, setEvaluationHtml] = useState("");
