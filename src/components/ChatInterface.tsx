@@ -327,6 +327,29 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     const value = text || input;
     if (!value.trim() || isTyping) return;
 
+    // Handle differentiation follow-up answer for "Client Other"
+    if (awaitingDifferentiationAnswer) {
+      const userMsg: Message = { role: "user", content: value };
+      setMessages((prev) => [...prev, userMsg]);
+      setInput("");
+      setAwaitingDifferentiationAnswer(false);
+      setIsTyping(true);
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your **Idea Evaluation Report** now..." },
+        ]);
+        setIsTyping(false);
+        // Now proceed with actual submission
+        setRecommendationsDismissed(true);
+        setCanvasView("evaluation");
+        const targetId = draftIdeaId || undefined;
+        evaluationTargetIdRef.current = targetId || null;
+        generateEvaluation(targetId);
+      }, 1000);
+      return;
+    }
+
     const userMsg: Message = { role: "user", content: value };
     const isFirstMessage = messages.length === 0;
 
