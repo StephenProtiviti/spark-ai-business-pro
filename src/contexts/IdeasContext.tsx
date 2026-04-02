@@ -161,8 +161,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     return idea;
   };
 
-  const updateIdea = (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string }) => {
-    // Skip updates for deleted ideas
+  const updateIdea = (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string; ideaType?: string; ideaSubcategory?: string }) => {
     if (deletedIds.has(id)) return;
 
     setRecentIdeas((prev) =>
@@ -174,28 +173,31 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
               ...(updates.messages !== undefined && { messages: updates.messages }),
               ...(updates.wireframeHtml !== undefined && { wireframeHtml: updates.wireframeHtml }),
               ...(updates.businessPlanHtml !== undefined && { businessPlanHtml: updates.businessPlanHtml }),
+              ...(updates.ideaType !== undefined && { ideaType: updates.ideaType }),
+              ...(updates.ideaSubcategory !== undefined && { ideaSubcategory: updates.ideaSubcategory }),
             }
           : idea
       )
     );
 
-    // Persist updates to database
     const dbUpdates: Record<string, any> = {};
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.messages !== undefined) dbUpdates.messages = updates.messages;
     if (updates.wireframeHtml !== undefined) dbUpdates.wireframe_html = updates.wireframeHtml;
     if (updates.businessPlanHtml !== undefined) dbUpdates.business_plan_html = updates.businessPlanHtml;
+    if (updates.ideaType !== undefined) dbUpdates.idea_type = updates.ideaType;
+    if (updates.ideaSubcategory !== undefined) dbUpdates.idea_subcategory = updates.ideaSubcategory;
 
     if (Object.keys(dbUpdates).length > 0) {
       enqueueDbOp(async () => {
-        if (deletedIds.has(id)) return; // Re-check before DB call
+        if (deletedIds.has(id)) return;
         const maxRetries = 2;
         for (let attempt = 0; attempt <= maxRetries; attempt++) {
           const { error } = await supabase
             .from("ideas")
-            .update(dbUpdates)
+            .update(dbUpdates as any)
             .eq("id", id);
-          if (!error) return; // Success
+          if (!error) return;
           const isNetworkError = error.message?.includes("Load failed") || error.message?.includes("Failed to fetch") || error.message?.includes("NetworkError");
           if (isNetworkError && attempt < maxRetries) {
             console.warn(`Update retry ${attempt + 1} for idea ${id}`);
