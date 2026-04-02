@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X, Download } from "lucide-react";
+import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X, Download, ChevronLeft, Ban } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import ReactMarkdown from "react-markdown";
 import { useIdeas, RecentIdea } from "@/contexts/IdeasContext";
@@ -165,6 +166,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
   const evaluationTargetIdRef = useRef<string | null>(null);
   const [ideaCategory, setIdeaCategory] = useState<string | null>(null);
   const [ideaArea, setIdeaArea] = useState<string | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
@@ -255,6 +257,39 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setIdeaCategory(null);
     setIdeaArea(null);
     evaluationTargetIdRef.current = null;
+  };
+
+  const handleGoBack = () => {
+    if (hasStarted && !conversationDone) {
+      // During Q&A: remove last user msg + last assistant question to go back one step
+      const lastUserIdx = messages.map((m, i) => ({ role: m.role, i })).filter(m => m.role === "user").pop()?.i;
+      if (lastUserIdx !== undefined && lastUserIdx > 0) {
+        // Remove messages from lastUserIdx onward, and the assistant question before it
+        const assistantBefore = messages.slice(0, lastUserIdx).map((m, i) => ({ role: m.role, i })).filter(m => m.role === "assistant").pop()?.i;
+        const cutPoint = assistantBefore !== undefined ? assistantBefore : lastUserIdx;
+        setMessages(messages.slice(0, cutPoint));
+        setQuestionIndex(Math.max(0, questionIndex - 1));
+      } else {
+        // Only one user message — go back to selection
+        setMessages([]);
+        setQuestionIndex(0);
+        setSelectedScenario(null);
+        setConversationDone(false);
+      }
+    } else if (ideaArea && subAreas[ideaArea]) {
+      // In sub-area selection — go back to area
+      setIdeaArea(null);
+    } else if (ideaArea) {
+      setIdeaArea(null);
+    } else if (ideaCategory) {
+      // In area selection — go back to category
+      setIdeaCategory(null);
+    }
+  };
+
+  const handleCancelSubmission = () => {
+    setShowCancelModal(false);
+    resetChat();
   };
 
   const extractAnswers = (): Record<string, string> => {
@@ -525,11 +560,20 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
         <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
           {/* Chat Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-sidebar-border shrink-0">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-sidebar-border shrink-0">
+            {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+              <button
+                onClick={handleGoBack}
+                className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
+                title="Go back"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+            )}
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
                 {isViewing ? viewingIdea.title : "Spark Intake Agent"}
               </h2>
@@ -938,6 +982,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                       </button>
                     </div>
                   )}
+                  {!isViewing && !submitted && (
+                    <button
+                      onClick={() => setShowCancelModal(true)}
+                      className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors ml-2"
+                    >
+                      <Ban className="w-3 h-3" />
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -1114,20 +1167,51 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Layout className="w-8 h-8 text-muted-foreground/40" />
+            <div className="flex-1 flex flex-col">
+              {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+                <div className="flex justify-end px-4 py-2 border-b border-border shrink-0">
+                  <button
+                    onClick={() => setShowCancelModal(true)}
+                    className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
+                  >
+                    <Ban className="w-3 h-3" />
+                    Cancel Submission
+                  </button>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
-                <p className="text-sm text-muted-foreground max-w-xs">
-                  Recommendations and your evaluation report will appear here.
-                </p>
+              )}
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+                    <Layout className="w-8 h-8 text-muted-foreground/40" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
+                  <p className="text-sm text-muted-foreground max-w-xs">
+                    Recommendations and your evaluation report will appear here.
+                  </p>
+                </div>
               </div>
             </div>
           )}
         </div>
       </ResizablePanel>
+
+      {/* Cancel Confirmation Modal */}
+      <AlertDialog open={showCancelModal} onOpenChange={setShowCancelModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Submission?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel this submission? All progress will be lost and you'll return to the start.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Editing</AlertDialogCancel>
+            <AlertDialogAction onClick={handleCancelSubmission} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Yes, Cancel Submission
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ResizablePanelGroup>
   );
 };
