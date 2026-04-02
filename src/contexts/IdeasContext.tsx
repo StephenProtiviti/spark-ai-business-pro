@@ -41,6 +41,8 @@ export interface RecentIdea {
   messages: { role: "user" | "assistant"; content: string }[];
   wireframeHtml?: string;
   businessPlanHtml?: string;
+  ideaType?: string;
+  ideaSubcategory?: string;
 }
 
 interface IdeasContextType {
@@ -48,10 +50,10 @@ interface IdeasContextType {
   isLoading: boolean;
   activeIdeaId: string | null;
   setActiveIdeaId: (id: string | null) => void;
-  submitIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string) => RecentIdea;
+  submitIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string, ideaType?: string, ideaSubcategory?: string) => RecentIdea;
   deleteIdea: (id: string) => void;
-  createDraftIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[]) => RecentIdea;
-  updateIdea: (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string }) => void;
+  createDraftIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], ideaType?: string, ideaSubcategory?: string) => RecentIdea;
+  updateIdea: (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string; ideaType?: string; ideaSubcategory?: string }) => void;
 }
 
 const IdeasContext = createContext<IdeasContextType | null>(null);
@@ -95,6 +97,8 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           messages: row.messages as { role: "user" | "assistant"; content: string }[],
           wireframeHtml: row.wireframe_html || undefined,
           businessPlanHtml: row.business_plan_html || undefined,
+          ideaType: row.idea_type || undefined,
+          ideaSubcategory: row.idea_subcategory || undefined,
         }));
 
         // Merge remote data with any optimistic local ideas to avoid first-message drafts disappearing.
@@ -117,7 +121,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     loadIdeas();
   }, []);
 
-  const createDraftIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[]) => {
+  const createDraftIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], ideaType?: string, ideaSubcategory?: string) => {
     const assigned = supportTeam[nextAssignIndex % supportTeam.length];
     nextAssignIndex++;
 
@@ -128,12 +132,12 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
       teamsChannel: `spark-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 30)}`,
       date: new Date().toISOString(),
       messages,
+      ideaType,
+      ideaSubcategory,
     };
 
     setRecentIdeas((prev) => [idea, ...prev]);
-    // Do NOT set activeIdeaId here — the chat is still in Q&A mode
 
-    // Persist to database (serialized to avoid lock-stealing)
     enqueueDbOp(async () => {
       const { error } = await supabase
         .from("ideas")
@@ -145,7 +149,9 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           assigned_avatar: assigned.avatar,
           teams_channel: idea.teamsChannel,
           messages: messages as any,
-        });
+          idea_type: ideaType || null,
+          idea_subcategory: ideaSubcategory || null,
+        } as any);
       if (error) {
         console.error("Failed to save draft idea:", error.message, error.code);
         toast.error(`Failed to save idea: ${error.message}`);
@@ -155,8 +161,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     return idea;
   };
 
-  const updateIdea = (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string }) => {
-    // Skip updates for deleted ideas
+  const updateIdea = (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string; ideaType?: string; ideaSubcategory?: string }) => {
     if (deletedIds.has(id)) return;
 
     setRecentIdeas((prev) =>
@@ -168,28 +173,31 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
               ...(updates.messages !== undefined && { messages: updates.messages }),
               ...(updates.wireframeHtml !== undefined && { wireframeHtml: updates.wireframeHtml }),
               ...(updates.businessPlanHtml !== undefined && { businessPlanHtml: updates.businessPlanHtml }),
+              ...(updates.ideaType !== undefined && { ideaType: updates.ideaType }),
+              ...(updates.ideaSubcategory !== undefined && { ideaSubcategory: updates.ideaSubcategory }),
             }
           : idea
       )
     );
 
-    // Persist updates to database
     const dbUpdates: Record<string, any> = {};
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.messages !== undefined) dbUpdates.messages = updates.messages;
     if (updates.wireframeHtml !== undefined) dbUpdates.wireframe_html = updates.wireframeHtml;
     if (updates.businessPlanHtml !== undefined) dbUpdates.business_plan_html = updates.businessPlanHtml;
+    if (updates.ideaType !== undefined) dbUpdates.idea_type = updates.ideaType;
+    if (updates.ideaSubcategory !== undefined) dbUpdates.idea_subcategory = updates.ideaSubcategory;
 
     if (Object.keys(dbUpdates).length > 0) {
       enqueueDbOp(async () => {
-        if (deletedIds.has(id)) return; // Re-check before DB call
+        if (deletedIds.has(id)) return;
         const maxRetries = 2;
         for (let attempt = 0; attempt <= maxRetries; attempt++) {
           const { error } = await supabase
             .from("ideas")
-            .update(dbUpdates)
+            .update(dbUpdates as any)
             .eq("id", id);
-          if (!error) return; // Success
+          if (!error) return;
           const isNetworkError = error.message?.includes("Load failed") || error.message?.includes("Failed to fetch") || error.message?.includes("NetworkError");
           if (isNetworkError && attempt < maxRetries) {
             console.warn(`Update retry ${attempt + 1} for idea ${id}`);
@@ -204,7 +212,7 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const submitIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string) => {
+  const submitIdea = (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string, ideaType?: string, ideaSubcategory?: string) => {
     const assigned = supportTeam[nextAssignIndex % supportTeam.length];
     nextAssignIndex++;
 
@@ -217,12 +225,13 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
       messages,
       wireframeHtml,
       businessPlanHtml,
+      ideaType,
+      ideaSubcategory,
     };
 
     setRecentIdeas((prev) => [idea, ...prev]);
     setActiveIdeaId(idea.id);
 
-    // Persist to database (serialized)
     enqueueDbOp(async () => {
       const { error } = await supabase
         .from("ideas")
@@ -236,7 +245,9 @@ export const IdeasProvider = ({ children }: { children: ReactNode }) => {
           messages: messages as any,
           wireframe_html: wireframeHtml || null,
           business_plan_html: businessPlanHtml || null,
-        });
+          idea_type: ideaType || null,
+          idea_subcategory: ideaSubcategory || null,
+        } as any);
       if (error) {
         console.error("Failed to save idea:", error.message, error.code);
         toast.error(`Failed to save idea: ${error.message}`);

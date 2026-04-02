@@ -384,17 +384,15 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       };
 
       if (isScenarioClick) {
-        // Scenario was clicked — show greeting + first question, wait for idea
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
-        const draft = createDraftIdea(value, initialMessages);
+        const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || value);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
       } else {
-        // Free-text idea — show greeting + first question
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
-        const draft = createDraftIdea(value, initialMessages);
+        const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || undefined);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
       }
@@ -407,6 +405,14 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
     setMessages(updatedMessages);
     setInput("");
     setIsTyping(true);
+
+    // Update idea title with the first real answer (the idea description)
+    const userMsgCount = updatedMessages.filter(m => m.role === "user").length;
+    if (userMsgCount === 2 && draftIdeaId) {
+      // Second user message is the first real answer — use as title
+      const betterTitle = value.slice(0, 60) || "Untitled Idea";
+      updateIdea(draftIdeaId, { title: betterTitle });
+    }
 
     setTimeout(() => {
       if (questionIndex < followUps.questions.length) {
