@@ -50,10 +50,10 @@ interface IdeasContextType {
   isLoading: boolean;
   activeIdeaId: string | null;
   setActiveIdeaId: (id: string | null) => void;
-  submitIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string) => RecentIdea;
+  submitIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], wireframeHtml?: string, businessPlanHtml?: string, ideaType?: string, ideaSubcategory?: string) => RecentIdea;
   deleteIdea: (id: string) => void;
-  createDraftIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[]) => RecentIdea;
-  updateIdea: (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string }) => void;
+  createDraftIdea: (title: string, messages: { role: "user" | "assistant"; content: string }[], ideaType?: string, ideaSubcategory?: string) => RecentIdea;
+  updateIdea: (id: string, updates: { title?: string; messages?: { role: "user" | "assistant"; content: string }[]; wireframeHtml?: string; businessPlanHtml?: string; ideaType?: string; ideaSubcategory?: string }) => void;
 }
 
 const IdeasContext = createContext<IdeasContextType | null>(null);
