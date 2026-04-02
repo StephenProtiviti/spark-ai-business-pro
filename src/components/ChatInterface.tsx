@@ -560,11 +560,20 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
       <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
         <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
           {/* Chat Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-sidebar-border shrink-0">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-sidebar-border shrink-0">
+            {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+              <button
+                onClick={handleGoBack}
+                className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
+                title="Go back"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+            )}
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-primary-foreground" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h2 className="font-semibold text-sm text-sidebar-foreground truncate">
                 {isViewing ? viewingIdea.title : "Spark Intake Agent"}
               </h2>
