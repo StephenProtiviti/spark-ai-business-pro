@@ -646,7 +646,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                       <TrendingUp className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-sidebar-foreground block">Client Delivery Idea</span>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Ideas to support client delivery</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Solutions, tools, or innovations for client engagements</span>
                     </div>
                   </button>
@@ -658,7 +658,7 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                       <Shield className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-sidebar-foreground block">Internal Protiviti Operations Idea</span>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Ideas to transform/enhance internal operations</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Improve internal processes, tools, or workflows</span>
                     </div>
                   </button>
