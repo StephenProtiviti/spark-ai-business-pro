@@ -727,9 +727,9 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What area best aligns with your idea?</h2>
-                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
-                  <span className="font-medium text-primary">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
-                </p>
+                <p className="text-sidebar-foreground/40 mb-6 text-center text-xs max-w-xs">
+                   <span className="font-medium text-sidebar-foreground/50">{ideaCategory === "Client Delivery" ? "Client Delivery" : "Internal Protiviti Operations"}</span>
+                 </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {(ideaCategory === "Client Delivery" ? clientAreas : internalAreas).map(({ label, icon: Icon, description }) => {
                     const hasSubArea = !!subAreas[label];
