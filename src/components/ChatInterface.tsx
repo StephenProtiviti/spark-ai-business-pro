@@ -128,12 +128,14 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
   "Client Other": {
-    greeting: "Great — let's capture your idea! I'll walk you through a few consolidated questions to gather everything we need for the review board.",
+    greeting: "Great — let's capture your idea! I'll walk you through a few questions to gather everything we need for the review board.",
     questions: [
-      "**Tell us about your idea.** What's the name, what problem does it solve, and what needs does it fulfill? Give us the elevator pitch.",
-      "**Proposed solution & expected outcomes.** Describe your proposed approach and what success looks like — what changes for the end user when this is delivered?",
-      "**Stakeholders & target users.** Who is the end user of this idea? Do you have a potential MD sponsor? Which **C-suite solution teams** and **industry teams** does this apply to?",
-      "Last one: **Market context & validation.** Are there any competitors or similar solutions? Do you have any client validation (and which client)? Roughly how many end users would be impacted?",
+      "**Describe your use case and the need this enabler is expected to fulfill?**",
+      "**What are the expected outcomes?**",
+      "**Do you have an MD sponsor for this idea?** If so, what is their name?",
+      "**What insights do you have about the current market demand?**",
+      "**Do you have a ready client on which you can use this?**",
+      "Last one: **What is the estimated efficiency gains and/or revenue impact from this use case?**",
     ],
   },
 };
