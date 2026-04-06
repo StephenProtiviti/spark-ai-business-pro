@@ -32,10 +32,10 @@ const steps = [
   {
     num: "03",
     icon: BarChart3,
-    title: "Scored Evaluation Report",
-    description: "Your idea is evaluated across strategic alignment, feasibility, innovation, and impact. A scored report is generated for the review board to make informed decisions.",
+    title: "Review & Selection",
+    description: "Your idea is reviewed by the leadership team for strategic fit, feasibility, and impact. Promising ideas are selected to move forward into development, turning concepts into real solutions.",
     image: stepWireframe,
-    alt: "Evaluation report with scores and charts",
+    alt: "Leadership team reviewing and selecting ideas for development",
   },
 ];
 
