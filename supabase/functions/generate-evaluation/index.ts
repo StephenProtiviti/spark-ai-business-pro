@@ -85,7 +85,7 @@ ${Object.entries(answers || {}).map(([q, a]) => `- ${q}: ${a}`).join("\n")}
 **Existing Solutions Shown:** ${recommendations?.length ? recommendations.map((r: any) => r.name).join(", ") : "None"}
 **Submitter Chose to Proceed:** Yes (submitted as new idea)
 
-Create a thorough, scored evaluation that helps the review board make an informed decision.`;
+Create a thorough qualitative evaluation (no numeric scores) that helps the review board make an informed decision.`;
 
       messages = [
         { role: "system", content: systemPrompt },
