@@ -59,22 +59,17 @@ Rules:
 - The document should be structured as an evaluation report containing these sections:
 
 1. **Submission Overview** — Scenario type, idea title, date, and a 2-3 sentence executive summary.
-2. **Evaluation Scores** — Score each dimension 1-10 with a visual bar/indicator:
-   - Strategic Alignment (how well it fits organizational goals)
-   - Innovation Level (novelty and differentiation)
-   - Feasibility (technical and operational viability)
-   - Impact Potential (scope and magnitude of benefit)
-   - Resource Efficiency (effort vs. return)
-   - Overall Score (weighted average out of 100)
-3. **Detailed Assessment** — 2-3 paragraphs analyzing the idea's strengths, weaknesses, and strategic fit.
-4. **Risk Analysis** — 3-4 key risks with severity ratings (High/Medium/Low) and mitigations.
-5. **Existing Solutions Considered** — If recommendations were shown, list them and note whether the submitter chose to proceed anyway and why.
-6. **Recommended Next Steps** — Clear actionable steps for the review board: Approve / Needs More Info / Redirect to Existing Solution / Decline.
-7. **Triage Routing** — Based on the scenario type, indicate which team(s) should be notified (IT, AI Studio, Platform Engineering, etc.).
+2. **Pros / Strengths** — 3-5 bullet points highlighting the strongest aspects of the idea (strategic fit, innovation, potential value, etc.).
+3. **Cons / Weaknesses** — 3-5 bullet points covering limitations, gaps, or concerns.
+4. **Risk Analysis** — 3-4 key risks with severity ratings (High/Medium/Low) and mitigations, presented in a clean table.
+5. **Tangible Metrics & Considerations** — Qualitative indicators such as estimated effort level (Low/Medium/High), time-to-value, required resources, dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
+6. **Existing Solutions Considered** — If recommendations were shown, list them and note whether the submitter chose to proceed anyway and why.
+7. **Recommended Next Steps** — Clear actionable steps for the review board: Approve / Needs More Info / Redirect to Existing Solution / Decline.
+8. **Triage Routing** — Based on the scenario type, indicate which team(s) should be notified (IT, AI Studio, Platform Engineering, etc.).
 
-- Make it look like a professional evaluation scorecard — use score bars, color-coded ratings, clean tables, and clear hierarchy.
+- IMPORTANT: Do NOT include any numeric scores, ratings out of 10/100, score bars, or overall score summaries anywhere in the document. Focus only on qualitative analysis, pros/cons, risks, and tangible descriptive metrics.
+- Use clean tables, color-coded severity tags (for risks only), and clear hierarchy.
 - Include realistic, specific content derived from the inputs — NOT generic boilerplate.
-- Scores should be justified by the content provided.
 - Make it responsive and printable.
 - The HTML must be fully self-contained (inline styles, no external dependencies).`;
 
@@ -90,7 +85,7 @@ ${Object.entries(answers || {}).map(([q, a]) => `- ${q}: ${a}`).join("\n")}
 **Existing Solutions Shown:** ${recommendations?.length ? recommendations.map((r: any) => r.name).join(", ") : "None"}
 **Submitter Chose to Proceed:** Yes (submitted as new idea)
 
-Create a thorough, scored evaluation that helps the review board make an informed decision.`;
+Create a thorough qualitative evaluation (no numeric scores) that helps the review board make an informed decision.`;
 
       messages = [
         { role: "system", content: systemPrompt },

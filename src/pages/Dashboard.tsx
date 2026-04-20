@@ -116,20 +116,6 @@ const Dashboard = () => {
         {filtered.length > 0 ? (
           <div className="flex flex-col gap-4">
             {filtered.map((idea, i) => {
-              const userMsgs = idea.messages.filter(m => m.role === "user");
-              const totalWords = userMsgs.reduce((sum, m) => sum + m.content.split(/\s+/).length, 0);
-              const questionCount = idea.messages.filter(m => m.role === "assistant").length;
-              
-              const feasibility = Math.min(100, Math.round(
-                30 + (totalWords > 20 ? 20 : totalWords) + (questionCount > 3 ? 15 : 5) + (userMsgs.length * 2)
-              ));
-              const complexity = Math.min(100, Math.round(
-                15 + (totalWords > 50 ? 35 : totalWords * 0.7) + (userMsgs.length * 5)
-              ));
-
-              const feasibilityColor = feasibility >= 70 ? "text-emerald-500" : feasibility >= 40 ? "text-amber-500" : "text-red-400";
-              const complexityColor = complexity >= 70 ? "text-red-400" : complexity >= 40 ? "text-amber-500" : "text-emerald-500";
-
               return (
                 <motion.div
                   key={idea.id}
@@ -185,19 +171,7 @@ const Dashboard = () => {
                           </div>
                         </div>
 
-                        {/* Scores */}
-                        <div className="flex items-center gap-6 shrink-0">
-                          <div className="text-center">
-                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Feasibility</p>
-                            <p className={`text-2xl font-bold ${feasibilityColor}`}>{feasibility}</p>
-                          </div>
-                          <div className="w-px h-10 bg-border" />
-                          <div className="text-center">
-                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Complexity</p>
-                            <p className={`text-2xl font-bold ${complexityColor}`}>{complexity}</p>
-                          </div>
-                          <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 self-center" />
                       </div>
                     </div>
                   </Link>
