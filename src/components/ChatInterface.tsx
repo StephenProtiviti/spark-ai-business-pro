@@ -160,7 +160,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
-const directTriageScenarios = ["AI Studio Support"];
+const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop"];
 
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
