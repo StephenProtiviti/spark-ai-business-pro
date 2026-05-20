@@ -55,7 +55,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 
 // Map final selections to scenario question keys
 const selectionToScenario: Record<string, string> = {
-  "Client Workshop": "AI Studio Support",
+  "Client Workshop": "AI Studio - Client Workshop",
   "Prototype Development": "AI Studio Support",
   "Idea for an AI Showcase": "AI Studio Support",
   "Use Case Development": "Enabler Development",
@@ -84,6 +84,23 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What's the current state?** Do you have an existing prototype, data set, or is this starting from scratch?",
       "**What's the timeline and urgency?** Is there a client demo date or internal deadline driving this?",
       "Last one: **What does success look like?** A working demo, a client commitment, internal buy-in, or something else?",
+    ],
+  },
+  "AI Studio - Client Workshop": {
+    greeting: "A Client Workshop at the AI Studio — exciting! Let's capture the details so we can set this up for success.",
+    questions: [
+      "First up: **What's the purpose of your visit to the AI Studio?** For example, are you looking to explore an AI opportunity, walk a client through a tailored experience, or help them get hands-on through training and enablement?",
+      "**Which client is this workshop for?** Please share the client name.",
+      "**Who is the Sponsoring MD** championing this engagement?",
+      "**Who are the key client stakeholders attending,** and what's their level/title? (e.g., CIO, VP of Innovation)",
+      "**Who are the day-to-day contact(s)** we'll be coordinating with leading up to and during the workshop?",
+      "**What's the functional alignment** of this workshop? (e.g., Finance, Risk, Technology, Operations)",
+      "**What's the industry alignment?** Which industry vertical does this client sit in?",
+      "**How would you describe the client's maturity with AI?** (e.g., Unsure, Exploring, Experimenting, Scaling, Advanced)",
+      "**What's the desired outcome** of this workshop? What should the client walk away with?",
+      "**What's your preferred timeline** for running this workshop?",
+      "**Where would you like the workshop to take place?** (e.g., Chicago AI Studio, Houston AI Studio, client site, virtual)",
+      "Last one: **Any other topics of interest** you'd like to weave into the workshop agenda?",
     ],
   },
   "Agent Development": {
@@ -143,7 +160,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
-const directTriageScenarios = ["AI Studio Support"];
+const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop"];
 
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
