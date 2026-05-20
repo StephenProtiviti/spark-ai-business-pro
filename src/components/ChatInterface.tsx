@@ -55,7 +55,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 
 // Map final selections to scenario question keys
 const selectionToScenario: Record<string, string> = {
-  "Client Workshop": "AI Studio Support",
+  "Client Workshop": "AI Studio - Client Workshop",
   "Prototype Development": "AI Studio Support",
   "Idea for an AI Showcase": "AI Studio Support",
   "Use Case Development": "Enabler Development",
