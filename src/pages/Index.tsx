@@ -100,13 +100,22 @@ const Index = () => {
             Submit ideas through a conversational AI intake and proactively receive recommendations about existing solutions and enablers.
           </p>
 
-          <Link
-            to="/submit"
-            className="group inline-flex items-center gap-2 px-12 py-4 rounded-lg bg-secondary text-white font-semibold text-lg hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/30"
-          >
-            Submit an Idea
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              to="/submit"
+              className="group inline-flex items-center gap-2 px-12 py-4 rounded-lg bg-secondary text-white font-semibold text-lg hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/30"
+            >
+              Submit an Idea
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              to="/submit?mode=support"
+              className="group inline-flex items-center gap-2 px-12 py-4 rounded-lg border-2 border-white/30 bg-white/5 text-white font-semibold text-lg hover:bg-white/10 hover:border-white/50 transition-all"
+            >
+              Request Support
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         </motion.div>
       </section>
 

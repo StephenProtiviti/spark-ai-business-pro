@@ -68,6 +68,8 @@ const selectionToScenario: Record<string, string> = {
   "Enabler Development": "Enabler Development",
   "Copilot Agent Publishing Support": "Enabler Development",
   "Design Thinking Support": "Generic Idea",
+  "Design Thinking Workshop": "Generic Idea",
+  "Pursuit Enablement Support": "Generic Idea",
   "Support in Exploring Existing Tools": "Generic Idea",
   "Other": "Generic Idea",
 };
@@ -145,9 +147,10 @@ const directTriageScenarios = ["AI Studio Support"];
 
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
+  mode?: "idea" | "support";
 }
 
-const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
+const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
@@ -724,8 +727,60 @@ const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
               </motion.div>
             )}
 
+            {/* Welcome Screen — Support Mode */}
+            {!isViewing && !hasStarted && !isTyping && mode === "support" && !ideaCategory && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center py-8"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="text-lg font-bold text-sidebar-foreground mb-1">What kind of support do you need?</h2>
+                <p className="text-sidebar-foreground/60 mb-6 text-center text-xs max-w-xs">
+                  Select a support path to get started.
+                </p>
+                <div className="grid grid-cols-1 gap-3 w-full">
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Design Thinking Workshop");
+                      handleSend("Design Thinking Workshop");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Lightbulb className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Design Thinking Workshop</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Facilitate a workshop to frame and explore a problem</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Pursuit Enablement Support");
+                      handleSend("Pursuit Enablement Support");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Rocket className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Pursuit Enablement Support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for an active client pursuit or proposal</span>
+                    </div>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             {/* Welcome Screen — Step 1: Category Selection */}
-            {!isViewing && !hasStarted && !isTyping && !ideaCategory && (
+            {!isViewing && !hasStarted && !isTyping && mode === "idea" && !ideaCategory && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

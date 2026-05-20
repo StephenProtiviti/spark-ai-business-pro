@@ -15,7 +15,7 @@ const Navbar = () => {
           className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium text-[hsl(var(--sidebar-foreground))]/80 hover:text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
         >
           <LayoutDashboard className="w-4 h-4" />
-          Dashboard
+          View All Ideas
         </Link>
       </div>
     </nav>
