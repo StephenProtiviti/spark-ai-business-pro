@@ -147,9 +147,10 @@ const directTriageScenarios = ["AI Studio Support"];
 
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
+  mode?: "idea" | "support";
 }
 
-const ChatInterface = ({ viewingIdea }: ChatInterfaceProps) => {
+const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
