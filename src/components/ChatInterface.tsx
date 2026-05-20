@@ -57,7 +57,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 const selectionToScenario: Record<string, string> = {
   "Client Workshop": "AI Studio - Client Workshop",
   "Prototype Development": "AI Studio Support",
-  "Idea for an AI Showcase": "AI Studio Support",
+  "Idea for an AI Showcase": "AI Studio - AI Showcase",
   "Use Case Development": "Enabler Development",
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
@@ -101,6 +101,18 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What's your preferred timeline** for running this workshop?",
       "**Where would you like the workshop to take place?** (e.g., Chicago AI Studio, Houston AI Studio, client site, virtual)",
       "Last one: **Any other topics of interest** you'd like to weave into the workshop agenda?",
+    ],
+  },
+  "AI Studio - AI Showcase": {
+    greeting: "An idea for the AI Showcase — love it! Let's capture the details so we can feature it well.",
+    questions: [
+      "First up: **What type of submission is this?** (e.g., Idea / Market Trend, Built use case (Internal), Built use case (Client-facing))",
+      "**Which industry** does this showcase align to?",
+      "**Who is the C-Suite buyer** for this idea? (e.g., CIO, CFO, CRO, CHRO)",
+      "**Who are the point(s) of contact** for this idea or example? Please share names and roles.",
+      "**What's the title of your use case?**",
+      "**Give us a description of your use case** — what problem does it solve, who benefits, and how does it work?",
+      "Last one: **Do you have a demo or credential asset** we can showcase? (e.g., recorded demo, slide, link, or 'not yet')",
     ],
   },
   "Agent Development": {
