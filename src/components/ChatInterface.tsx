@@ -56,7 +56,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 // Map final selections to scenario question keys
 const selectionToScenario: Record<string, string> = {
   "Client Workshop": "AI Studio - Client Workshop",
-  "Prototype Development": "AI Studio Support",
+  "Prototype Development": "AI Studio - Prototype Development",
   "Idea for an AI Showcase": "AI Studio - AI Showcase",
   "Use Case Development": "Atlas Use Case Development",
   "New Protiviti Atlas API Provisioning": "Enabler Development",
@@ -84,6 +84,26 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What's the current state?** Do you have an existing prototype, data set, or is this starting from scratch?",
       "**What's the timeline and urgency?** Is there a client demo date or internal deadline driving this?",
       "Last one: **What does success look like?** A working demo, a client commitment, internal buy-in, or something else?",
+    ],
+  },
+  "AI Studio - Prototype Development": {
+    greeting: "Prototype Development with the AI Studio — let's capture the details so we can scope and build this well.",
+    questions: [
+      "First up: **Who is the Sponsoring EMD** championing this prototype?",
+      "**Who are the Primary Contact(s)** we'll be coordinating with day-to-day?",
+      "**Which client(s) are potentially interested in this prototype?** Share names if known.",
+      "**What's the Functional Area?** (e.g., Finance, Risk, Technology, Operations)",
+      "**What's the Industry alignment?** Which industry vertical does this target?",
+      "**What's the Sub Industry?** (e.g., within Financial Services: Banking, Insurance, Capital Markets)",
+      "**Who is the Target Buyer?** (e.g., CIO, CFO, CRO, Head of Innovation)",
+      "**What's the Title of the Use Case?**",
+      "**Describe the Use Case** — what problem does it solve and how does it work?",
+      "**Use Case Data Availability:** Is the data needed already available? (Yes / No / Partial)",
+      "**Data Location:** Where does the data live? (e.g., client systems, public datasets, synthetic, Protiviti)",
+      "**Describe the Desired Outcome** — what should this prototype prove or demonstrate?",
+      "**Describe the Business Value or Benefits** — revenue impact, efficiency gains, strategic value, etc.",
+      "**What's the Timeline?** Is there a client demo date or internal deadline?",
+      "Last one: **Any Additional Comments** or context we should know?",
     ],
   },
   "AI Studio - Client Workshop": {
