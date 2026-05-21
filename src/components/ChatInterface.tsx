@@ -412,6 +412,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (value === "Other" && ideaCategory === "Client Delivery") {
         mappedScenario = "Client Other";
       }
+      if (value === "Other" && ideaCategory === "Internal Operations") {
+        mappedScenario = "Internal Other";
+      }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
