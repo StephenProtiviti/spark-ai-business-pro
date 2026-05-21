@@ -663,33 +663,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
-        // All questions answered — show recommendations
-        const answers = extractAnswers();
-        const ideaText = Object.values(answers).join(" ");
-        const recs = getRecommendations(ideaText, scenario || "Generic Idea");
-        setRecommendations(recs);
-        setShowRecommendations(true);
-        setCanvasView("recommendations");
-
-        if (recs.length > 0) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant" as const,
-              content: `I've found **${recs.length} existing solution${recs.length > 1 ? "s" : ""}** that might match your needs. Take a look at the recommendations panel on the right.\n\nYou can **open a recommended solution** to explore it, or **proceed with your submission** to generate a full evaluation report for the review board.`,
-            },
-          ]);
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant" as const,
-              content: "I didn't find any closely matching existing solutions. Let me generate a full **Evaluation Report** for the review board to assess your idea.",
-            },
-          ]);
-          // Auto-proceed to evaluation
-          handleProceedWithSubmission(updatedMessages);
-        }
+        // All questions answered — go straight to evaluation report
+        setShowRecommendations(false);
+        setRecommendationsDismissed(true);
+        setCanvasView("evaluation");
+        handleProceedWithSubmission(updatedMessages);
         setConversationDone(true);
       }
       setIsTyping(false);
@@ -697,21 +675,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   };
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
-    // For scenarios with recommendations, ask differentiation question first
-    if ((selectedScenario === "Client Other" || selectedScenario === "Agent Development" || selectedScenario === "Agent Development - Client" || selectedScenario === "Agent Development - Internal") && !awaitingDifferentiationAnswer) {
-      setRecommendationsDismissed(true);
-      const followUpMsg: Message = {
-        role: "assistant",
-        content: "Ok, please **describe what's different in your idea from the recommended accelerators?** This helps us understand why your idea is unique from existing solutions.",
-      };
-      setMessages((prev) => [...prev, followUpMsg]);
-      setAwaitingDifferentiationAnswer(true);
-      setConversationDone(false); // Re-enable chat input
-      return;
-    }
-
     setRecommendationsDismissed(true);
     setCanvasView("evaluation");
+
 
     const proceedMsg: Message = {
       role: "assistant",
