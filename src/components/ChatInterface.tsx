@@ -861,7 +861,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
           {/* Chat Header */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-sidebar-border shrink-0">
-            {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+            {!isViewing && !submitted && (
               <button
                 onClick={handleGoBack}
                 className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
