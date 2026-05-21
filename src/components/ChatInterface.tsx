@@ -179,6 +179,22 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
+  "Internal Other": {
+    greeting: "Great — let's capture your internal operations idea! I'll walk you through a few questions to gather everything we need for the review board.",
+    questions: [
+      "To start, **what's the name of your idea?** A short working title is perfect.",
+      "**Problem Statement:** What need does your idea fulfill? Describe the gap or pain point it addresses.",
+      "**Proposed Solution:** What are the expected outcomes from this idea? How will it solve the problem?",
+      "**Idea Description:** Walk me through how your idea works in a bit more detail.",
+      "**MD Sponsor:** Who is the MD championing this idea internally?",
+      "**Who is the intended end user of your idea?** (e.g., specific internal teams, functions, or roles)",
+      "**What type of support are you looking for?** (e.g., Idea Refinement, Design Thinking, Proto Recognition, POC, Development, Technical Resources — you can list multiple)",
+      "Last one: **What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
+    ],
+  },
+};
+
+// Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
 
 interface ChatInterfaceProps {
