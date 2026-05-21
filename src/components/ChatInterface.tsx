@@ -549,6 +549,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } else if (ideaCategory) {
       // In area selection — go back to category
       setIdeaCategory(null);
+    } else {
+      // At the top of the chat flow — go back to the homepage
+      navigate("/");
     }
   };
 
