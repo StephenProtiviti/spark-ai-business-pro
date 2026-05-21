@@ -316,6 +316,25 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
     ],
   },
+  "Agent Development - Client": {
+    greeting: "New Agent Development for Client Delivery — let's scope out what you're building!",
+    questions: [
+      "To start, **what's the Idea Title?** A short working title is perfect.",
+      "**Overview of the Idea:** Give me a quick summary of what this agent is and what it does.",
+      "**Problem Statement:** What needs will this Agent fulfill and what value can it create?",
+      "**What are the expected outcomes of this idea?**",
+      "**What is the current approach of performing the task** the agent will take on?",
+      "**What data or knowledge base will this agent rely on** to generate its responses?",
+      "**What infrastructure or technology would you like to suggest for building this Agent?** (e.g., Copilot Studio, Atlas, OpenAI, Claude, Other — feel free to mention more than one)",
+      "**Specify the MD / Business Point of Contact** for this agent.",
+      "**Who are the target users for the agent?** (e.g., client executives, internal teams, specific personas)",
+      "**What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
+      "**What is the anticipated revenue impact of this use case?**",
+      "**How would you classify the data suggested for this agent?** (e.g., public, internal, confidential, regulated)",
+      "**What efficiency gains are expected from this use case?**",
+      "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
+    ],
+  },
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
@@ -546,6 +565,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (value === "Use Case Development" && ideaCategory === "Client Delivery") {
         mappedScenario = "Atlas Use Case Development - Client";
       }
+      if (value === "New Agent Development" && ideaCategory === "Client Delivery") {
+        mappedScenario = "Agent Development - Client";
+      }
       if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Client Delivery") {
         mappedScenario = "Atlas API Provisioning - Client";
       }
@@ -654,7 +676,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
     // For scenarios with recommendations, ask differentiation question first
-    if ((selectedScenario === "Client Other" || selectedScenario === "Agent Development") && !awaitingDifferentiationAnswer) {
+    if ((selectedScenario === "Client Other" || selectedScenario === "Agent Development" || selectedScenario === "Agent Development - Client") && !awaitingDifferentiationAnswer) {
       setRecommendationsDismissed(true);
       const followUpMsg: Message = {
         role: "assistant",
