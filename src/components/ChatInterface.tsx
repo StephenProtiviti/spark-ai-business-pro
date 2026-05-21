@@ -282,6 +282,23 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Specify the IP Address (Office) for all user(s)** who will be accessing the API from the office.",
     ],
   },
+  "Atlas API Provisioning Existing - Client": {
+    greeting: "Existing Protiviti Atlas API Provisioning for Client Delivery — let's capture the details we need.",
+    questions: [
+      "To start, **what type of request are you submitting for an existing Protiviti Atlas API key/project?** (Add new user(s) and request API key(s) to an already approved existing project, Update IP address(es) for an existing API key/project, or Other / Not sure)",
+      "**What's the Title of your Project?**",
+      "**What is the description of your project?** Walk me through it in a bit more detail.",
+      "**Share the Project ID/Code** associated with this engagement.",
+      "**Specify the base URL** for the API.",
+      "**Specify the User ID(s) of all users** who will need access.",
+      "**Specify the IP Address (Home) for all user(s)** who will be accessing from home.",
+      "**Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
+      "**Specify the IP Address (Office) for all user(s)** who will be accessing from the office.",
+      "**What is the anticipated revenue impact of this use case?**",
+      "**What efficiency gains are expected from this use case?**",
+      "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
+    ],
+  },
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
@@ -517,6 +534,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       }
       if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Internal Operations") {
         mappedScenario = "Atlas API Provisioning - Internal";
+      }
+      if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Client Delivery") {
+        mappedScenario = "Atlas API Provisioning Existing - Client";
       }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
