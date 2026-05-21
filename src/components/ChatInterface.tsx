@@ -175,10 +175,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Do you have Client Validation for this idea?** If yes, please share the **name of the client**.",
     ],
   },
-
-};
-
-// Triage mapping — which scenarios go directly to IT/AI Studio
   "Internal Other": {
     greeting: "Great — let's capture your internal operations idea! I'll walk you through a few questions to gather everything we need for the review board.",
     questions: [
