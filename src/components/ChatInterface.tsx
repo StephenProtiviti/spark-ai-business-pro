@@ -396,6 +396,7 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
+  const navigate = useNavigate();
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
