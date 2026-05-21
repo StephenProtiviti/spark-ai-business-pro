@@ -251,6 +251,22 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Do you have Client Validation for this idea?** If yes, please share the **name of the client**.",
     ],
   },
+  "Atlas API Provisioning - Client": {
+    greeting: "New Protiviti Atlas API Provisioning for Client Delivery — let's capture the details we need to get this provisioned.",
+    questions: [
+      "To start, **what is the scope of your project?** Give a brief overview of what you're trying to accomplish.",
+      "**What's the Title of your Project?**",
+      "**What is the description of your project?** Walk me through it in a bit more detail.",
+      "**What kind of data will be used in the project?** (e.g., client data, public data, synthetic data — and any sensitivity considerations)",
+      "**Share the Project ID/Code** associated with this engagement.",
+      "**Who is the MD sponsor** championing this project?",
+      "**Do you have MD approval?** (Yes / No) — if Yes, please **attach or share a link to the MD approval**.",
+      "**Specify the User ID(s) of all users** who will need access to the API.",
+      "**Specify the IP Address (Home) for all user(s)** who will be accessing the API from home.",
+      "**Specify the IP Address (Office) for all user(s)** who will be accessing the API from the office.",
+      "Last one: **Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
+    ],
+  },
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
