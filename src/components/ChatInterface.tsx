@@ -267,6 +267,21 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
     ],
   },
+  "Atlas API Provisioning - Internal": {
+    greeting: "New Protiviti Atlas API Provisioning for Internal Operations — let's capture the details we need to get this provisioned.",
+    questions: [
+      "To start, **what is the scope of your project?** Give a brief overview of what you're trying to accomplish.",
+      "**What is the intended goal?** (Experimentation, Learning, or Internal Use)",
+      "**What's the Name of your project?**",
+      "**Please share details of your use case** — walk me through what you're building and why.",
+      "**What kind of data will be used in the project?** (e.g., internal data, public data, synthetic data — and any sensitivity considerations)",
+      "**Do you have MD approval?** (Yes / No) — if Yes, please **attach or share a link to the MD approval**.",
+      "**Specify the User ID(s) of all users** who will need access to the API.",
+      "**Specify the IP Address (Home) for all user(s)** who will be accessing the API from home.",
+      "**Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
+      "Last one: **Specify the IP Address (Office) for all user(s)** who will be accessing the API from the office.",
+    ],
+  },
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
