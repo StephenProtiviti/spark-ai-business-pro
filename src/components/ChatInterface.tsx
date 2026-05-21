@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Sparkles, CheckCircle2, FileText, MessageSquare, Lightbulb, Zap, TrendingUp, Shield, BarChart3, Workflow, Pencil, ThumbsUp, Loader2, Eye, RefreshCw, ExternalLink, Layout, Mic, MicOff, Bot, Wrench, Cpu, Rocket, Package, ArrowRight, X, Download, ChevronLeft, Ban } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -395,6 +396,7 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
+  const navigate = useNavigate();
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
@@ -547,6 +549,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } else if (ideaCategory) {
       // In area selection — go back to category
       setIdeaCategory(null);
+    } else {
+      // At the top of the chat flow — go back to the homepage
+      navigate("/");
     }
   };
 
@@ -856,7 +861,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
           {/* Chat Header */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-sidebar-border shrink-0">
-            {!isViewing && (ideaCategory || hasStarted) && !submitted && (
+            {!isViewing && !submitted && (
               <button
                 onClick={handleGoBack}
                 className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
