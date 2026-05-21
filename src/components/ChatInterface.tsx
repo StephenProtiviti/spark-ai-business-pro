@@ -667,13 +667,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         setShowRecommendations(false);
         setRecommendationsDismissed(true);
         setCanvasView("evaluation");
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant" as const,
-            content: "Thanks — that's everything I need. Generating your **Idea Evaluation Report** for the review board now...",
-          },
-        ]);
         handleProceedWithSubmission(updatedMessages);
         setConversationDone(true);
       }
