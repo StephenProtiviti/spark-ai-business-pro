@@ -500,6 +500,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Client Delivery") {
         mappedScenario = "Atlas API Provisioning - Client";
       }
+      if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Internal Operations") {
+        mappedScenario = "Atlas API Provisioning - Internal";
+      }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
