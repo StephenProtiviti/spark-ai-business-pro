@@ -69,7 +69,7 @@ const selectionToScenario: Record<string, string> = {
   "Copilot Agent Publishing Support": "Enabler Development",
   "Design Thinking Support": "Generic Idea",
   "Design Thinking Workshop": "Generic Idea",
-  "Pursuit Enablement Support": "Generic Idea",
+  "Pursuit Enablement Support": "Pursuit Enablement Support",
   "Support in Exploring Existing Tools": "Generic Idea",
   "Other": "Generic Idea",
 };
