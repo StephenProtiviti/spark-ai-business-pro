@@ -161,14 +161,21 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Client Other": {
     greeting: "Great — let's capture your idea! I'll walk you through a few questions to gather everything we need for the review board.",
     questions: [
-      "**Describe your use case and the need this enabler is expected to fulfill?**",
-      "**What are the expected outcomes?**",
-      "**Do you have an MD sponsor for this idea?** If so, what is their name?",
-      "**What insights do you have about the current market demand?**",
-      "**Do you have a ready client on which you can use this?**",
-      "Last one: **What is the estimated efficiency gains and/or revenue impact from this use case?**",
+      "To start, **what's the name of your idea?** A short working title is perfect.",
+      "**Problem Statement:** What need does your idea fulfill? Describe the gap or pain point it addresses.",
+      "**Proposed Solution:** What are the expected outcomes from this idea? How will it solve the problem?",
+      "**Idea Description:** Walk me through how your idea works in a bit more detail.",
+      "**MD Sponsor:** Who is the MD championing this idea internally?",
+      "**Who is the intended end user of your idea?** (e.g., client executives, internal teams, specific personas)",
+      "**What C-Suite Solution Team(s) does this apply to?** (e.g., CFO, CIO, CRO, CHRO, COO — you can list multiple)",
+      "**What industry team(s) does this apply to?** (e.g., Financial Services, Healthcare, Consumer Products)",
+      "**Who is the competitor?** Are we up against Consulting Firms, Third Party Vendors, or both?",
+      "**Name of the competitor(s)** — who specifically should we be aware of?",
+      "**What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
+      "Last one: **Do you have Client Validation for this idea?** If yes, please share the **name of the client**.",
     ],
   },
+
 };
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
