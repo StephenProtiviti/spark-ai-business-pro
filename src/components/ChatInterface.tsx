@@ -698,7 +698,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
     // For scenarios with recommendations, ask differentiation question first
-    if ((selectedScenario === "Client Other" || selectedScenario === "Agent Development" || selectedScenario === "Agent Development - Client") && !awaitingDifferentiationAnswer) {
+    if ((selectedScenario === "Client Other" || selectedScenario === "Agent Development" || selectedScenario === "Agent Development - Client" || selectedScenario === "Agent Development - Internal") && !awaitingDifferentiationAnswer) {
       setRecommendationsDismissed(true);
       const followUpMsg: Message = {
         role: "assistant",
