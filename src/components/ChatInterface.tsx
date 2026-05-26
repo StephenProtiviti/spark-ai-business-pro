@@ -22,7 +22,6 @@ const clientAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Design Thinking Support", icon: Lightbulb, description: "Design thinking facilitation and support" },
   { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
   { label: "Other", icon: Sparkles, description: "Other client delivery ideas" },
 ];
@@ -1124,7 +1123,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <button
                         key={label}
                         onClick={() => {
-                          if (hasSubArea) {
+                          if (label === "Protiviti Atlas") {
+                            // Skip sub-area picker — go straight to Use Case Development
+                            setIdeaArea(label);
+                            handleSend("Use Case Development");
+                          } else if (hasSubArea) {
                             setIdeaArea(label);
                           } else {
                             // Terminal selection — start conversation
