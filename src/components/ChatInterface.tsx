@@ -56,6 +56,10 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
     { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Support for an existing Protiviti Atlas API provisioning" },
   ],
+  "New Protiviti Atlas API Provisioning": [
+    { label: "Client use case / enabler", icon: TrendingUp, description: "API provisioning for a client engagement" },
+    { label: "Experimentation / Learning / Internal Use", icon: Shield, description: "API provisioning for internal experimentation or learning" },
+  ],
 };
 
 // Map final selections to scenario question keys
@@ -639,9 +643,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Internal Operations") {
         mappedScenario = "Atlas API Provisioning Existing - Internal";
       }
-      if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
-        mappedScenario = "Atlas API Provisioning - Client";
-      }
       if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
         mappedScenario = "Atlas API Provisioning Existing - Client";
       }
@@ -1172,9 +1173,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                  </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
-                    <button
-                      key={label}
-                      onClick={() => handleSend(label)}
+                     <button
+                       key={label}
+                       onClick={() => {
+                         if (subAreas[label]) {
+                           setIdeaArea(label);
+                         } else {
+                           handleSend(label);
+                         }
+                       }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
