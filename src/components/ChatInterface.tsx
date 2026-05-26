@@ -1586,6 +1586,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
+                    ) : showLiveBrief ? (
+                      <LiveBrief
+                        scenario={selectedScenario}
+                        ideaTitle={liveIdeaTitle}
+                        ideaDescription={liveIdeaDescription}
+                        questions={liveBriefQuestions}
+                        answers={liveAnswers}
+                        isTyping={isTyping}
+                      />
                     ) : (
                       <div className="h-full flex items-center justify-center">
                         <p className="text-sm text-muted-foreground">Innovation Idea Brief will appear here after you proceed.</p>
