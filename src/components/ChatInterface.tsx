@@ -53,8 +53,8 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
   ],
   "Protiviti Atlas API Support": [
-    { label: "Client use case / enabler", icon: TrendingUp, description: "API provisioning for a client engagement" },
-    { label: "Experimentation / Learning / Internal Use", icon: Shield, description: "API provisioning for internal experimentation or learning" },
+    { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
+    { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Support for an existing Protiviti Atlas API provisioning" },
   ],
 };
 
