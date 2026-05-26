@@ -18,7 +18,6 @@ interface Message {
 // ── Decision Tree Areas ──
 const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
-  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
