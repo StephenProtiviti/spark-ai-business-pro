@@ -1028,7 +1028,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-sidebar-foreground block">Training Conference Support</span>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Training / Conference Support</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for a training event or conference session</span>
                     </div>
                   </button>
