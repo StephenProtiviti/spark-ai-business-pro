@@ -30,7 +30,6 @@ const internalAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Design Thinking Support", icon: Lightbulb, description: "Design thinking facilitation and support" },
   { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
   { label: "Other", icon: Sparkles, description: "Other internal operations ideas" },
 ];
