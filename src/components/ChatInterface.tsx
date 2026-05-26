@@ -826,7 +826,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           ...prev,
           {
             role: "assistant" as const,
-            content: "Your **Evaluation Report** is ready! Review it on the right panel. You can request changes or submit for review.",
+            content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
           },
         ]);
       } else if (refinement && previousHtml) {
