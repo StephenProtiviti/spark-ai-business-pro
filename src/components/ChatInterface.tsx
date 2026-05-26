@@ -886,6 +886,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const hasCanvasContent = evaluationHtml || isGeneratingEvaluation || showRecommendations ||
     (isViewing && viewingIdea?.businessPlanHtml);
 
+  // Progress for the question phase — drives the canvas progress indicator
+  const totalQuestions = (selectedScenario && scenarioQuestions[selectedScenario]
+    ? scenarioQuestions[selectedScenario].questions.length
+    : scenarioQuestions["Generic Idea"]?.questions.length) || 0;
+  const answeredQuestions = Math.min(questionIndex, totalQuestions);
+  const progressPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+  const inQuestionPhase = !isViewing && !submitted && hasStarted && !evaluationHtml &&
+    !isGeneratingEvaluation && !conversationDone && totalQuestions > 0;
+
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
       {/* ===== LEFT PANEL — Chat ===== */}
@@ -1604,16 +1613,92 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                 </div>
               )}
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-                    <Layout className="w-8 h-8 text-muted-foreground/40" />
+              <div className="flex-1 flex items-center justify-center p-6 overflow-auto">
+                {inQuestionPhase ? (
+                  (() => {
+                    const sections = [
+                      "Overview",
+                      "Problem Statement",
+                      "Target Audience",
+                      "Proposed Solution",
+                      "Expected Impact",
+                      "Feasibility & Next Steps",
+                    ];
+                    const unlocked = Math.ceil((answeredQuestions / Math.max(totalQuestions, 1)) * sections.length);
+                    const radius = 52;
+                    const circumference = 2 * Math.PI * radius;
+                    const dashOffset = circumference - (progressPct / 100) * circumference;
+                    return (
+                      <div className="w-full max-w-md flex flex-col items-center">
+                        {/* Circular progress */}
+                        <div className="relative w-36 h-36 mb-4">
+                          <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r={radius} stroke="hsl(var(--muted))" strokeWidth="8" fill="none" />
+                            <circle
+                              cx="60"
+                              cy="60"
+                              r={radius}
+                              stroke="hsl(var(--primary))"
+                              strokeWidth="8"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeDasharray={circumference}
+                              strokeDashoffset={dashOffset}
+                              className="transition-all duration-700 ease-out"
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <FileText className="w-6 h-6 text-primary mb-1" />
+                            <span className="text-2xl font-semibold text-foreground tabular-nums">{progressPct}%</span>
+                          </div>
+                        </div>
+                        <h3 className="text-base font-semibold text-foreground/80 mb-1">Canvas</h3>
+                        <p className="text-xs text-muted-foreground mb-6">
+                          Building your Innovation Idea Brief — {answeredQuestions} of {totalQuestions} questions answered
+                        </p>
+
+                        {/* Ghosted brief preview */}
+                        <div className="w-full bg-card border border-border rounded-lg p-5 space-y-4 shadow-sm">
+                          <div className="space-y-2 pb-3 border-b border-border">
+                            <div className="h-3 w-1/2 rounded bg-muted" />
+                            <div className="h-2 w-1/3 rounded bg-muted/70" />
+                          </div>
+                          {sections.map((label, i) => {
+                            const active = i < unlocked;
+                            return (
+                              <div
+                                key={label}
+                                className={`space-y-2 transition-opacity duration-700 ${active ? "opacity-100" : "opacity-25"}`}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div className={`h-1.5 w-1.5 rounded-full ${active ? "bg-primary" : "bg-muted-foreground/40"}`} />
+                                  <div className={`text-[11px] font-medium uppercase tracking-wider ${active ? "text-primary" : "text-muted-foreground/60"}`}>
+                                    {label}
+                                  </div>
+                                </div>
+                                <div className="space-y-1.5 pl-3.5">
+                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "92%" }} />
+                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "78%" }} />
+                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "64%" }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+                      <Layout className="w-8 h-8 text-muted-foreground/40" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
+                    <p className="text-sm text-muted-foreground max-w-xs">
+                      Recommendations and your Innovation Idea Brief will appear here.
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
-                  <p className="text-sm text-muted-foreground max-w-xs">
-                    Recommendations and your Innovation Idea Brief will appear here.
-                  </p>
-                </div>
+                )}
               </div>
             </div>
           )}
