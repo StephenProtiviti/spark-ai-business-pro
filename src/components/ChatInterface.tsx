@@ -9,6 +9,7 @@ import { useIdeas, RecentIdea } from "@/contexts/IdeasContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getRecommendations, Accelerator } from "@/data/mockAccelerators";
+import LiveBrief from "@/components/LiveBrief";
 
 interface Message {
   role: "user" | "assistant";
@@ -697,12 +698,14 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || value);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
+        setCanvasView("evaluation");
       } else {
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
         const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || undefined);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
+        setCanvasView("evaluation");
       }
       setInput("");
       return;
@@ -883,8 +886,27 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setSubmitted(true);
   };
 
+  // Live brief: show during Q&A flow before evaluation is generated
+  const liveBriefScenario = selectedScenario || "Generic Idea";
+  const liveBriefQuestions = scenarioQuestions[liveBriefScenario]?.questions || [];
+  const userMessagesAll = (isViewing ? viewingMessages : messages).filter((m) => m.role === "user");
+  // First user message is the scenario click (e.g. an area label), not an answer.
+  // The second user message is the idea description, and subsequent ones answer the questions.
+  const liveIdeaDescription = userMessagesAll[1]?.content || "";
+  const liveAnswers = liveBriefQuestions.map((_, i) => userMessagesAll[i + 2]?.content || "");
+  const liveIdeaTitle = liveIdeaDescription
+    ? liveIdeaDescription.slice(0, 80)
+    : (userMessagesAll[0]?.content || "");
+  const showLiveBrief =
+    !isViewing &&
+    !submitted &&
+    !!selectedScenario &&
+    !evaluationReady &&
+    !isGeneratingEvaluation &&
+    userMessagesAll.length >= 1;
+
   const hasCanvasContent = evaluationHtml || isGeneratingEvaluation || showRecommendations ||
-    (isViewing && viewingIdea?.businessPlanHtml);
+    (isViewing && viewingIdea?.businessPlanHtml) || showLiveBrief;
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -1565,6 +1587,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         title="Innovation Idea Brief"
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
+                      />
+                    ) : showLiveBrief ? (
+                      <LiveBrief
+                        scenario={selectedScenario}
+                        ideaTitle={liveIdeaTitle}
+                        ideaDescription={liveIdeaDescription}
+                        questions={liveBriefQuestions}
+                        answers={liveAnswers}
+                        isTyping={isTyping}
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
