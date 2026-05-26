@@ -1611,7 +1611,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
                   <p className="text-sm text-muted-foreground max-w-xs">
-                    Recommendations and your evaluation report will appear here.
+                    Recommendations and your Innovation Idea Brief will appear here.
                   </p>
                 </div>
               </div>
