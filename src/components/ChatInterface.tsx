@@ -803,7 +803,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error("Failed to generate evaluation report");
+        toast.error("Failed to generate Innovation Idea Brief");
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
