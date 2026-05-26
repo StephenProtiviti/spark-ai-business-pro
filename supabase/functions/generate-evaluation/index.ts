@@ -49,29 +49,28 @@ Rules:
         },
       ];
     } else {
-      const systemPrompt = `You are a senior innovation analyst evaluating idea submissions for a review board. Given an idea, its scenario type, and the submitter's answers, generate a professional evaluation document in clean, self-contained HTML.
+      const systemPrompt = `You are a senior innovation analyst reviewing idea submissions for a review board. Given an idea, its scenario type, and the submitter's answers, generate a professional Innovation Idea Brief in clean, self-contained HTML.
 
 Rules:
 - Output ONLY valid HTML. No markdown, no code fences, no explanation text.
 - Output a COMPLETE document starting with <!DOCTYPE html>.
 - Use inline CSS with a professional, executive-ready design. Use system-ui font, clean typography, and a muted color palette (#1e3a5f navy, #f97316 accent orange, #f8fafc backgrounds).
-- The main title/header of the document should be the specific idea title derived from the submission — NOT a generic "IDEA EVALUATION REPORT" heading. Use the idea name/title as the prominent H1 header at the top.
-- The document should be structured as an evaluation report containing these sections:
+- The main title/header of the document should be the specific idea title derived from the submission — NOT a generic "INNOVATION IDEA BRIEF" heading. Use the idea name/title as the prominent H1 header at the top.
+- The document should be structured as an Innovation Idea Brief containing these sections:
 
 1. **Submission Overview** — Scenario type, idea title, date, and a 2-3 sentence executive summary.
 2. **Pros / Strengths** — 3-5 bullet points highlighting the strongest aspects of the idea (strategic fit, innovation, potential value, etc.).
 3. **Cons / Weaknesses** — 3-5 bullet points covering limitations, gaps, or concerns.
-4. **Risk Analysis** — 3-4 key risks with severity ratings (High/Medium/Low) and mitigations, presented in a clean table.
-5. **Tangible Metrics & Considerations** — Qualitative indicators such as estimated effort level (Low/Medium/High), time-to-value, required resources, dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
-6. **Existing Solutions Considered** — If recommendations were shown, list them and note whether the submitter chose to proceed anyway and why.
-7. **Recommended Next Steps** — Clear actionable steps for the review board: Approve / Needs More Info / Redirect to Existing Solution / Decline.
-8. **Triage Routing** — Based on the scenario type, indicate which team(s) should be notified (IT, AI Studio, Platform Engineering, etc.).
+4. **Tangible Metrics & Considerations** — Qualitative indicators such as estimated effort level (Low/Medium/High), time-to-value, required resources, dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
+5. **Triage Routing** — Based on the scenario type, indicate which team(s) should be notified (IT, AI Studio, Platform Engineering, etc.).
 
-- IMPORTANT: Do NOT include any numeric scores, ratings out of 10/100, score bars, or overall score summaries anywhere in the document. Focus only on qualitative analysis, pros/cons, risks, and tangible descriptive metrics.
-- Use clean tables, color-coded severity tags (for risks only), and clear hierarchy.
+- IMPORTANT: Do NOT include any numeric scores, ratings out of 10/100, score bars, or overall score summaries anywhere in the document. Focus only on qualitative analysis, pros/cons, and tangible descriptive metrics.
+- Do NOT include a Risk Analysis section, an Existing Solutions Considered section, or a Recommended Next Steps section.
+- Use clean tables and clear hierarchy.
 - Include realistic, specific content derived from the inputs — NOT generic boilerplate.
 - Make it responsive and printable.
 - The HTML must be fully self-contained (inline styles, no external dependencies).`;
+
 
       const userPrompt = `Generate an idea evaluation document for the review board:
 
