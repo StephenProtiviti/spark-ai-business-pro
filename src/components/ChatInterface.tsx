@@ -52,6 +52,10 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
   ],
+  "Protiviti Atlas API Support": [
+    { label: "Client use case / enabler", icon: TrendingUp, description: "API provisioning for a client engagement" },
+    { label: "Experimentation / Learning / Internal Use", icon: Shield, description: "API provisioning for internal experimentation or learning" },
+  ],
 };
 
 // Map final selections to scenario question keys
