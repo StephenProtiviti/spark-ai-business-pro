@@ -1237,7 +1237,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   <CheckCircle2 className="w-10 h-10 text-accent mx-auto mb-2" />
                   <h3 className="font-semibold text-sidebar-foreground text-base mb-1">Submitted for Review!</h3>
                   <p className="text-xs text-sidebar-foreground/60 mb-3">
-                    Your idea has been submitted with an evaluation report. The review board will assess it.
+                    Your idea has been submitted. Congratulations. The team will review it and assign it to either the AI studio, the innovation team, or the IT group.
                   </p>
                   {selectedScenario && directTriageScenarios.includes(selectedScenario) && (
                     <div className="rounded-lg border border-accent/30 bg-accent/10 p-2 mb-3">
@@ -1246,16 +1246,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       </p>
                     </div>
                   )}
-                  <div className="rounded-lg border border-sidebar-border bg-sidebar p-3 text-left">
-                    <div className="flex items-center gap-2 mb-1">
-                      <MessageSquare className="w-4 h-4 text-primary" />
-                      <span className="font-medium text-sidebar-foreground text-xs">Teams Channel</span>
-                    </div>
-                    <p className="text-[11px] text-sidebar-foreground/60">
-                      <span className="font-mono bg-sidebar-accent px-1.5 py-0.5 rounded">#{submittedIdea.teamsChannel}</span>
-                      <span className="ml-1.5">— {submittedIdea.assignedTo.name}</span>
-                    </p>
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -1577,15 +1567,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
 
               {/* Assigned member */}
-              {((submittedIdea && submitted) || (isViewing && viewingIdea)) && (
+              {(isViewing && viewingIdea) && (
                 <div className="px-4 py-3 border-t border-border shrink-0">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">
-                      {(submittedIdea || viewingIdea)?.assignedTo.avatar}
+                      {viewingIdea?.assignedTo.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground">{(submittedIdea || viewingIdea)?.assignedTo.name}</p>
-                      <p className="text-xs text-muted-foreground">{(submittedIdea || viewingIdea)?.assignedTo.role}</p>
+                      <p className="text-sm font-medium text-foreground">{viewingIdea?.assignedTo.name}</p>
+                      <p className="text-xs text-muted-foreground">{viewingIdea?.assignedTo.role}</p>
                     </div>
                   </div>
                 </div>
