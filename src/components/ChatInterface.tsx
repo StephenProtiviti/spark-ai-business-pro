@@ -298,32 +298,21 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Atlas API Provisioning - Client": {
     greeting: "New Protiviti Atlas API Provisioning for Client Delivery — let's capture the details we need to get this provisioned.",
     questions: [
-      "To start, **what is the scope of your project?** Give a brief overview of what you're trying to accomplish.",
-      "**What's the Title of your Project?**",
-      "**What is the description of your project?** Walk me through it in a bit more detail.",
-      "**What kind of data will be used in the project?** (e.g., client data, public data, synthetic data — and any sensitivity considerations)",
-      "**Share the Project ID/Code** associated with this engagement.",
-      "**Who is the MD sponsor** championing this project?",
-      "**Do you have MD approval?** (Yes / No) — if Yes, please **attach or share a link to the MD approval**.",
-      "**Specify the User ID(s) of all users** who will need access to the API.",
-      "**Specify the IP Address (Home) for all user(s)** who will be accessing the API from home.",
-      "**Specify the IP Address (Office) for all user(s)** who will be accessing the API from the office.",
-      "Last one: **Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
+      "To start, share the **project basics**: **scope/overview**, **project title**, and a **brief description** of what you're building.",
+      "**Project & sponsor details:** share the **Project ID/Code**, the **MD sponsor** championing this project, and **MD approval status** (Yes/No — if Yes, attach or share a link).",
+      "**Data:** what **kind of data** will be used? (e.g., client, public, synthetic — include any sensitivity considerations)",
+      "**User access:** list the **User ID(s)** of all users who will need access to the API.",
+      "Last one — **IP addresses to whitelist** for all users: **Home**, **Office**, and **Public** IPs.",
     ],
   },
   "Atlas API Provisioning - Internal": {
     greeting: "New Protiviti Atlas API Provisioning for Internal Operations — let's capture the details we need to get this provisioned.",
     questions: [
-      "To start, **what is the scope of your project?** Give a brief overview of what you're trying to accomplish.",
-      "**What is the intended goal?** (Experimentation, Learning, or Internal Use)",
-      "**What's the Name of your project?**",
-      "**Please share details of your use case** — walk me through what you're building and why.",
-      "**What kind of data will be used in the project?** (e.g., internal data, public data, synthetic data — and any sensitivity considerations)",
-      "**Do you have MD approval?** (Yes / No) — if Yes, please **attach or share a link to the MD approval**.",
-      "**Specify the User ID(s) of all users** who will need access to the API.",
-      "**Specify the IP Address (Home) for all user(s)** who will be accessing the API from home.",
-      "**Specify the IP Address (Public) for all user(s)** that should be whitelisted for public access.",
-      "Last one: **Specify the IP Address (Office) for all user(s)** who will be accessing the API from the office.",
+      "To start, share the **project basics**: **scope/overview**, **project name**, and the **intended goal** (Experimentation, Learning, or Internal Use).",
+      "**Use case & data:** share **details of your use case** (what you're building and why) and the **kind of data** that will be used (internal, public, synthetic — include any sensitivity considerations).",
+      "**MD approval:** Yes / No — if Yes, please **attach or share a link to the MD approval**.",
+      "**User access:** list the **User ID(s)** of all users who will need access to the API.",
+      "Last one — **IP addresses to whitelist** for all users: **Home**, **Office**, and **Public** IPs.",
     ],
   },
   "Atlas API Provisioning Existing - Client": {
@@ -1039,7 +1028,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-sidebar-foreground block">Training Conference Support</span>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Training / Conference Support</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for a training event or conference session</span>
                     </div>
                   </button>
