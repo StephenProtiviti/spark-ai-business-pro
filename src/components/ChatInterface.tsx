@@ -1123,7 +1123,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <button
                         key={label}
                         onClick={() => {
-                          if (hasSubArea) {
+                          if (label === "Protiviti Atlas") {
+                            // Skip sub-area picker — go straight to Use Case Development
+                            setIdeaArea(label);
+                            handleSend("Use Case Development");
+                          } else if (hasSubArea) {
                             setIdeaArea(label);
                           } else {
                             // Terminal selection — start conversation
