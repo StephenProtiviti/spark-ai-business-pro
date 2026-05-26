@@ -1554,21 +1554,21 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             </div>
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-foreground">Generating evaluation report...</p>
-                            <p className="text-xs text-muted-foreground mt-1">Scoring and analyzing your submission</p>
+                            <p className="text-sm font-semibold text-foreground">Generating Innovation Idea Brief...</p>
+                            <p className="text-xs text-muted-foreground mt-1">Summarizing your submission</p>
                           </div>
                         </div>
                       </div>
                     ) : (evaluationHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
                       <iframe
                         srcDoc={evaluationHtml || viewingIdea?.businessPlanHtml}
-                        title="Evaluation Report"
+                        title="Innovation Idea Brief"
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">Evaluation report will appear here after you proceed.</p>
+                        <p className="text-sm text-muted-foreground">Innovation Idea Brief will appear here after you proceed.</p>
                       </div>
                     )}
                   </>
