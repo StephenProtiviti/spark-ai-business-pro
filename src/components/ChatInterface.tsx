@@ -748,7 +748,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
     const proceedMsg: Message = {
       role: "assistant",
-      content: "Generating your **Idea Evaluation Report** — this will include scores, risk analysis, and a recommendation for the review board...",
+      content: "Generating your **Innovation Idea Brief** — preparing a qualitative summary for the review board...",
     };
     const msgsToUse = msgOverride || messages;
     setMessages((prev) => [...prev, proceedMsg]);
