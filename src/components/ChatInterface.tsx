@@ -698,12 +698,14 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || value);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
+        setCanvasView("evaluation");
       } else {
         const initialMessages = [userMsg, greeting, firstQuestion];
         setMessages(initialMessages);
         const draft = createDraftIdea(value, initialMessages, ideaCategory || undefined, ideaArea || undefined);
         setDraftIdeaId(draft.id);
         setQuestionIndex(1);
+        setCanvasView("evaluation");
       }
       setInput("");
       return;
