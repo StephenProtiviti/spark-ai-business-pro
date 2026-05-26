@@ -56,6 +56,10 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
     { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Support for an existing Protiviti Atlas API provisioning" },
   ],
+  "New Protiviti Atlas API Provisioning": [
+    { label: "Client use case / enabler", icon: TrendingUp, description: "API provisioning for a client engagement" },
+    { label: "Experimentation / Learning / Internal Use", icon: Shield, description: "API provisioning for internal experimentation or learning" },
+  ],
 };
 
 // Map final selections to scenario question keys
