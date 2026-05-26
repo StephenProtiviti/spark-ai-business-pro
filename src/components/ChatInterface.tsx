@@ -748,7 +748,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
     const proceedMsg: Message = {
       role: "assistant",
-      content: "Generating your **Idea Evaluation Report** — this will include scores, risk analysis, and a recommendation for the review board...",
+      content: "Generating your **Innovation Idea Brief** — preparing a qualitative summary for the review board...",
     };
     const msgsToUse = msgOverride || messages;
     setMessages((prev) => [...prev, proceedMsg]);
@@ -803,7 +803,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error("Failed to generate evaluation report");
+        toast.error("Failed to generate Innovation Idea Brief");
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
@@ -826,7 +826,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           ...prev,
           {
             role: "assistant" as const,
-            content: "Your **Evaluation Report** is ready! Review it on the right panel. You can request changes or submit for review.",
+            content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
           },
         ]);
       } else if (refinement && previousHtml) {
@@ -851,7 +851,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-    const assistantMsg: Message = { role: "assistant", content: "Got it! Updating the evaluation report..." };
+    const assistantMsg: Message = { role: "assistant", content: "Got it! Updating the Innovation Idea Brief..." };
 
     if (isViewing && viewingIdea) {
       setViewingMessages((prev) => [...prev, userMsg, assistantMsg]);
@@ -991,7 +991,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "evaluation" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      Evaluation Report
+                      Innovation Idea Brief
                     </button>
                   </div>
                 </div>
@@ -1296,13 +1296,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 }}
                 placeholder={
                   isGeneratingEvaluation
-                    ? "Generating evaluation..."
+                    ? "Generating brief..."
                     : isViewing
-                    ? "Describe changes to the evaluation..."
+                    ? "Describe changes to the brief..."
                     : conversationDone && evaluationReady
-                    ? "Request changes to the evaluation..."
+                    ? "Request changes to the brief..."
                     : conversationDone && !evaluationReady
-                    ? "Generating evaluation report..."
+                    ? "Generating Innovation Idea Brief..."
                     : hasStarted
                     ? "Type your answer..."
                     : "Describe your idea..."
@@ -1356,7 +1356,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ) : (
                     <>
                       <FileText className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-foreground">Evaluation Report</h3>
+                      <h3 className="font-semibold text-sm text-foreground">Innovation Idea Brief</h3>
                     </>
                   )}
                 </div>
@@ -1554,21 +1554,21 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             </div>
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-foreground">Generating evaluation report...</p>
-                            <p className="text-xs text-muted-foreground mt-1">Scoring and analyzing your submission</p>
+                            <p className="text-sm font-semibold text-foreground">Generating Innovation Idea Brief...</p>
+                            <p className="text-xs text-muted-foreground mt-1">Summarizing your submission</p>
                           </div>
                         </div>
                       </div>
                     ) : (evaluationHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
                       <iframe
                         srcDoc={evaluationHtml || viewingIdea?.businessPlanHtml}
-                        title="Evaluation Report"
+                        title="Innovation Idea Brief"
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">Evaluation report will appear here after you proceed.</p>
+                        <p className="text-sm text-muted-foreground">Innovation Idea Brief will appear here after you proceed.</p>
                       </div>
                     )}
                   </>
@@ -1611,7 +1611,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
                   <p className="text-sm text-muted-foreground max-w-xs">
-                    Recommendations and your evaluation report will appear here.
+                    Recommendations and your Innovation Idea Brief will appear here.
                   </p>
                 </div>
               </div>

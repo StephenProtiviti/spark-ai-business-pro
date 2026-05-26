@@ -42,7 +42,7 @@ const steps = [
 const stats = [
   { value: "5", label: "Intake Scenarios", icon: Sparkles },
   { value: "AI", label: "Smart Recommendations", icon: Zap },
-  { value: "Scored", label: "Evaluation Reports", icon: BarChart3 },
+  { value: "Brief", label: "Innovation Idea Briefs", icon: BarChart3 },
   { value: "Team", label: "Review Board Ready", icon: Users },
 ];
 
