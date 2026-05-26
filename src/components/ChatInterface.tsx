@@ -1296,13 +1296,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 }}
                 placeholder={
                   isGeneratingEvaluation
-                    ? "Generating evaluation..."
+                    ? "Generating brief..."
                     : isViewing
-                    ? "Describe changes to the evaluation..."
+                    ? "Describe changes to the brief..."
                     : conversationDone && evaluationReady
-                    ? "Request changes to the evaluation..."
+                    ? "Request changes to the brief..."
                     : conversationDone && !evaluationReady
-                    ? "Generating evaluation report..."
+                    ? "Generating Innovation Idea Brief..."
                     : hasStarted
                     ? "Type your answer..."
                     : "Describe your idea..."
