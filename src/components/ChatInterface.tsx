@@ -1356,7 +1356,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ) : (
                     <>
                       <FileText className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-foreground">Evaluation Report</h3>
+                      <h3 className="font-semibold text-sm text-foreground">Innovation Idea Brief</h3>
                     </>
                   )}
                 </div>
