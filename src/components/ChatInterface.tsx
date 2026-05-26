@@ -9,6 +9,7 @@ import { useIdeas, RecentIdea } from "@/contexts/IdeasContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { getRecommendations, Accelerator } from "@/data/mockAccelerators";
+import LiveBrief from "@/components/LiveBrief";
 
 interface Message {
   role: "user" | "assistant";
