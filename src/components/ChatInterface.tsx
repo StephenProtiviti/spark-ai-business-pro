@@ -76,6 +76,9 @@ const selectionToScenario: Record<string, string> = {
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
   "Support in Exploring Existing Tools": "Generic Idea",
+  "Client use case / enabler": "Atlas API Provisioning - Client",
+  "Experimentation / Learning / Internal Use": "Atlas API Provisioning - Internal",
+  "Training Conference Support": "Training Conference Support",
   "Other": "Generic Idea",
 };
 
