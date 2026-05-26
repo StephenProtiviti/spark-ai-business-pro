@@ -99,6 +99,12 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Anything else we should know?** Constraints, audience size, or additional context.",
     ],
   },
+  "Training Conference Support": {
+    greeting: "Training Conference Support — we'll capture the details for your conference or training event. (More questions coming soon.)",
+    questions: [
+      "To start, **briefly describe the training or conference support you need.** Include the event, audience, and what kind of help you're looking for.",
+    ],
+  },
   "Pursuit Enablement Support": {
     greeting: "Pursuit Enablement Support — let's capture the details so we can mobilize the right help for your opportunity.",
     questions: [
