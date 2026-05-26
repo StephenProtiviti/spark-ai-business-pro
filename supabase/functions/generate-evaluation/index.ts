@@ -173,7 +173,7 @@ Create a thorough qualitative evaluation (no numeric scores) that helps the revi
     }
 
     if (!html.includes("<!DOCTYPE html>")) {
-      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Idea Evaluation</title></head><body>${html}</body></html>`;
+      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Innovation Idea Brief</title></head><body>${html}</body></html>`;
     }
 
     return new Response(JSON.stringify({ html }), {
