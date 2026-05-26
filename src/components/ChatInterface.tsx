@@ -1176,9 +1176,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                  </p>
                 <div className="grid grid-cols-1 gap-2 w-full">
                   {subAreas[ideaArea].map(({ label, icon: Icon, description }) => (
-                    <button
-                      key={label}
-                      onClick={() => handleSend(label)}
+                     <button
+                       key={label}
+                       onClick={() => {
+                         if (subAreas[label]) {
+                           setIdeaArea(label);
+                         } else {
+                           handleSend(label);
+                         }
+                       }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
