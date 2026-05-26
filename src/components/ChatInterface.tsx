@@ -639,6 +639,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Internal Operations") {
         mappedScenario = "Atlas API Provisioning Existing - Internal";
       }
+      if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
+        mappedScenario = "Atlas API Provisioning - Client";
+      }
+      if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
+        mappedScenario = "Atlas API Provisioning Existing - Client";
+      }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
       setSelectedScenario(matchedScenario);
