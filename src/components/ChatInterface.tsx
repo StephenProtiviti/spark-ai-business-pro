@@ -991,7 +991,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "evaluation" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      Evaluation Report
+                      Innovation Idea Brief
                     </button>
                   </div>
                 </div>
