@@ -52,6 +52,10 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
   ],
+  "Protiviti Atlas API Support": [
+    { label: "Client use case / enabler", icon: TrendingUp, description: "API provisioning for a client engagement" },
+    { label: "Experimentation / Learning / Internal Use", icon: Shield, description: "API provisioning for internal experimentation or learning" },
+  ],
 };
 
 // Map final selections to scenario question keys
@@ -72,6 +76,9 @@ const selectionToScenario: Record<string, string> = {
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
   "Support in Exploring Existing Tools": "Generic Idea",
+  "Client use case / enabler": "Atlas API Provisioning - Client",
+  "Experimentation / Learning / Internal Use": "Atlas API Provisioning - Internal",
+  "Training Conference Support": "Training Conference Support",
   "Other": "Generic Idea",
 };
 
@@ -90,6 +97,12 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "If this is a **client training or workshop**, please share the **client name**, any **C-Suite alignment**, and any **relevant background** on what's happened already. (If not client-facing, just say N/A)",
       "If this is **conference/event session support**, please share the **event name + date**, **session type** (panel, keynote, breakout, or workshop), **speaker(s)**, **what you need help with**, and whether you have **existing slides/materials** to start from. (If not applicable, say N/A)",
       "Last one: **Anything else we should know?** Constraints, audience size, or additional context.",
+    ],
+  },
+  "Training Conference Support": {
+    greeting: "Training Conference Support — we'll capture the details for your conference or training event. (More questions coming soon.)",
+    questions: [
+      "To start, **briefly describe the training or conference support you need.** Include the event, audience, and what kind of help you're looking for.",
     ],
   },
   "Pursuit Enablement Support": {
@@ -1012,6 +1025,37 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <div>
                       <span className="text-sm font-semibold text-sidebar-foreground block">Pursuit Enablement Support</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for an active client pursuit or proposal</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Training Conference Support");
+                      handleSend("Training Conference Support");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Training Conference Support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for a training event or conference session</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Protiviti Atlas API Support");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <BarChart3 className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Protiviti Atlas API Support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New Protiviti Atlas API provisioning support</span>
                     </div>
                   </button>
                 </div>
