@@ -18,7 +18,6 @@ interface Message {
 // ── Decision Tree Areas ──
 const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
-  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
@@ -203,6 +202,30 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**Who is the target user of this enabler?** Internal teams, clients, or both?",
       "**What existing tools or processes does this replace or enhance?** Describe the current state.",
       "Last one: **How will you measure adoption and success?** Number of users, integrations, or business outcomes?",
+    ],
+  },
+  "Enabler Development - Client": {
+    greeting: "Enabler Development on Protiviti Atlas for Client Delivery — let's capture the details so we can scope, build, and prioritize this properly.",
+    questions: [
+      "To start, **what's the name of your enabler/idea?** A short working title is perfect.",
+      "**What enabler are you looking to build?** Describe the capability or tool in 1-2 sentences.",
+      "**Problem Statement:** What need does your idea fulfill? Describe the gap or pain point it addresses.",
+      "**Proposed Solution:** What are your expected outcomes from this idea? How will it solve the problem?",
+      "**Idea Description:** Walk me through how your idea works in a bit more detail.",
+      "**Will this be built on Atlas or another platform/technology?** Specify the platform and any key dependencies.",
+      "**What existing tools or processes does this replace or enhance?** Describe the current state.",
+      "**What C-Suite Solution Team(s) does this apply to?** (e.g., CFO, CIO, CRO, CHRO, COO — you can list multiple)",
+      "**What industry team(s) does this apply to?** (e.g., Financial Services, Healthcare, Consumer Products)",
+      "**MD Sponsor:** Who is the MD championing this idea internally?",
+      "**Who is the intended end user of your idea?** (e.g., client executives, internal teams, specific personas)",
+      "**What is the anticipated revenue impact of this use case?**",
+      "**What efficiency gains are expected from this use case?**",
+      "**Who is the competitor?** (Consulting Firms, Third Party Vendors, or both) — and **name(s)** to be aware of.",
+      "**Current Market Demand:** How would you describe the demand for this in the market today?",
+      "**What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
+      "**Support Type:** What kind of support are you looking for to develop this?",
+      "**How will you measure adoption and success?** Number of users, integrations, or business outcomes.",
+      "Last one: **Do you have Client Validation for this idea?** If yes, please share the **name of the client**.",
     ],
   },
   "Automation Support": {
@@ -644,6 +667,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       }
       if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
         mappedScenario = "Atlas API Provisioning Existing - Client";
+      }
+      if (value === "Enabler Development" && ideaCategory === "Client Delivery") {
+        mappedScenario = "Enabler Development - Client";
       }
       const matchedScenario = mappedScenario && scenarioQuestions[mappedScenario] ? mappedScenario : (scenarioQuestions[value] ? value : null);
       scenario = matchedScenario;
