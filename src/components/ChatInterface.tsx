@@ -886,6 +886,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const hasCanvasContent = evaluationHtml || isGeneratingEvaluation || showRecommendations ||
     (isViewing && viewingIdea?.businessPlanHtml);
 
+  // Progress for the question phase — drives the canvas progress indicator
+  const totalQuestions = (selectedScenario && scenarioQuestions[selectedScenario]
+    ? scenarioQuestions[selectedScenario].questions.length
+    : scenarioQuestions["Generic Idea"]?.questions.length) || 0;
+  const answeredQuestions = Math.min(questionIndex, totalQuestions);
+  const progressPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+  const inQuestionPhase = !isViewing && !submitted && hasStarted && !evaluationHtml &&
+    !isGeneratingEvaluation && !conversationDone && totalQuestions > 0;
+
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
       {/* ===== LEFT PANEL — Chat ===== */}
