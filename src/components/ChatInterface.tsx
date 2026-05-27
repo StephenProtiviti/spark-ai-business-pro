@@ -371,6 +371,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What efficiency gains are expected from this use case?**",
       "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
     ],
+  },
   "Atlas API Provisioning Existing - Support": {
     greeting: "Existing Protiviti Atlas API Provisioning Support — let's capture the details we need.",
     questions: [
