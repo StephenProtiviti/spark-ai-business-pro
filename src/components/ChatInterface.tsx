@@ -336,7 +336,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     questions: [
       "To start, share the **project basics**: **scope/overview**, **project name**, and the **intended goal** (Experimentation, Learning, or Internal Use).",
       "**Use case & data:** share **details of your use case** (what you're building and why) and the **kind of data** that will be used (internal, public, synthetic — include any sensitivity considerations).",
-      "**MD approval:** Yes / No — if Yes, please **attach or share a link to the MD approval**.",
       "**User access:** list the **User ID(s)** of all users who will need access to the API.",
       "Last one — **IP addresses to whitelist** for all users: **Home**, **Office**, and **Public** IPs.",
     ],
