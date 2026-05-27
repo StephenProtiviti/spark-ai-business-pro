@@ -497,15 +497,15 @@ const buildTrainingQuestions = (answers: string[]): string[] => {
 // Skip the "Upload MD approval" step when MD approval status is "No".
 const buildAtlasApiClientQuestions = (answers: string[]): string[] => {
   const base = scenarioQuestions["Atlas API Provisioning - Client"].questions;
-  // answers[0] = idea desc, [1] = project basics, [2] = Project ID/Code,
-  // [3] = MD sponsor, [4] = MD approval Yes/No, [5] = upload (if Yes)
-  const approval = (answers[4] || "").toLowerCase().trim();
+  // answers[0] = project basics (first real answer), [1] = Project ID/Code,
+  // [2] = MD sponsor, [3] = MD approval Yes/No, [4] = upload (if Yes)
+  const approval = (answers[3] || "").toLowerCase().trim();
   if (!approval) {
-    // Until MD approval is answered, only expose questions up to Q4
+    // Until MD approval is answered, only expose questions up to base[3]
     return [base[0], base[1], base[2], base[3]];
   }
   if (approval.startsWith("y")) return base;
-  // No → skip upload step
+  // No → skip upload step (base[4])
   return [base[0], base[1], base[2], base[3], ...base.slice(5)];
 };
 
