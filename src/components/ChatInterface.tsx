@@ -493,6 +493,22 @@ const buildTrainingQuestions = (answers: string[]): string[] => {
   return [base[0]];
 };
 
+// ── Atlas API Provisioning - Client — dynamic branching ──
+// Skip the "Upload MD approval" step when MD approval status is "No".
+const buildAtlasApiClientQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Atlas API Provisioning - Client"].questions;
+  // answers[0] = idea desc, [1] = project basics, [2] = Project ID/Code,
+  // [3] = MD sponsor, [4] = MD approval Yes/No, [5] = upload (if Yes)
+  const approval = (answers[4] || "").toLowerCase().trim();
+  if (!approval) {
+    // Until MD approval is answered, only expose questions up to Q4
+    return [base[0], base[1], base[2], base[3]];
+  }
+  if (approval.startsWith("y")) return base;
+  // No → skip upload step
+  return [base[0], base[1], base[2], base[3], ...base.slice(5)];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
@@ -511,6 +527,10 @@ const getQuestionsForScenario = (
   if (scenario === "Training Conference Support") {
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildTrainingQuestions(answers);
+  }
+  if (scenario === "Atlas API Provisioning - Client") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildAtlasApiClientQuestions(answers);
   }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
