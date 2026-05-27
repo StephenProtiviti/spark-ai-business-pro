@@ -1616,15 +1616,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               <div className="flex-1 flex items-center justify-center p-6 overflow-auto">
                 {inQuestionPhase ? (
                   (() => {
-                    const sections = [
-                      "Overview",
-                      "Problem Statement",
-                      "Target Audience",
-                      "Proposed Solution",
-                      "Expected Impact",
-                      "Feasibility & Next Steps",
-                    ];
-                    const unlocked = Math.ceil((answeredQuestions / Math.max(totalQuestions, 1)) * sections.length);
                     const radius = 52;
                     const circumference = 2 * Math.PI * radius;
                     const dashOffset = circumference - (progressPct / 100) * circumference;
@@ -1656,35 +1647,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         <p className="text-xs text-muted-foreground mb-6">
                           Building your Innovation Idea Brief — {answeredQuestions} of {totalQuestions} questions answered
                         </p>
-
-                        {/* Ghosted brief preview */}
-                        <div className="w-full bg-card border border-border rounded-lg p-5 space-y-4 shadow-sm">
-                          <div className="space-y-2 pb-3 border-b border-border">
-                            <div className="h-3 w-1/2 rounded bg-muted" />
-                            <div className="h-2 w-1/3 rounded bg-muted/70" />
-                          </div>
-                          {sections.map((label, i) => {
-                            const active = i < unlocked;
-                            return (
-                              <div
-                                key={label}
-                                className={`space-y-2 transition-opacity duration-700 ${active ? "opacity-100" : "opacity-25"}`}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className={`h-1.5 w-1.5 rounded-full ${active ? "bg-primary" : "bg-muted-foreground/40"}`} />
-                                  <div className={`text-[11px] font-medium uppercase tracking-wider ${active ? "text-primary" : "text-muted-foreground/60"}`}>
-                                    {label}
-                                  </div>
-                                </div>
-                                <div className="space-y-1.5 pl-3.5">
-                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "92%" }} />
-                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "78%" }} />
-                                  <div className={`h-2 rounded ${active ? "bg-muted" : "bg-muted/50"}`} style={{ width: "64%" }} />
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
                       </div>
                     );
                   })()
