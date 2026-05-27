@@ -101,7 +101,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Pursuit Enablement Support": {
     greeting: "Pursuit Enablement Support — let's capture the details so we can mobilize the right help for your opportunity.",
     questions: [
-      "To start, **what type of pursuit support do you need?** Select all that apply: RFI/RFP response, Proposal creation, Demo of an existing enabler/solution, Build/Prototype new enabler.",
+      "To start, **what type of pursuit support do you need?**",
       "If you selected a demo, **which Technology Delivery Enablers or Solutions** should be demoed? (e.g., AI Showcase, AI showcase and enablers, Technology Delivery Enablers — list all that apply, or say N/A)",
       "**Is this request tied to a live client opportunity with a due date?** (Yes — active pursuit / No — prep, reuse asset, or internal readiness)",
       "**What is the client delivery or presentation date and time?**",
@@ -109,7 +109,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What deliverables are needed?** Select all that apply: Deck/slide narrative, Written response (RFI/RFP answers), Prototype/POC, Demo of an existing enabler/solution, Other (please specify).",
       "**What's the format or channel of delivery?** (Live meeting presentation, Email delivery, Portal upload, or Leave-behind deck only)",
       "**Who is the target audience?** (Executive/Board/Audit Committee)",
-      "Last one: **Where should the working materials live?** Please share the SharePoint folder link.",
     ],
   },
   "AI Studio Support": {
@@ -1029,6 +1028,32 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     >
                       <span className="font-semibold block">{o.label}</span>
                       <span className="block text-xs opacity-80 mt-0.5">{o.desc}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
+
+            {/* Quick-reply choices for Pursuit Enablement Support: type of pursuit support question */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("what type of pursuit support do you need")) return null;
+              const options = [
+                { label: "RFI/RFP response" },
+                { label: "Proposal creation" },
+                { label: "Demo of an existing enabler / solution" },
+                { label: "Build/Prototype New Enabler" },
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start">
+                  {options.map((o) => (
+                    <button
+                      key={o.label}
+                      onClick={() => handleSend(o.label)}
+                      className="max-w-[85%] text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{o.label}</span>
                     </button>
                   ))}
                 </motion.div>
