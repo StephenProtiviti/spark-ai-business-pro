@@ -470,9 +470,9 @@ const buildTrainingQuestions = (answers: string[]): string[] => {
   const a1 = (answers[0] || "").toLowerCase();
   const isClient = a1.includes("client training") || a1.includes("client workshop");
   const isEvent = a1.includes("conference") || a1.includes("other training");
-  // base[1] = Client name, base[2] = Event name/date, base[3] = Session type
+  // base[1] = Client name, base[2] = Event name/date, base[3] = Session type, base[6] = Preferred date(s)
   if (isClient) return [base[0], base[1], ...base.slice(4)];
-  if (isEvent) return [base[0], base[2], base[3], ...base.slice(4)];
+  if (isEvent) return [base[0], base[2], base[3], base[4], base[5], ...base.slice(7)];
   // Before Q1 answered, show only the first question
   return [base[0]];
 };
