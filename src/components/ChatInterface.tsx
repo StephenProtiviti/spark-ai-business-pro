@@ -86,16 +86,10 @@ const selectionToScenario: Record<string, string> = {
 const scenarioQuestions: Record<string, { greeting: string; questions: string[] }> = {
   "Design Thinking Workshop": {
     greeting: "Design Thinking Workshop support — let's capture the details so we can shape the right session for you.",
+    // NOTE: This scenario uses dynamic branching via buildDTWQuestions(). The list below
+    // is only a placeholder for the initial question; the real list is computed from prior answers.
     questions: [
-      "**What's the primary goal or outcome?** (e.g., increase AI skills, enable Copilot adoption, explore use cases, prep leaders to deliver workshop)",
-      "**How would you like the support delivered?** (Build the content/materials for you, Co-create content with you, Review/QA and improve existing materials, Co-present, or Other — please specify)",
-      "**What's your preferred date(s), timeline, and duration?**",
-      "**What session format works best?** (Virtual, In-person, or Hybrid) — if In-person or Hybrid, please also share the **location** (city / office / client site).",
-      "**Who's the primary point of contact** for coordination?",
-      "**Who is the MD Sponsor** for this effort?",
-      "If this is a **client training or workshop**, please share the **client name**, any **C-Suite alignment**, and any **relevant background** on what's happened already. (If not client-facing, just say N/A)",
-      "If this is **conference/event session support**, please share the **event name + date**, **session type** (panel, keynote, breakout, or workshop), **speaker(s)**, **what you need help with**, and whether you have **existing slides/materials** to start from. (If not applicable, say N/A)",
-      "Last one: **Anything else we should know?** Constraints, audience size, or additional context.",
+      "To start, **do you have a defined outcome and scope for the workshop?** (Yes / No)",
     ],
   },
   "Training Conference Support": {
@@ -412,6 +406,60 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   },
 };
 
+// ── Design Thinking Workshop — dynamic branching question builder ──
+// `answers` are the user's answers in order (answers[0] = answer to Q1).
+const buildDTWQuestions = (answers: string[]): string[] => {
+  const list: string[] = [
+    "To start, **do you have a defined outcome and scope for the workshop?** (Yes / No)",
+  ];
+
+  const common = [
+    "**What's the department / functional area** of the session? (e.g., Finance, Internal Audit, Information Technology)",
+    "**Briefly describe the purpose / challenge statement** of this workshop.",
+    "**How many participants** do you expect?",
+    "**What's your preferred workshop date and duration?**",
+    "**Workshop type:** Virtual or In-person?",
+    "**What support do you need from our Innovation Team** to assist with the workshop?",
+    "Last one: **Please provide a project code** for the Innovation Team to capture time spent preparing and executing the workshop and deliverables.",
+  ];
+
+  const a1 = (answers[0] || "").toLowerCase().trim();
+  if (!a1) return list;
+
+  if (a1.startsWith("n")) {
+    list.push("**Briefly describe your big idea and/or workshop request.**");
+    list.push(...common);
+    return list;
+  }
+
+  list.push("**What's the nature of the workshop?** (Client use case or Internal use case)");
+  const a2 = (answers[1] || "").toLowerCase();
+  if (!a2) return list;
+
+  if (a2.includes("client")) {
+    list.push("**What's the client name?**");
+    list.push("**Will we be charging a fee for the workshop?** (Yes / No)");
+  }
+  // Internal: skip client-specific questions
+
+  list.push(...common);
+  return list;
+};
+
+// Resolve the active question list for a scenario, taking dynamic branching into account.
+const getQuestionsForScenario = (
+  scenario: string | null,
+  userMessages: { role: string; content: string }[]
+): string[] => {
+  const fallback = scenarioQuestions["Generic Idea"]?.questions || [];
+  if (!scenario) return fallback;
+  if (scenario === "Design Thinking Workshop") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildDTWQuestions(answers);
+  }
+  return scenarioQuestions[scenario]?.questions || fallback;
+};
+
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
 
@@ -588,7 +636,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const extractAnswers = (): Record<string, string> => {
     const userMsgs = messages.filter((m) => m.role === "user");
     const scenario = selectedScenario || "Generic Idea";
-    const qs = scenarioQuestions[scenario]?.questions || [];
+    const qs = getQuestionsForScenario(scenario, userMsgs);
     const result: Record<string, string> = {};
     // First user message is the idea itself
     result["Idea Description"] = userMsgs[0]?.content || "";
@@ -722,10 +770,14 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     }
 
     setTimeout(() => {
-      if (questionIndex < followUps.questions.length) {
+      // Recompute the question list against the updated answers so dynamic
+      // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
+      const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+      if (questionIndex < dynamicQuestions.length) {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant" as const, content: followUps.questions[questionIndex] },
+          { role: "assistant" as const, content: dynamicQuestions[questionIndex] },
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
@@ -886,9 +938,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     (isViewing && viewingIdea?.businessPlanHtml);
 
   // Progress for the question phase — drives the canvas progress indicator
-  const totalQuestions = (selectedScenario && scenarioQuestions[selectedScenario]
-    ? scenarioQuestions[selectedScenario].questions.length
-    : scenarioQuestions["Generic Idea"]?.questions.length) || 0;
+  const totalQuestions = getQuestionsForScenario(
+    selectedScenario,
+    messages.filter((m) => m.role === "user")
+  ).length;
   const answeredQuestions = Math.min(questionIndex, totalQuestions);
   const progressPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
   const inQuestionPhase = !isViewing && !submitted && hasStarted && !evaluationHtml &&
