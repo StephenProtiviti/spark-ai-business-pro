@@ -371,6 +371,18 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What efficiency gains are expected from this use case?**",
       "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
     ],
+  "Atlas API Provisioning Existing - Support": {
+    greeting: "Existing Protiviti Atlas API Provisioning Support — let's capture the details we need.",
+    questions: [
+      "To start, **what type of request are you submitting for an existing Protiviti Atlas API key/project?** (Add new user(s) and request API key(s) to an already approved existing project, Update IP address(es) for an existing API key/project, or Other / Not sure)",
+      "**What is the description of your project?** Walk me through it in a bit more detail.",
+      "**What's the Title of your Project?**",
+      "**Share the Project ID/Code** associated with this engagement.",
+      "**Specify the base URL, IP Address (Home), IP Address (Public) and IP Address (Office)** for this request.",
+      "**What is the anticipated revenue impact of this use case?**",
+      "**What efficiency gains are expected from this use case?**",
+      "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
+    ],
   },
   "Agent Development - Client": {
     greeting: "New Agent Development for Client Delivery — let's scope out what you're building!",
