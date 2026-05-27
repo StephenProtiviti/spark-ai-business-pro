@@ -444,6 +444,17 @@ const buildDTWQuestions = (answers: string[]): string[] => {
   return list;
 };
 
+// ── Pursuit Enablement Support — dynamic branching ──
+// Only include the Technology Delivery Enablers demo question when the user
+// selected "Demo of an existing enabler / solution" in Q1.
+const buildPursuitQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Pursuit Enablement Support"].questions;
+  const a1 = (answers[0] || "").toLowerCase();
+  const isDemo = a1.includes("demo");
+  // base[1] is the "which Technology Delivery Enablers" question
+  return isDemo ? base : [base[0], ...base.slice(2)];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
@@ -455,8 +466,13 @@ const getQuestionsForScenario = (
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildDTWQuestions(answers);
   }
+  if (scenario === "Pursuit Enablement Support") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildPursuitQuestions(answers);
+  }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
+
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
