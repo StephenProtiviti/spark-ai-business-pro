@@ -1009,6 +1009,34 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ))}
             </AnimatePresence>
 
+            {/* Quick-reply choices for DTW: Innovation Team support question */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("What support do you need from our Innovation Team")) return null;
+              const options = [
+                { label: "Consultation", desc: "Requestor facilitates. Innovation Team provides a pre-session consult (agenda/method review, facilitation tips)." },
+                { label: "Coaching", desc: "Requestor facilitates. Innovation Team provides coaching support before and during the session." },
+                { label: "Facilitation", desc: "Requestor provides session objectives/agenda. Innovation Team provides a facilitator to lead the session." },
+                { label: "End-to-End Facilitation", desc: "Innovation Team helps define the objectives, shape the agenda, and facilitate the session." },
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start">
+                  {options.map((o) => (
+                    <button
+                      key={o.label}
+                      onClick={() => handleSend(`${o.label}: ${o.desc}`)}
+                      className="max-w-[85%] text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{o.label}</span>
+                      <span className="block text-xs opacity-80 mt-0.5">{o.desc}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
+
+
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                 <div className="bg-sidebar-accent rounded-lg px-3 py-2 text-sm text-sidebar-foreground/60">
