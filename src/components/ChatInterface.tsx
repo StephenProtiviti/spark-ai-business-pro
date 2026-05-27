@@ -96,7 +96,9 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     greeting: "Training Conference Support — we'll capture the details for your conference or training event.",
     questions: [
       "To start, **what type of training or conference support do you need?**",
-      "**Tell us more about the event or session.** Include the event name, audience, and what kind of help you're looking for.",
+      "**What is the primary goal/outcome?**",
+      "**How do you want support delivered?** (Examples: Build the training content/materials for me, Co-create content with me)",
+      "**Preferred date(s) / timeline & duration?**",
     ],
   },
   "Pursuit Enablement Support": {
