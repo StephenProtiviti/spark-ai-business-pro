@@ -109,7 +109,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What deliverables are needed?** Select all that apply: Deck/slide narrative, Written response (RFI/RFP answers), Prototype/POC, Demo of an existing enabler/solution, Other (please specify).",
       "**What's the format or channel of delivery?** (Live meeting presentation, Email delivery, Portal upload, or Leave-behind deck only)",
       "**Who is the target audience?** (Executive/Board/Audit Committee)",
-      "**Who should be involved or consulted?** Please share names of the people who need to be looped in.",
       "Last one: **Where should the working materials live?** Please share the SharePoint folder link.",
     ],
   },
