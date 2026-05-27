@@ -770,10 +770,14 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     }
 
     setTimeout(() => {
-      if (questionIndex < followUps.questions.length) {
+      // Recompute the question list against the updated answers so dynamic
+      // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
+      const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+      if (questionIndex < dynamicQuestions.length) {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant" as const, content: followUps.questions[questionIndex] },
+          { role: "assistant" as const, content: dynamicQuestions[questionIndex] },
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
