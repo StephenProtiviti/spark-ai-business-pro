@@ -938,9 +938,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     (isViewing && viewingIdea?.businessPlanHtml);
 
   // Progress for the question phase — drives the canvas progress indicator
-  const totalQuestions = (selectedScenario && scenarioQuestions[selectedScenario]
-    ? scenarioQuestions[selectedScenario].questions.length
-    : scenarioQuestions["Generic Idea"]?.questions.length) || 0;
+  const totalQuestions = getQuestionsForScenario(
+    selectedScenario,
+    messages.filter((m) => m.role === "user")
+  ).length;
   const answeredQuestions = Math.min(questionIndex, totalQuestions);
   const progressPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
   const inQuestionPhase = !isViewing && !submitted && hasStarted && !evaluationHtml &&
