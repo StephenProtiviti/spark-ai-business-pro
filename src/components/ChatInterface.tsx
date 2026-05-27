@@ -86,16 +86,10 @@ const selectionToScenario: Record<string, string> = {
 const scenarioQuestions: Record<string, { greeting: string; questions: string[] }> = {
   "Design Thinking Workshop": {
     greeting: "Design Thinking Workshop support — let's capture the details so we can shape the right session for you.",
+    // NOTE: This scenario uses dynamic branching via buildDTWQuestions(). The list below
+    // is only a placeholder for the initial question; the real list is computed from prior answers.
     questions: [
-      "**What's the primary goal or outcome?** (e.g., increase AI skills, enable Copilot adoption, explore use cases, prep leaders to deliver workshop)",
-      "**How would you like the support delivered?** (Build the content/materials for you, Co-create content with you, Review/QA and improve existing materials, Co-present, or Other — please specify)",
-      "**What's your preferred date(s), timeline, and duration?**",
-      "**What session format works best?** (Virtual, In-person, or Hybrid) — if In-person or Hybrid, please also share the **location** (city / office / client site).",
-      "**Who's the primary point of contact** for coordination?",
-      "**Who is the MD Sponsor** for this effort?",
-      "If this is a **client training or workshop**, please share the **client name**, any **C-Suite alignment**, and any **relevant background** on what's happened already. (If not client-facing, just say N/A)",
-      "If this is **conference/event session support**, please share the **event name + date**, **session type** (panel, keynote, breakout, or workshop), **speaker(s)**, **what you need help with**, and whether you have **existing slides/materials** to start from. (If not applicable, say N/A)",
-      "Last one: **Anything else we should know?** Constraints, audience size, or additional context.",
+      "To start, **do you have a defined outcome and scope for the workshop?** (Yes / No)",
     ],
   },
   "Training Conference Support": {
