@@ -636,7 +636,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const extractAnswers = (): Record<string, string> => {
     const userMsgs = messages.filter((m) => m.role === "user");
     const scenario = selectedScenario || "Generic Idea";
-    const qs = scenarioQuestions[scenario]?.questions || [];
+    const qs = getQuestionsForScenario(scenario, userMsgs);
     const result: Record<string, string> = {};
     // First user message is the idea itself
     result["Idea Description"] = userMsgs[0]?.content || "";
