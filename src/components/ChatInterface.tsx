@@ -751,7 +751,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         mappedScenario = "Atlas API Provisioning Existing - Internal";
       }
       if (value === "Existing Protiviti Atlas API Provisioning" && ideaCategory === "Support") {
-        mappedScenario = "Atlas API Provisioning Existing - Client";
+        mappedScenario = "Atlas API Provisioning Existing - Support";
       }
       if (value === "Enabler Development" && ideaCategory === "Client Delivery") {
         mappedScenario = "Enabler Development - Client";
