@@ -1062,17 +1062,18 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 { label: "Build/Prototype New Enabler" },
               ];
               return (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
                   {options.map((o) => (
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="max-w-[85%] text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                      className="w-full text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
                   ))}
                 </motion.div>
+
               );
             })()}
 
