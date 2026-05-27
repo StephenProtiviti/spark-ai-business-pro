@@ -102,7 +102,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     greeting: "Pursuit Enablement Support — let's capture the details so we can mobilize the right help for your opportunity.",
     questions: [
       "To start, **what type of pursuit support do you need?** Select all that apply: RFI/RFP response, Proposal creation, Demo of an existing enabler/solution, Build/Prototype new enabler.",
-      "If you selected a demo, **which Tech Delivery Enablers or Solutions** should be demoed? (e.g., AI Showcase, AI showcase and enablers, Technology Delivery Enablers — list all that apply, or say N/A)",
+      "If you selected a demo, **which Technology Delivery Enablers or Solutions** should be demoed? (e.g., AI Showcase, AI showcase and enablers, Technology Delivery Enablers — list all that apply, or say N/A)",
       "**Is this request tied to a live client opportunity with a due date?** (Yes — active pursuit / No — prep, reuse asset, or internal readiness)",
       "**What is the client delivery or presentation date and time?**",
       "**What problem are they trying to solve, and what are the key client questions or asks?**",
