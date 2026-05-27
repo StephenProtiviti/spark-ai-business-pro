@@ -322,7 +322,10 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     greeting: "New Protiviti Atlas API Provisioning for Client Delivery — let's capture the details we need to get this provisioned.",
     questions: [
       "To start, share the **project basics**: **scope/overview**, **project title**, and a **brief description** of what you're building.",
-      "**Project & sponsor details:** share the **Project ID/Code**, the **MD sponsor** championing this project, and **MD approval status** (Yes/No — if Yes, attach or share a link).",
+      "**Project ID/Code:** please share the Project ID/Code for this engagement.",
+      "**MD sponsor:** who is the **MD championing this project**?",
+      "**MD approval status:** has this project received MD approval? (**Yes** / **No**)",
+      "**Upload MD approval:** please attach a screenshot of the approval or an exported Outlook message (image, PDF, or .msg).",
       "**Data:** what **kind of data** will be used? (e.g., client, public, synthetic — include any sensitivity considerations)",
       "**User access:** list the **User ID(s)** of all users who will need access to the API.",
       "Last one — **IP addresses to whitelist** for all users: **Home**, **Office**, and **Public** IPs.",
@@ -490,6 +493,22 @@ const buildTrainingQuestions = (answers: string[]): string[] => {
   return [base[0]];
 };
 
+// ── Atlas API Provisioning - Client — dynamic branching ──
+// Skip the "Upload MD approval" step when MD approval status is "No".
+const buildAtlasApiClientQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Atlas API Provisioning - Client"].questions;
+  // answers[0] = idea desc, [1] = project basics, [2] = Project ID/Code,
+  // [3] = MD sponsor, [4] = MD approval Yes/No, [5] = upload (if Yes)
+  const approval = (answers[4] || "").toLowerCase().trim();
+  if (!approval) {
+    // Until MD approval is answered, only expose questions up to Q4
+    return [base[0], base[1], base[2], base[3]];
+  }
+  if (approval.startsWith("y")) return base;
+  // No → skip upload step
+  return [base[0], base[1], base[2], base[3], ...base.slice(5)];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
@@ -508,6 +527,10 @@ const getQuestionsForScenario = (
   if (scenario === "Training Conference Support") {
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildTrainingQuestions(answers);
+  }
+  if (scenario === "Atlas API Provisioning - Client") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildAtlasApiClientQuestions(answers);
   }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
@@ -1478,6 +1501,32 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
           {/* Input Bar — always visible */}
           <div className="px-3 pb-3 pt-2 border-t border-sidebar-border shrink-0">
+            {(() => {
+              const lastAsst = [...displayMessages].reverse().find((m) => m.role === "assistant");
+              const isUploadStep =
+                !isViewing &&
+                !conversationDone &&
+                !!lastAsst?.content?.includes("Upload MD approval:");
+              return isUploadStep ? (
+                <div className="mb-2 flex items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-2">
+                  <label className="flex-1 cursor-pointer text-xs text-sidebar-foreground/80 hover:text-sidebar-foreground transition-colors flex items-center gap-2 px-2 py-1.5">
+                    <FileText className="w-4 h-4 text-primary" />
+                    <span>Click to attach approval (image, PDF, or .msg)</span>
+                    <input
+                      type="file"
+                      accept="image/*,application/pdf,.msg,.eml"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleSend(`Attached approval: ${file.name}`);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  <span className="text-[10px] text-sidebar-foreground/50">or type a link below</span>
+                </div>
+              ) : null;
+            })()}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
                 value={input}
