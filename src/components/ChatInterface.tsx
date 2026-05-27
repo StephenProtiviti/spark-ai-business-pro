@@ -87,7 +87,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Design Thinking Workshop": {
     greeting: "Design Thinking Workshop support — let's capture the details so we can shape the right session for you.",
     questions: [
-      "To start, **what type of training support do you need?** (Client training/enablement session, Client workshop for co-creation/use cases, Conference/event session support for speaker prep, or Other training-related support)",
       "**What's the primary goal or outcome?** (e.g., increase AI skills, enable Copilot adoption, explore use cases, prep leaders to deliver workshop)",
       "**How would you like the support delivered?** (Build the content/materials for you, Co-create content with you, Review/QA and improve existing materials, Co-present, or Other — please specify)",
       "**What's your preferred date(s), timeline, and duration?**",
