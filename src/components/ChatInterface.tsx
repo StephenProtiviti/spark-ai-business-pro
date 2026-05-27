@@ -99,6 +99,8 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What is the primary goal/outcome?**",
       "**How do you want support delivered?** (Examples: Build the training content/materials for me, Co-create content with me)",
       "**Preferred date(s) / timeline & duration?**",
+      "**Session format** (Virtual, In-person, Hybrid)",
+      "**MD Sponsor and primary point of contact for coordination**",
     ],
   },
   "Pursuit Enablement Support": {
