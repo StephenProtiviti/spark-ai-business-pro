@@ -322,7 +322,10 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     greeting: "New Protiviti Atlas API Provisioning for Client Delivery — let's capture the details we need to get this provisioned.",
     questions: [
       "To start, share the **project basics**: **scope/overview**, **project title**, and a **brief description** of what you're building.",
-      "**Project & sponsor details:** share the **Project ID/Code**, the **MD sponsor** championing this project, and **MD approval status** (Yes/No — if Yes, attach or share a link).",
+      "**Project ID/Code:** please share the Project ID/Code for this engagement.",
+      "**MD sponsor:** who is the **MD championing this project**?",
+      "**MD approval status:** has this project received MD approval? (**Yes** / **No**)",
+      "**Upload MD approval:** please attach a screenshot of the approval or an exported Outlook message (image, PDF, or .msg).",
       "**Data:** what **kind of data** will be used? (e.g., client, public, synthetic — include any sensitivity considerations)",
       "**User access:** list the **User ID(s)** of all users who will need access to the API.",
       "Last one — **IP addresses to whitelist** for all users: **Home**, **Office**, and **Public** IPs.",
