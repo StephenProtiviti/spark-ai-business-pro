@@ -406,6 +406,60 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   },
 };
 
+// ── Design Thinking Workshop — dynamic branching question builder ──
+// `answers` are the user's answers in order (answers[0] = answer to Q1).
+const buildDTWQuestions = (answers: string[]): string[] => {
+  const list: string[] = [
+    "To start, **do you have a defined outcome and scope for the workshop?** (Yes / No)",
+  ];
+
+  const common = [
+    "**What's the department / functional area** of the session? (e.g., Finance, Internal Audit, Information Technology)",
+    "**Briefly describe the purpose / challenge statement** of this workshop.",
+    "**How many participants** do you expect?",
+    "**What's your preferred workshop date and duration?**",
+    "**Workshop type:** Virtual or In-person?",
+    "**What support do you need from our Innovation Team** to assist with the workshop?",
+    "Last one: **Please provide a project code** for the Innovation Team to capture time spent preparing and executing the workshop and deliverables.",
+  ];
+
+  const a1 = (answers[0] || "").toLowerCase().trim();
+  if (!a1) return list;
+
+  if (a1.startsWith("n")) {
+    list.push("**Briefly describe your big idea and/or workshop request.**");
+    list.push(...common);
+    return list;
+  }
+
+  list.push("**What's the nature of the workshop?** (Client use case or Internal use case)");
+  const a2 = (answers[1] || "").toLowerCase();
+  if (!a2) return list;
+
+  if (a2.includes("client")) {
+    list.push("**What's the client name?**");
+    list.push("**Will we be charging a fee for the workshop?** (Yes / No)");
+  }
+  // Internal: skip client-specific questions
+
+  list.push(...common);
+  return list;
+};
+
+// Resolve the active question list for a scenario, taking dynamic branching into account.
+const getQuestionsForScenario = (
+  scenario: string | null,
+  userMessages: { role: string; content: string }[]
+): string[] => {
+  const fallback = scenarioQuestions["Generic Idea"]?.questions || [];
+  if (!scenario) return fallback;
+  if (scenario === "Design Thinking Workshop") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildDTWQuestions(answers);
+  }
+  return scenarioQuestions[scenario]?.questions || fallback;
+};
+
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
 
