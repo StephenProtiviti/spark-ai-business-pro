@@ -96,6 +96,9 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     greeting: "Training Conference Support — we'll capture the details for your conference or training event.",
     questions: [
       "To start, **what type of training or conference support do you need?**",
+      "**Client name?**",
+      "**Event name and date?**",
+      "**Session type:** Panel / keynote / breakout / workshop",
       "**What is the primary goal/outcome?**",
       "**How do you want support delivered?** (Examples: Build the training content/materials for me, Co-create content with me)",
       "**Preferred date(s) / timeline & duration?**",
@@ -460,6 +463,20 @@ const buildPursuitQuestions = (answers: string[]): string[] => {
   return isDemo ? base : [base[0], ...base.slice(2)];
 };
 
+// ── Training Conference Support — dynamic branching ──
+// Client training/workshop → ask "Client name"; Conference/Other → ask "Event name and date" + "Session type".
+const buildTrainingQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Training Conference Support"].questions;
+  const a1 = (answers[0] || "").toLowerCase();
+  const isClient = a1.includes("client training") || a1.includes("client workshop");
+  const isEvent = a1.includes("conference") || a1.includes("other training");
+  // base[1] = Client name, base[2] = Event name/date, base[3] = Session type
+  if (isClient) return [base[0], base[1], ...base.slice(4)];
+  if (isEvent) return [base[0], base[2], base[3], ...base.slice(4)];
+  // Before Q1 answered, show only the first question
+  return [base[0]];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
@@ -474,6 +491,10 @@ const getQuestionsForScenario = (
   if (scenario === "Pursuit Enablement Support") {
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildPursuitQuestions(answers);
+  }
+  if (scenario === "Training Conference Support") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildTrainingQuestions(answers);
   }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
