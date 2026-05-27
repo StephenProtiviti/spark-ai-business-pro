@@ -93,9 +93,10 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
   "Training Conference Support": {
-    greeting: "Training Conference Support — we'll capture the details for your conference or training event. (More questions coming soon.)",
+    greeting: "Training Conference Support — we'll capture the details for your conference or training event.",
     questions: [
-      "To start, **briefly describe the training or conference support you need.** Include the event, audience, and what kind of help you're looking for.",
+      "To start, **what type of training or conference support do you need?**",
+      "**Tell us more about the event or session.** Include the event name, audience, and what kind of help you're looking for.",
     ],
   },
   "Pursuit Enablement Support": {
@@ -1074,6 +1075,32 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ))}
                 </motion.div>
 
+              );
+            })()}
+
+            {/* Quick-reply choices for Training Conference Support: type of support question */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("what type of training or conference support do you need")) return null;
+              const options = [
+                { label: "Client training / enablement session" },
+                { label: "Client workshop (co-creation / use cases)" },
+                { label: "Conference / event session support (speaker prep)" },
+                { label: "Other training-related support" },
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {options.map((o) => (
+                    <button
+                      key={o.label}
+                      onClick={() => handleSend(o.label)}
+                      className="w-full text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{o.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
               );
             })()}
 
