@@ -793,10 +793,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       // Map the selection through the decision tree to a scenario
       // Category-aware override: "Other" under Client Delivery uses "Client Other"
       let mappedScenario = selectionToScenario[value] || null;
-      if (value === "Other" && ideaCategory === "Client Delivery") {
+      if ((value === "Other" || value === "Other generic ideas") && ideaCategory === "Client Delivery") {
         mappedScenario = "Client Other";
       }
-      if (value === "Other" && ideaCategory === "Internal Operations") {
+      if ((value === "Other" || value === "Other generic ideas") && ideaCategory === "Internal Operations") {
         mappedScenario = "Internal Other";
       }
       if (value === "Use Case Development" && ideaCategory === "Client Delivery") {
