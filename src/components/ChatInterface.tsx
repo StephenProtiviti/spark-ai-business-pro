@@ -599,6 +599,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [ideaCategory, setIdeaCategory] = useState<string | null>(null);
   const [ideaArea, setIdeaArea] = useState<string | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
