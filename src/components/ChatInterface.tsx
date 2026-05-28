@@ -1341,7 +1341,28 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               );
             })()}
 
+            {/* Quick-reply Yes/No for "Does this enabler use AI?" */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("Does this enabler use AI")) return null;
+              const options = ["Yes", "No"];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {options.map((label) => (
+                    <button
+                      key={label}
+                      onClick={() => handleSend(label)}
+                      className="w-full text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
 
+            {isTyping && (
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                 <div className="bg-sidebar-accent rounded-lg px-3 py-2 text-sm text-sidebar-foreground/60">
