@@ -68,7 +68,7 @@ const selectionToScenario: Record<string, string> = {
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
   "New Agent Development": "Agent Development",
-  "Support in Publishing a copilot agent": "Enabler Development",
+  "Support in Publishing a copilot agent": "Publishing Copilot Agent",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
   "Enabler Development": "Enabler Development",
