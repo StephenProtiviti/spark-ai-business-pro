@@ -68,7 +68,7 @@ const selectionToScenario: Record<string, string> = {
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
   "New Agent Development": "Agent Development",
-  "Support in Publishing a copilot agent": "Enabler Development",
+  "Support in Publishing a copilot agent": "Publishing Copilot Agent",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
   "Enabler Development": "Enabler Development",
@@ -403,6 +403,18 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What efficiency gains are expected from this use case?**\n\n- Minimal measurable impact; isolated use\n- Small gains for a single team\n- Moderate cross-team gains\n- High impact on multiple cross-team processes\n- Major cross-functional gains for client and internal operations",
       "**How would you classify the data suggested for this agent?**\n\n- Personal Identifiable Information / Employee Data (e.g., name, SSN, email)\n- Confidential Client Information (e.g., financial records, customer data)\n- Confidential Company Information (e.g., internal reports, source code)\n- Non-Confidential Business Information (e.g., project plans, training docs)\n- Public Data (e.g., published reports, open datasets)\n- Other",
       "Last one: **What are the anticipated operational efficiency savings expected from this use case?**\n\n- No direct savings contribution\n- Minor indirect savings contribution\n- Some measurable savings contribution\n- Significant savings contributions\n- Major savings and cost reductions",
+    ],
+  },
+  "Publishing Copilot Agent": {
+    greeting: "Support in Publishing a Copilot Agent — let's capture the details so we can help you publish this agent successfully.",
+    questions: [
+      "To start, **please describe what the agent does.**",
+      "**Explain the business challenge or opportunity** that led to the need for this agent.",
+      "**Was this enabler developed for project delivery acceleration or internal use?**",
+      "**Describe the knowledge base.** Does it contain any sensitive (PII/PHI/Client confidential) information?",
+      "**Please specify the development team** involved in building this enabler.",
+      "**Estimated number of users** who will be using this agent?",
+      "Last one: **Specify the geographic locations** that will be using this agent.",
     ],
   },
 
