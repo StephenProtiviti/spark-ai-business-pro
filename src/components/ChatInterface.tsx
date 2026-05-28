@@ -507,6 +507,20 @@ const buildAtlasApiClientQuestions = (answers: string[]): string[] => {
   return [base[0], base[1], base[2], base[3], ...base.slice(5)];
 };
 
+// Agent Development - Client: skip Region/Country unless target users answer is "Regional"
+const buildAgentDevClientQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Agent Development - Client"].questions;
+  // answers[0..3] = first 4 questions, answers[4] = target users (Global/Regional)
+  const target = (answers[4] || "").toLowerCase().trim();
+  if (!target) {
+    // Until target users is answered, only expose questions up to base[4]
+    return base.slice(0, 5);
+  }
+  if (target.startsWith("reg")) return base;
+  // Global (or anything else) → skip Region (base[5]) and Country (base[6])
+  return [...base.slice(0, 5), ...base.slice(7)];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
