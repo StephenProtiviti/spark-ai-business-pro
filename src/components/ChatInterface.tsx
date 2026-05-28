@@ -47,7 +47,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
   ],
   "Custom Agent": [
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
-    { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
+    { label: "Support in Publishing a copilot agent", icon: Package, description: "Help publish a Copilot agent" },
   ],
   "Protiviti Atlas API Support": [
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
