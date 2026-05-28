@@ -1727,9 +1727,23 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleSend(`${isSalesUpload ? "Attached asset" : "Attached approval"}: ${file.name}`);
+                        if (file) {
+                          if (file.size > 10 * 1024 * 1024) {
+                            toast.error("File too large. Please attach files under 10MB.");
+                            e.target.value = "";
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            const dataUrl = reader.result as string;
+                            setAttachments((prev) => [...prev, { name: file.name, type: file.type || "application/octet-stream", dataUrl }]);
+                            handleSend(`${isSalesUpload ? "Attached asset" : "Attached approval"}: ${file.name}`);
+                          };
+                          reader.readAsDataURL(file);
+                        }
                         e.target.value = "";
                       }}
+
                     />
                   </label>
                   <span className="text-[10px] text-sidebar-foreground/50">or type a link below</span>
