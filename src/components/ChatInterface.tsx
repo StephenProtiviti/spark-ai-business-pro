@@ -1327,8 +1327,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </motion.div>
               );
             })()}
-            })()}
-
 
 
             {isTyping && (
