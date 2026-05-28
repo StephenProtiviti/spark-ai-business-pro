@@ -1525,6 +1525,38 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New and Existing Protiviti Atlas API provisioning support</span>
                     </div>
                   </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Copilot Agent Publishing Support");
+                      handleSend("Copilot Agent Publishing Support");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Rocket className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Copilot Agent Publishing Support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for publishing Copilot agents</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Support in Promoting Enablers");
+                      handleSend("Support in Promoting Enablers");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Package className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Support in Promoting Enablers</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Helping to promote enabler internally</span>
+                    </div>
+                  </button>
                 </div>
               </motion.div>
             )}
