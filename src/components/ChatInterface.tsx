@@ -1291,7 +1291,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     </div>
                     <div>
                       <span className="text-sm font-semibold text-sidebar-foreground block">Protiviti Atlas API Support</span>
-                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New Protiviti Atlas API provisioning support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New and Existing Protiviti Atlas API provisioning support</span>
                     </div>
                   </button>
                 </div>
