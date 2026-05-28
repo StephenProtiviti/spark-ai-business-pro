@@ -1226,6 +1226,36 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ],
                 },
                 {
+                  match: "industry team(s) does this apply to",
+                  options: [
+                    "Energy & Utilities",
+                    "Consumer Products & Services",
+                    "Financial Services",
+                    "Technology, Media & Telecommunication",
+                    "Aerospace, Defense & Federal",
+                    "Private Equity",
+                    "Public Sector",
+                    "Healthcare",
+                  ],
+                },
+                {
+                  match: "intended end user",
+                  options: ["Client", "Protiviti"],
+                },
+                {
+                  match: "Who is the competitor",
+                  options: ["Consulting Firm", "Third Party Vendor"],
+                },
+                {
+                  match: "Market Demand look like",
+                  options: [
+                    "Market Demand in the next 0–3 months",
+                    "Market Demand in the next 3–12 months",
+                    "Market Demand in 1–2 years",
+                    "Market Demand in 2+ years",
+                  ],
+                },
+                {
                   match: "anticipated operational efficiency savings",
                   options: [
                     "No direct savings contribution",
