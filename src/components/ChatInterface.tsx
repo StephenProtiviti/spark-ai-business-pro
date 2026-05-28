@@ -388,6 +388,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
   "Agent Development - Client": {
+    // Agent Development - Client: questions ordered per user prompt (May 28)
     greeting: "New Agent Development for Client Delivery — let's scope out what you're building!",
     questions: [
       "To start, **what needs will this Agent fulfill and what value can it create?**",
