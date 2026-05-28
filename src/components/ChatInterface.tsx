@@ -1731,8 +1731,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   <span className="text-[10px] text-sidebar-foreground/50">or type a link below</span>
                 </div>
               ) : null;
-
-              ) : null;
             })()}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
