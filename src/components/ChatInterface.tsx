@@ -613,6 +613,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [ideaArea, setIdeaArea] = useState<string | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
+
   const hasStarted = messages.length > 0;
 
   const toggleListening = useCallback(() => {
@@ -658,6 +660,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       setViewingMessages([]);
       setEvaluationHtml("");
       setEvaluationReady(false);
+      setAttachments([]);
+
     }
   }, [viewingIdea?.id]);
 
@@ -980,6 +984,42 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (htmlMatch) html = htmlMatch[1].trim();
 
       if (html.trim()) {
+
+        // Append attachments section so any documents uploaded in chat are
+        // accessible from within the Innovation Idea Brief.
+        if (attachments.length > 0) {
+          const items = attachments.map((a) => {
+            const isImage = a.type.startsWith("image/");
+            const preview = isImage
+              ? `<div style="margin-top:8px;"><img src="${a.dataUrl}" alt="${a.name}" style="max-width:100%;max-height:240px;border:1px solid #e5e7eb;border-radius:6px;" /></div>`
+              : "";
+            return `<li style="margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:6px;background:#fafafa;list-style:none;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                  <span style="font-size:18px;">📎</span>
+                  <span style="font-weight:600;color:#111827;word-break:break-all;">${a.name}</span>
+                  <span style="font-size:12px;color:#6b7280;">(${a.type || "file"})</span>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <a href="${a.dataUrl}" target="_blank" rel="noopener" style="color:#ea580c;font-weight:600;text-decoration:none;font-size:13px;">View</a>
+                  <a href="${a.dataUrl}" download="${a.name}" style="color:#ea580c;font-weight:600;text-decoration:none;font-size:13px;">Download</a>
+                </div>
+              </div>
+              ${preview}
+            </li>`;
+          }).join("");
+          const section = `<section style="margin-top:32px;padding-top:24px;border-top:2px solid #e5e7eb;">
+            <h2 style="font-size:20px;font-weight:700;color:#111827;margin-bottom:12px;">Attached Documents</h2>
+            <p style="color:#6b7280;margin-bottom:16px;font-size:14px;">Documents uploaded during intake. Click View to open in a new tab or Download to save a copy.</p>
+            <ul style="padding:0;margin:0;">${items}</ul>
+          </section>`;
+          // Insert before closing body tag if present; otherwise append.
+          if (/<\/body>/i.test(html)) {
+            html = html.replace(/<\/body>/i, `${section}</body>`);
+          } else {
+            html = `${html}${section}`;
+          }
+        }
         setEvaluationHtml(html);
         setEvaluationReady(true);
         setMessages((prev) => [
@@ -1006,7 +1046,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations]);
+  }, [messages, selectedScenario, recommendations, attachments]);
+
 
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
@@ -1723,9 +1764,23 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleSend(`${isSalesUpload ? "Attached asset" : "Attached approval"}: ${file.name}`);
+                        if (file) {
+                          if (file.size > 10 * 1024 * 1024) {
+                            toast.error("File too large. Please attach files under 10MB.");
+                            e.target.value = "";
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            const dataUrl = reader.result as string;
+                            setAttachments((prev) => [...prev, { name: file.name, type: file.type || "application/octet-stream", dataUrl }]);
+                            handleSend(`${isSalesUpload ? "Attached asset" : "Attached approval"}: ${file.name}`);
+                          };
+                          reader.readAsDataURL(file);
+                        }
                         e.target.value = "";
                       }}
+
                     />
                   </label>
                   <span className="text-[10px] text-sidebar-foreground/50">or type a link below</span>
