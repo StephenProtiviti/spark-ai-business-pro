@@ -1182,6 +1182,76 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               );
             })()}
 
+            {/* Quick-reply choices for Agent Development - Client multiple-choice questions */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              const content = last.content;
+              const choiceSets: { match: string; options: string[] }[] = [
+                {
+                  match: "estimated number of end users impacted",
+                  options: ["10 – 50", "51 – 500", "501 – 1000", "1001 – 5000", "Global"],
+                },
+                {
+                  match: "anticipated revenue impact",
+                  options: [
+                    "No direct revenue contribution",
+                    "Minor indirect revenue contribution",
+                    "Some measurable revenue contribution",
+                    "Enables new revenue stream",
+                    "Major drivers for high-margin or recurring revenue",
+                  ],
+                },
+                {
+                  match: "efficiency gains are expected",
+                  options: [
+                    "Minimal measurable impact; isolated use",
+                    "Small gains for a single team",
+                    "Moderate cross-team gains",
+                    "High impact on multiple cross-team processes",
+                    "Major cross-functional gains for client and internal operations",
+                  ],
+                },
+                {
+                  match: "classify the data suggested",
+                  options: [
+                    "Personal Identifiable Information / Employee Data (e.g., name, SSN, email)",
+                    "Confidential Client Information (e.g., financial records, customer data)",
+                    "Confidential Company Information (e.g., internal reports, source code)",
+                    "Non-Confidential Business Information (e.g., project plans, training docs)",
+                    "Public Data (e.g., published reports, open datasets)",
+                    "Other",
+                  ],
+                },
+                {
+                  match: "anticipated operational efficiency savings",
+                  options: [
+                    "No direct savings contribution",
+                    "Minor indirect savings contribution",
+                    "Some measurable savings contribution",
+                    "Significant savings contributions",
+                    "Major savings and cost reductions",
+                  ],
+                },
+              ];
+              const set = choiceSets.find((s) => content.includes(s.match));
+              if (!set) return null;
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {set.options.map((label) => (
+                    <button
+                      key={label}
+                      onClick={() => handleSend(label)}
+                      className="w-full text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
+
+
 
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
