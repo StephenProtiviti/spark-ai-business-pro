@@ -419,7 +419,6 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   },
 
   "Agent Development - Internal": {
-  "Agent Development - Internal": {
     greeting: "New Agent Development for Internal Operations — let's scope out what you're building!",
     questions: [
       "To start, **what's the Idea Title?** A short working title is perfect.",
