@@ -1024,11 +1024,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
             content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
           },
         ]);
-
-            role: "assistant" as const,
-            content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
-          },
-        ]);
       } else if (refinement && previousHtml) {
         setEvaluationHtml(previousHtml);
         setEvaluationReady(true);
