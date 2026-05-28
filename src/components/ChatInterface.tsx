@@ -21,7 +21,7 @@ const clientAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
@@ -30,7 +30,7 @@ const internalAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
@@ -70,7 +70,7 @@ const selectionToScenario: Record<string, string> = {
   "New Agent Development": "Agent Development",
   "Support in Publishing a copilot agent": "Publishing Copilot Agent",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
-  "Support in Promoting Enablers": "Enabler Development",
+  "Support in Promoting Enablers": "Promoting Enablers",
   "Enabler Development": "Enabler Development",
   "Copilot Agent Publishing Support": "Enabler Development",
   "Design Thinking Workshop": "Design Thinking Workshop",
@@ -405,6 +405,19 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**Please specify the development team** involved in building this enabler.",
       "**Estimated number of users** who will be using this agent?",
       "Last one: **Specify the geographic locations** that will be using this agent.",
+    ],
+  },
+
+  "Promoting Enablers": {
+    greeting: "Support in Promoting Enablers — let's capture the details so we can help promote this enabler internally.",
+    questions: [
+      "To start, **explain the business challenge or opportunity** that led to the need for this enabler.",
+      "**Describe the enabler and how it addresses that need.**",
+      "**Please specify the development team** involved in building this enabler.",
+      "**Who is the sponsoring MD?**",
+      "**What third-party tool and/or ecosystem partner** did you use to develop the enabler?",
+      "**Does this enabler use AI?** (Yes / No)",
+      "Last one: **Please upload or share a link** of Sales Assets, Overview Presentations, One Pagers, Recorded Demos, or Credentials.",
     ],
   },
 
@@ -1328,6 +1341,26 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               );
             })()}
 
+            {/* Quick-reply Yes/No for "Does this enabler use AI?" */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("Does this enabler use AI")) return null;
+              const options = ["Yes", "No"];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {options.map((label) => (
+                    <button
+                      key={label}
+                      onClick={() => handleSend(label)}
+                      className="w-full text-left rounded-lg border border-sidebar-border bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors px-3 py-2 text-sm"
+                    >
+                      <span className="font-semibold block">{label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
 
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
