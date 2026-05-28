@@ -47,7 +47,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
   ],
   "Custom Agent": [
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
-    { label: "Support in Promoting & Publishing Enablers", icon: Package, description: "Help promote and publish enablers" },
+    { label: "Support in Publishing a copilot agent", icon: Package, description: "Help publish a Copilot agent" },
   ],
   "Protiviti Atlas API Support": [
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
@@ -68,7 +68,7 @@ const selectionToScenario: Record<string, string> = {
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
   "New Agent Development": "Agent Development",
-  "Support in Promoting & Publishing Enablers": "Enabler Development",
+  "Support in Publishing a copilot agent": "Enabler Development",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Enabler Development",
   "Enabler Development": "Enabler Development",
