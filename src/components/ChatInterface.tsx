@@ -204,27 +204,17 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Enabler Development - Client": {
     greeting: "Enabler Development on Protiviti Atlas for Client Delivery — let's capture the details so we can scope, build, and prioritize this properly.",
     questions: [
-      "To start, **what's the name of your enabler/idea?** A short working title is perfect.",
-      "**What enabler are you looking to build?** Describe the capability or tool in 1-2 sentences.",
-      "**Problem Statement:** What need does your idea fulfill? Describe the gap or pain point it addresses.",
-      "**Proposed Solution:** What are your expected outcomes from this idea? How will it solve the problem?",
-      "**Idea Description:** Walk me through how your idea works in a bit more detail.",
-      "**Will this be built on Atlas or another platform/technology?** Specify the platform and any key dependencies.",
-      "**What existing tools or processes does this replace or enhance?** Describe the current state.",
-      "**What C-Suite Solution Team(s) does this apply to?** (e.g., CFO, CIO, CRO, CHRO, COO — you can list multiple)",
-      "**What industry team(s) does this apply to?** (e.g., Financial Services, Healthcare, Consumer Products)",
-      "**MD Sponsor:** Who is the MD championing this idea internally?",
-      "**Who is the intended end user of your idea?** (e.g., client executives, internal teams, specific personas)",
-      "**What is the anticipated revenue impact of this use case?**",
-      "**What efficiency gains are expected from this use case?**",
-      "**Who is the competitor?** (Consulting Firms, Third Party Vendors, or both) — and **name(s)** to be aware of.",
-      "**Current Market Demand:** How would you describe the demand for this in the market today?",
-      "**What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
-      "**Support Type:** What kind of support are you looking for to develop this?",
-      "**How will you measure adoption and success?** Number of users, integrations, or business outcomes.",
-      "Last one: **Do you have Client Validation for this idea?** If yes, please share the **name of the client**.",
+      "To start, **briefly describe your problem statement.** What gap or pain point does this enabler address?",
+      "**Proposed Solution:** What are your expected outcomes from this enabler?",
+      "**Who is the MD sponsor?** Please share the name of the MD championing this idea.",
+      "**What industry team(s) does this apply to?** Select one of the following:",
+      "**Who is the intended end user?** (Client / Protiviti)",
+      "**Who is the competitor?** (Consulting Firm / Third Party Vendor)",
+      "**What does the Market Demand look like?** Select the timeframe that best fits:",
+      "Last one: **Has this idea been validated by the client or anyone in Protiviti?** If yes, please share who validated it.",
     ],
   },
+
   "Automation Support": {
     greeting: "Automation — let's identify what to streamline!",
     questions: [
@@ -1233,6 +1223,36 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     "Non-Confidential Business Information (e.g., project plans, training docs)",
                     "Public Data (e.g., published reports, open datasets)",
                     "Other",
+                  ],
+                },
+                {
+                  match: "industry team(s) does this apply to",
+                  options: [
+                    "Energy & Utilities",
+                    "Consumer Products & Services",
+                    "Financial Services",
+                    "Technology, Media & Telecommunication",
+                    "Aerospace, Defense & Federal",
+                    "Private Equity",
+                    "Public Sector",
+                    "Healthcare",
+                  ],
+                },
+                {
+                  match: "intended end user",
+                  options: ["Client", "Protiviti"],
+                },
+                {
+                  match: "Who is the competitor",
+                  options: ["Consulting Firm", "Third Party Vendor"],
+                },
+                {
+                  match: "Market Demand look like",
+                  options: [
+                    "Market Demand in the next 0–3 months",
+                    "Market Demand in the next 3–12 months",
+                    "Market Demand in 1–2 years",
+                    "Market Demand in 2+ years",
                   ],
                 },
                 {
