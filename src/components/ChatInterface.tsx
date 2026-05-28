@@ -21,7 +21,7 @@ const clientAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
@@ -30,7 +30,7 @@ const internalAreas = [
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Help promoting and publishing enablers" },
+  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
@@ -70,7 +70,7 @@ const selectionToScenario: Record<string, string> = {
   "New Agent Development": "Agent Development",
   "Support in Publishing a copilot agent": "Publishing Copilot Agent",
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
-  "Support in Promoting Enablers": "Enabler Development",
+  "Support in Promoting Enablers": "Promoting Enablers",
   "Enabler Development": "Enabler Development",
   "Copilot Agent Publishing Support": "Enabler Development",
   "Design Thinking Workshop": "Design Thinking Workshop",
