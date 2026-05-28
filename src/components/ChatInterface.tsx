@@ -544,6 +544,10 @@ const getQuestionsForScenario = (
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildAtlasApiClientQuestions(answers);
   }
+  if (scenario === "Agent Development - Client") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildAgentDevClientQuestions(answers);
+  }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
 
