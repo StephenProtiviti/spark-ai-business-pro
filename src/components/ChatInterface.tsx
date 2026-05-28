@@ -1046,7 +1046,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations]);
+  }, [messages, selectedScenario, recommendations, attachments]);
+
 
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
