@@ -979,7 +979,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (typeof data === "string") {
         try { parsedData = JSON.parse(data); } catch { parsedData = data; }
       }
+      let html = typeof parsedData?.html === "string" ? parsedData.html : (typeof parsedData === "string" ? parsedData : "");
+      const htmlMatch = html.match(/```html\s*([\s\S]*?)```/);
+      if (htmlMatch) html = htmlMatch[1].trim();
+
       if (html.trim()) {
+
         // Append attachments section so any documents uploaded in chat are
         // accessible from within the Innovation Idea Brief.
         if (attachments.length > 0) {
