@@ -390,22 +390,21 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
   "Agent Development - Client": {
     greeting: "New Agent Development for Client Delivery — let's scope out what you're building!",
     questions: [
-      "To start, **what's the Idea Title?** A short working title is perfect.",
-      "**Overview of the Idea:** Give me a quick summary of what this agent is and what it does.",
-      "**Problem Statement:** What needs will this Agent fulfill and what value can it create?",
-      "**What are the expected outcomes of this idea?**",
-      "**What is the current approach of performing the task** the agent will take on?",
+      "To start, **what needs will this Agent fulfill and what value can it create?**",
+      "**What are the expected outcomes?**",
+      "**What is the current approach of performing the task?**",
       "**What data or knowledge base will this agent rely on** to generate its responses?",
-      "**What infrastructure or technology would you like to suggest for building this Agent?** (e.g., Copilot Studio, Atlas, OpenAI, Claude, Other — feel free to mention more than one)",
-      "**Specify the MD / Business Point of Contact** for this agent.",
-      "**Who are the target users for the agent?** (e.g., client executives, internal teams, specific personas)",
-      "**What is the estimated number of end users impacted by this use case?** (10–50, 51–500, 501–1,000, 1,001–5,000, or Global)",
-      "**What is the anticipated revenue impact of this use case?**",
-      "**How would you classify the data suggested for this agent?** (e.g., public, internal, confidential, regulated)",
-      "**What efficiency gains are expected from this use case?**",
-      "Last one: **What are the anticipated operational efficiency savings expected from this use case?**",
+      "**Who are the target users for the agent?** (Global or Regional)",
+      "**Specify the Region.**",
+      "**Specify the Country.**",
+      "**What is the estimated number of end users impacted by this use case?**\n\n- 10 – 50\n- 51 – 500\n- 501 – 1000\n- 1001 – 5000\n- Global",
+      "**What is the anticipated revenue impact of this use case?**\n\n- No direct revenue contribution\n- Minor indirect revenue contribution\n- Some measurable revenue contribution\n- Enables new revenue stream\n- Major drivers for high-margin or recurring revenue",
+      "**What efficiency gains are expected from this use case?**\n\n- Minimal measurable impact; isolated use\n- Small gains for a single team\n- Moderate cross-team gains\n- High impact on multiple cross-team processes\n- Major cross-functional gains for client and internal operations",
+      "**How would you classify the data suggested for this agent?**\n\n- Personal Identifiable Information / Employee Data (e.g., name, SSN, email)\n- Confidential Client Information (e.g., financial records, customer data)\n- Confidential Company Information (e.g., internal reports, source code)\n- Non-Confidential Business Information (e.g., project plans, training docs)\n- Public Data (e.g., published reports, open datasets)\n- Other",
+      "Last one: **What are the anticipated operational efficiency savings expected from this use case?**\n\n- No direct savings contribution\n- Minor indirect savings contribution\n- Some measurable savings contribution\n- Significant savings contributions\n- Major savings and cost reductions",
     ],
   },
+
   "Agent Development - Internal": {
     greeting: "New Agent Development for Internal Operations — let's scope out what you're building!",
     questions: [
@@ -508,6 +507,20 @@ const buildAtlasApiClientQuestions = (answers: string[]): string[] => {
   return [base[0], base[1], base[2], base[3], ...base.slice(5)];
 };
 
+// Agent Development - Client: skip Region/Country unless target users answer is "Regional"
+const buildAgentDevClientQuestions = (answers: string[]): string[] => {
+  const base = scenarioQuestions["Agent Development - Client"].questions;
+  // answers[0..3] = first 4 questions, answers[4] = target users (Global/Regional)
+  const target = (answers[4] || "").toLowerCase().trim();
+  if (!target) {
+    // Until target users is answered, only expose questions up to base[4]
+    return base.slice(0, 5);
+  }
+  if (target.startsWith("reg")) return base;
+  // Global (or anything else) → skip Region (base[5]) and Country (base[6])
+  return [...base.slice(0, 5), ...base.slice(7)];
+};
+
 // Resolve the active question list for a scenario, taking dynamic branching into account.
 const getQuestionsForScenario = (
   scenario: string | null,
@@ -530,6 +543,10 @@ const getQuestionsForScenario = (
   if (scenario === "Atlas API Provisioning - Client") {
     const answers = userMessages.slice(1).map((m) => m.content);
     return buildAtlasApiClientQuestions(answers);
+  }
+  if (scenario === "Agent Development - Client") {
+    const answers = userMessages.slice(1).map((m) => m.content);
+    return buildAgentDevClientQuestions(answers);
   }
   return scenarioQuestions[scenario]?.questions || fallback;
 };
