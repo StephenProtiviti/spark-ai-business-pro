@@ -20,8 +20,6 @@ const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
-  { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
@@ -29,8 +27,6 @@ const internalAreas = [
   { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
-  { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
@@ -72,7 +68,7 @@ const selectionToScenario: Record<string, string> = {
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Promoting Enablers",
   "Enabler Development": "Enabler Development",
-  "Copilot Agent Publishing Support": "Enabler Development",
+  "Copilot Agent Publishing Support": "Publishing Copilot Agent",
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
   "Support in Exploring Existing Tools": "Generic Idea",
@@ -1527,6 +1523,38 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <div>
                       <span className="text-sm font-semibold text-sidebar-foreground block">Protiviti Atlas API Support</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New and Existing Protiviti Atlas API provisioning support</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Copilot Agent Publishing Support");
+                      handleSend("Copilot Agent Publishing Support");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Rocket className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Copilot Agent Publishing Support</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Support for publishing Copilot agents</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIdeaCategory("Support");
+                      setIdeaArea("Support in Promoting Enablers");
+                      handleSend("Support in Promoting Enablers");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Package className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Support in Promoting Enablers</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">Helping to promote enabler internally</span>
                     </div>
                   </button>
                 </div>
