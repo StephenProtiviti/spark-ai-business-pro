@@ -660,6 +660,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       setViewingMessages([]);
       setEvaluationHtml("");
       setEvaluationReady(false);
+      setAttachments([]);
+
     }
   }, [viewingIdea?.id]);
 
