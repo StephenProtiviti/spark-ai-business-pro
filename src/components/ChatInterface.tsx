@@ -20,8 +20,6 @@ const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
-  { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
@@ -29,8 +27,6 @@ const internalAreas = [
   { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
-  { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
-  { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
@@ -72,7 +68,7 @@ const selectionToScenario: Record<string, string> = {
   "Explore Existing Tools (ProGPT & Power Automate)": "Generic Idea",
   "Support in Promoting Enablers": "Promoting Enablers",
   "Enabler Development": "Enabler Development",
-  "Copilot Agent Publishing Support": "Enabler Development",
+  "Copilot Agent Publishing Support": "Publishing Copilot Agent",
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
   "Support in Exploring Existing Tools": "Generic Idea",
