@@ -1699,28 +1699,39 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           <div className="px-3 pb-3 pt-2 border-t border-sidebar-border shrink-0">
             {(() => {
               const lastAsst = [...displayMessages].reverse().find((m) => m.role === "assistant");
-              const isUploadStep =
+              const isMdUpload =
                 !isViewing &&
                 !conversationDone &&
                 !!lastAsst?.content?.includes("Upload MD approval:");
+              const isSalesUpload =
+                !isViewing &&
+                !conversationDone &&
+                !!lastAsst?.content?.includes("Sales Assets");
+              const isUploadStep = isMdUpload || isSalesUpload;
               return isUploadStep ? (
                 <div className="mb-2 flex items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-2">
                   <label className="flex-1 cursor-pointer text-xs text-sidebar-foreground/80 hover:text-sidebar-foreground transition-colors flex items-center gap-2 px-2 py-1.5">
                     <FileText className="w-4 h-4 text-primary" />
-                    <span>Click to attach approval (image, PDF, or .msg)</span>
+                    <span>
+                      {isSalesUpload
+                        ? "Click to attach sales assets (PDF, PPT, DOC, image, or video)"
+                        : "Click to attach approval (image, PDF, or .msg)"}
+                    </span>
                     <input
                       type="file"
-                      accept="image/*,application/pdf,.msg,.eml"
+                      accept={isSalesUpload ? "image/*,video/*,application/pdf,.ppt,.pptx,.doc,.docx" : "image/*,application/pdf,.msg,.eml"}
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleSend(`Attached approval: ${file.name}`);
+                        if (file) handleSend(`${isSalesUpload ? "Attached asset" : "Attached approval"}: ${file.name}`);
                         e.target.value = "";
                       }}
                     />
                   </label>
                   <span className="text-[10px] text-sidebar-foreground/50">or type a link below</span>
                 </div>
+              ) : null;
+
               ) : null;
             })()}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
