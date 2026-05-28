@@ -31,7 +31,7 @@ const internalAreas = [
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
   { label: "Copilot Agent Publishing Support", icon: Rocket, description: "Support for publishing Copilot agents" },
   { label: "Support in Promoting Enablers", icon: Package, description: "Helping to promote enabler internally" },
-  { label: "Other", icon: Sparkles, description: "Other internal operations ideas" },
+  { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
 const subAreas: Record<string, { label: string; icon: any; description: string }[]> = {
