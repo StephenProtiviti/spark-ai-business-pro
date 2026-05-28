@@ -405,7 +405,20 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **What are the anticipated operational efficiency savings expected from this use case?**\n\n- No direct savings contribution\n- Minor indirect savings contribution\n- Some measurable savings contribution\n- Significant savings contributions\n- Major savings and cost reductions",
     ],
   },
+  "Publishing Copilot Agent": {
+    greeting: "Support in Publishing a Copilot Agent — let's capture the details so we can help you publish this agent successfully.",
+    questions: [
+      "To start, **please describe what the agent does.**",
+      "**Explain the business challenge or opportunity** that led to the need for this agent.",
+      "**Was this enabler developed for project delivery acceleration or internal use?**",
+      "**Describe the knowledge base.** Does it contain any sensitive (PII/PHI/Client confidential) information?",
+      "**Please specify the development team** involved in building this enabler.",
+      "**Estimated number of users** who will be using this agent?",
+      "Last one: **Specify the geographic locations** that will be using this agent.",
+    ],
+  },
 
+  "Agent Development - Internal": {
   "Agent Development - Internal": {
     greeting: "New Agent Development for Internal Operations — let's scope out what you're building!",
     questions: [
