@@ -408,6 +408,20 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
     ],
   },
 
+  "Promoting Enablers": {
+    greeting: "Support in Promoting Enablers — let's capture the details so we can help promote this enabler internally.",
+    questions: [
+      "To start, **explain the business challenge or opportunity** that led to the need for this enabler.",
+      "**Describe the enabler and how it addresses that need.**",
+      "**Please specify the development team** involved in building this enabler.",
+      "**Who is the sponsoring MD?**",
+      "**What third-party tool and/or ecosystem partner** did you use to develop the enabler?",
+      "**Does this enabler use AI?** (Yes / No)",
+      "Last one: **Please upload or share a link** of Sales Assets, Overview Presentations, One Pagers, Recorded Demos, or Credentials.",
+    ],
+  },
+
+  "Agent Development - Internal": {
   "Agent Development - Internal": {
     greeting: "New Agent Development for Internal Operations — let's scope out what you're building!",
     questions: [
