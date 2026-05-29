@@ -1724,6 +1724,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                      <button
                        key={label}
                        onClick={() => {
+                          recordRoutingStep();
                          if (subAreas[label]) {
                            setIdeaArea(label);
                          } else {
