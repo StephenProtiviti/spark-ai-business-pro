@@ -1543,6 +1543,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Protiviti Atlas API Support");
                     }}
@@ -1558,6 +1559,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Copilot Agent Publishing Support");
                       handleSend("Copilot Agent Publishing Support");
@@ -1574,6 +1576,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Support in Promoting Enablers");
                       handleSend("Support in Promoting Enablers");
