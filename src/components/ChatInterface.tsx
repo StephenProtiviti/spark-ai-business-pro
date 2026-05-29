@@ -836,6 +836,35 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     }
   };
 
+  const handleSkipFollowUp = () => {
+    if (!pendingFollowUp || isTyping) return;
+    setPendingFollowUp(false);
+    setIsTyping(true);
+    const scenario = selectedScenario;
+    const skipMsg: Message = { role: "user", content: "(skipped)", followUpReply: true };
+    const updatedMessages = [...messages, skipMsg];
+    setMessages(updatedMessages);
+    (async () => {
+      await new Promise((r) => setTimeout(r, 300));
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
+      const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+      if (questionIndex < dynamicQuestions.length) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant" as const, content: dynamicQuestions[questionIndex] },
+        ]);
+        setQuestionIndex((i) => i + 1);
+      } else {
+        setShowRecommendations(false);
+        setRecommendationsDismissed(true);
+        setCanvasView("evaluation");
+        handleProceedWithSubmission(updatedMessages);
+        setConversationDone(true);
+      }
+      setIsTyping(false);
+    })();
+  };
+
   const handleSend = (text?: string) => {
     const value = text || input;
     if (!value.trim() || isTyping) return;
