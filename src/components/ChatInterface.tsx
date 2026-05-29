@@ -1080,15 +1080,31 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const hasCanvasContent = evaluationHtml || isGeneratingEvaluation || showRecommendations ||
     (isViewing && viewingIdea?.businessPlanHtml);
 
-  // Progress for the question phase — drives the canvas progress indicator
+  // Progress for the intake phase — drives the canvas progress indicator.
+  // Counts every multiple-choice/answer click from the very first step (category selection)
+  // through the final scenario question.
   const totalQuestions = getQuestionsForScenario(
     selectedScenario,
     messages.filter((m) => m.role === "user")
   ).length;
-  const answeredQuestions = Math.min(questionIndex, totalQuestions);
-  const progressPct = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
-  const inQuestionPhase = !isViewing && !submitted && hasStarted && !evaluationHtml &&
-    !isGeneratingEvaluation && !conversationDone && totalQuestions > 0;
+  const userMsgCount = messages.filter((m) => m.role === "user").length;
+  let totalSteps: number;
+  let answeredSteps: number;
+  if (selectedScenario && totalQuestions > 0) {
+    const preScenarioClicks = Math.max(userMsgCount - questionIndex, 0);
+    totalSteps = preScenarioClicks + totalQuestions;
+    answeredSteps = Math.min(userMsgCount, totalSteps);
+  } else {
+    // Pre-scenario phase: estimate so the bar moves forward with each click but never hits 100%.
+    totalSteps = Math.max(userMsgCount + 6, 8);
+    answeredSteps = userMsgCount;
+  }
+  const progressPct = totalSteps > 0
+    ? Math.min(Math.round((answeredSteps / totalSteps) * 100), selectedScenario ? 100 : 95)
+    : 0;
+  const inQuestionPhase = !isViewing && !submitted && !evaluationHtml &&
+    !isGeneratingEvaluation && !conversationDone;
+
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
