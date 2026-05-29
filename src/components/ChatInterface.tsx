@@ -803,6 +803,35 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     return result;
   };
 
+  // Quick heuristic — true for clearly factual / closed-ended questions we never want to
+  // second-guess. Keeps the AI judge from being called on names, dates, yes/no, and
+  // multiple-choice questions. This is NOT a length check.
+  const isFactualQuestion = (q: string): boolean => {
+    const clean = q.toLowerCase().replace(/\*\*/g, "");
+    if (/\(yes\s*\/\s*no\)/.test(clean)) return true;
+    if (/\bselect (all|one)\b/.test(clean)) return true;
+    if (/\b(name|date|timeline|audience size|point of contact|md sponsor|sponsor\?|email|phone|client name|project id|deadline)\b/.test(clean)) return true;
+    return false;
+  };
+
+  const judgeAnswer = async (question: string, answer: string, scenario: string | null): Promise<string | null> => {
+    if (followUpsUsed >= FOLLOW_UP_CAP) return null;
+    if (isFactualQuestion(question)) return null;
+    try {
+      const { data, error } = await supabase.functions.invoke("check-answer-quality", {
+        body: { question, answer, scenario: scenario || "Idea intake" },
+      });
+      if (error) return null;
+      if (data && data.sufficient === false && typeof data.followUp === "string" && data.followUp.trim()) {
+        return data.followUp.trim();
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  // Handle differentiation follow-up answer for "Client Other"
   const handleSend = (text?: string) => {
     const value = text || input;
     if (!value.trim() || isTyping) return;
