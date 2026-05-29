@@ -793,7 +793,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   };
 
   const extractAnswers = (): Record<string, string> => {
-    const userMsgs = messages.filter((m) => m.role === "user");
+    // Exclude clarifying follow-up replies — they're already merged into the preceding answer.
+    const userMsgs = messages.filter((m) => m.role === "user" && !m.followUpReply);
     const scenario = selectedScenario || "Generic Idea";
     const qs = getQuestionsForScenario(scenario, userMsgs);
     const result: Record<string, string> = {};
