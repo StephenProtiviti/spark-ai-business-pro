@@ -49,7 +49,7 @@ Rules:
         },
       ];
     } else {
-      const systemPrompt = `You are a senior innovation analyst reviewing idea submissions for a review board. Given an idea, its scenario type, and the submitter's answers, generate a professional Innovation Idea Brief in clean, self-contained HTML.
+      const systemPrompt = `You are a senior innovation analyst reviewing idea submissions for a review board. Given an idea, its scenario type, the submitter's answers, and the submission date, generate a professional Innovation Idea Brief in clean, self-contained HTML.
 
 Rules:
 - Output ONLY valid HTML. No markdown, no code fences, no explanation text.
@@ -58,7 +58,7 @@ Rules:
 - The main title/header of the document should be the specific idea title derived from the submission — NOT a generic "INNOVATION IDEA BRIEF" heading. Use the idea name/title as the prominent H1 header at the top.
 - The document should be structured as an Innovation Idea Brief containing these sections:
 
-1. **Submission Overview** — Scenario type, idea title, date, and a 2-3 sentence executive summary.
+1. **Submission Overview** — Scenario type, idea title, date, and a 2-3 sentence executive summary. The date MUST be exactly: ${submissionDate || "the current date"}. Do NOT use any other date.
 2. **Pros / Strengths** — 3-5 bullet points highlighting the strongest aspects of the idea (strategic fit, innovation, potential value, etc.).
 3. **Cons / Weaknesses** — 3-5 bullet points covering limitations, gaps, or concerns.
 4. **Tangible Metrics & Considerations** — Qualitative indicators such as estimated effort level (Low/Medium/High), time-to-value, required resources, dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
