@@ -1101,8 +1101,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   let answeredSteps: number;
   let showStepCount: boolean;
   if (selectedScenario && totalQuestions > 0) {
+    const answeredScenarioQuestions = Math.max(userMsgCount - 1, 0);
     totalSteps = routingStepCount + totalQuestions;
-    answeredSteps = Math.min(routingStepCount + userMsgCount, totalSteps);
+    answeredSteps = Math.min(routingStepCount + answeredScenarioQuestions, totalSteps);
     showStepCount = true;
   } else {
     // Pre-scenario phase: scale progress to button clicks so far, capped below 100%.
@@ -1694,7 +1695,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   })}
                 </div>
                 <button
-                  onClick={() => setIdeaCategory(null)}
+                  onClick={() => {
+                    removeRoutingStep();
+                    setIdeaCategory(null);
+                  }}
                    className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
                  >
                    ← Back to category selection
@@ -1744,7 +1748,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setIdeaArea(null)}
+                  onClick={() => {
+                    removeRoutingStep();
+                    setIdeaArea(null);
+                  }}
                    className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
                  >
                    ← Back to area selection
