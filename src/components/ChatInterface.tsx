@@ -1612,7 +1612,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </p>
                 <div className="grid grid-cols-1 gap-3 w-full">
                   <button
-                    onClick={() => setIdeaCategory("Client Delivery")}
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Client Delivery");
+                    }}
                     className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -1624,7 +1627,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     </div>
                   </button>
                   <button
-                    onClick={() => setIdeaCategory("Internal Operations")}
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Internal Operations");
+                    }}
                     className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -1661,6 +1667,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <button
                         key={label}
                         onClick={() => {
+                          recordRoutingStep();
                           if (label === "Protiviti Atlas") {
                             // Skip sub-area picker — go straight to Use Case Development
                             setIdeaArea(label);
