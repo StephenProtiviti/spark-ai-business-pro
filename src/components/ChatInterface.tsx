@@ -13,6 +13,10 @@ import { getRecommendations, Accelerator } from "@/data/mockAccelerators";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  // Marks a user message that is a clarifying reply to a smart follow-up question.
+  // These bubbles are shown in the transcript but excluded from answer extraction,
+  // so positional question→answer mapping stays correct.
+  followUpReply?: boolean;
 }
 
 // ── Decision Tree Areas ──
