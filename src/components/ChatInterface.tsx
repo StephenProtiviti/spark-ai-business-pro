@@ -1623,6 +1623,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <span className="text-sm font-semibold text-sidebar-foreground block">Support in Exploring Existing Tools</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">ProGPT, Power Platforms training and demos</span>
                     </div>
+                  </button>
                   <button
                     onClick={() => {
                       recordRoutingStep();
