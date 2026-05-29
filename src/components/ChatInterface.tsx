@@ -18,14 +18,14 @@ interface Message {
 // ── Decision Tree Areas ──
 const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
-  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other client delivery ideas" },
 ];
 
 const internalAreas = [
   { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
-  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
   { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
 ];
@@ -45,6 +45,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Publishing a copilot agent", icon: Package, description: "Help publish a Copilot agent" },
   ],
+  // Note: "Custom Agent Development" intentionally has no sub-areas — flows directly into Agent Development questions.
   "Protiviti Atlas API Support": [
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
     { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Support for an existing Protiviti Atlas API provisioning" },
@@ -1715,6 +1716,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             // Skip sub-area picker — go straight to Use Case Development
                             setIdeaArea(label);
                             handleSend("Use Case Development");
+                          } else if (label === "Custom Agent Development") {
+                            // Skip sub-area picker — go straight to New Agent Development questions
+                            setIdeaArea(label);
+                            handleSend("New Agent Development");
                           } else if (hasSubArea) {
                             setIdeaArea(label);
                           } else {
