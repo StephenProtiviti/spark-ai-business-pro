@@ -607,8 +607,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
+  const [routingStepCount, setRoutingStepCount] = useState(0);
 
   const hasStarted = messages.length > 0;
+
+  const recordRoutingStep = () => setRoutingStepCount((count) => count + 1);
+  const removeRoutingStep = () => setRoutingStepCount((count) => Math.max(0, count - 1));
 
   const toggleListening = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -699,6 +703,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setDraftIdeaId(null);
     setIdeaCategory(null);
     setIdeaArea(null);
+    setRoutingStepCount(0);
     setAwaitingDifferentiationAnswer(false);
     evaluationTargetIdRef.current = null;
   };
@@ -719,15 +724,19 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         setQuestionIndex(0);
         setSelectedScenario(null);
         setConversationDone(false);
+        removeRoutingStep();
       }
     } else if (ideaArea && subAreas[ideaArea]) {
       // In sub-area selection — go back to area
       setIdeaArea(null);
+      removeRoutingStep();
     } else if (ideaArea) {
       setIdeaArea(null);
+      removeRoutingStep();
     } else if (ideaCategory) {
       // In area selection — go back to category
       setIdeaCategory(null);
+      removeRoutingStep();
     } else {
       // At the top of the chat flow — go back to the homepage
       navigate("/");
