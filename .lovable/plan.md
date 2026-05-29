@@ -1,63 +1,56 @@
-# AI Studio Intake — Three Dedicated Conversational Questionnaires
+## Goal
 
-Split the shared `AI Studio Support` scenario into three separate, conversational questionnaires — one per sub-path from the diagram. After the last question, the existing flow continues unchanged (accelerator recommendations → differentiation question → evaluation report → submit).
+Make the intake chat smart enough to notice when an answer doesn't give the Idea Brief what it needs, and ask **one** targeted follow-up — based purely on the *meaning* of the answer, never on its length.
 
-## Changes (single file: `src/components/ChatInterface.tsx`)
+## Guardrails
 
-### 1. Update `selectionToScenario`
-- `"Client Workshop"` → `"AI Studio - Client Workshop"`
-- `"Prototype Development"` → `"AI Studio - Prototype Development"`
-- `"Idea for an AI Showcase"` → `"AI Studio - AI Showcase"`
+1. **No length-based triggers.** A two-word answer that fully answers the question ("Jane Doe", "Q3 2026") passes. A 200-word answer that dodges the question gets a follow-up.
+2. **At most one follow-up per question.** After one nudge, accept whatever's given and move on.
+3. **Hard cap of 2 follow-ups per intake.** Once hit, no more follow-ups fire for the rest of the conversation.
+4. **Skippable.** Every follow-up shows a "Skip / move on" affordance.
+5. **Soft framing.** "This will help the review board evaluate it" — never "your answer is insufficient."
+6. **Never blocks submission.** Enrichment only.
+7. **Exempt questions.** Factual fields (MD sponsor, point of contact, audience size, timeline, yes/no choices) skip the check entirely via per-question metadata.
 
-### 2. Add three new entries to `scenarioQuestions` (and remove `"AI Studio Support"`)
+## How the smartness works (semantic, not length)
 
-**AI Studio - Client Workshop**
-Greeting: "A Client Workshop at the AI Studio — exciting! Let's capture the details so we can plan a great session."
-1. To start, **what's the purpose of your visit to the AI Studio?** Are you exploring AI broadly, working on a specific use case, or aiming to inspire the client?
-2. **Which client is this workshop for?** Please share the client name.
-3. **Who is the sponsoring MD** championing this workshop internally?
-4. **Who are the key client stakeholders attending,** and what's their level (e.g., C-Suite, VP, Director)?
-5. **Who will be the day-to-day contact(s)** coordinating logistics on both sides?
-6. **Which function is this aligned to?** (e.g., Finance, Risk, Internal Audit, Technology)
-7. **What industry is the client in?** This helps us tailor examples and demos.
-8. **How would you describe the client's current maturity with AI?** Are they exploring, piloting, or already operationalizing?
-9. **What's the desired outcome of the workshop?** A signed pursuit, a roadmap, education, ideation — what does winning look like?
-10. **What's your preferred timeline** for running this workshop?
-11. **Where would you like the workshop held** — at the AI Studio, client site, or virtual?
-12. Last one: **Any other topics of interest** you'd like us to weave into the agenda?
+After the user submits an answer to an enrichment-eligible question, call a lightweight Lovable AI model (`google/gemini-2.5-flash-lite`) with structured output:
 
-**AI Studio - Prototype Development**
-Greeting: "Prototype development — let's scope what we're building. I'll walk you through everything we need to get the right team and tech in place."
-1. To start, **who is the sponsoring EMD** for this prototype?
-2. **Who are the primary contacts** we should coordinate with on this effort?
-3. **Which client(s) are potentially interested** in seeing or using this prototype?
-4. **What functional area does this prototype address?** (e.g., Finance, Audit, Risk, Operations)
-5. **What industry is this targeted at?**
-6. **Any specific sub-industry** we should tailor the prototype to?
-7. **Who is the target buyer / persona** this prototype is being built for?
-8. **What's the title of the use case** you're prototyping?
-9. **Describe the use case in detail** — what problem does it solve and how should it work?
-10. **Is the data needed for this use case available?** (Yes / No / Unsure — and a quick note on what data you're thinking of)
-11. **Where does that data live today?** (e.g., client system, Protiviti environment, public sources)
-12. **What's the desired outcome** of the prototype — a working demo, a measurable result, a conversation starter?
-13. **What's the business value or benefit** this prototype is meant to demonstrate?
-14. **What timeline are we working with?** Is there a specific client meeting or milestone driving it?
-15. Last one: **Anything else we should know?** Additional comments, constraints, or context.
+**Input to the model:**
+- The question being asked
+- A short rubric describing what the Idea Brief actually needs from this field (e.g. for "What problem does this solve?" the rubric is: *a specific pain point, who experiences it, and roughly how often or how much it costs*)
+- The user's verbatim answer
 
-**AI Studio - AI Showcase**
-Greeting: "Submitting an idea for the AI Showcase — love it! A few quick questions so we can evaluate it for inclusion."
-1. To start, **what type of submission is this?** (e.g., a working demo, a credential, a concept, a client story)
-2. **Which industry does this showcase target?**
-3. **Who is the C-Suite buyer** this would resonate with? (e.g., CFO, CIO, CRO, CHRO)
-4. **Who are the point(s) of contact** for this idea or example?
-5. **What's the title of your use case?**
-6. **Describe the use case** — what does it do, who benefits, and why is it showcase-worthy?
-7. Last one: **Do you have a demo or credential asset** we can use? Share a link or describe what's available.
+**Model returns JSON:**
+```
+{
+  addressesQuestion: boolean,   // did they actually answer the question asked?
+  coversRubric: boolean,        // does the answer hit the key facets the brief needs?
+  missingFacet: string | null,  // the single most useful thing still missing
+  followUp: string | null       // one short, friendly clarifying question — or null
+}
+```
 
-### 3. Update `directTriageScenarios`
-Replace `"AI Studio Support"` with all three new keys so auto-routing to IT / AI Studio is preserved for every AI Studio sub-path.
+A follow-up fires **only** when `addressesQuestion` is false OR `coversRubric` is false. The decision is 100% based on semantic content — the model is explicitly instructed to ignore answer length.
 
-## Out of scope
-- No UI/visual redesign.
-- No changes to the report generator, recommendations, or differentiation flow — they continue to work because they consume the full conversation transcript.
-- Side annotations in the diagram (e.g., "Michael Thor selected as the EMD", "AI Protiviti Industry Teams on Atlas") are treated as reference notes, not user-facing fields.
+## Smart touches that reinforce the goal
+
+- **Per-question rubrics** authored once in `scenarioQuestions` metadata, so the AI judge has a clear, consistent target for each field. (No rubric = question is exempt.)
+- **One-shot only.** The follow-up question is generated, posted, and then the next user reply is accepted as-is regardless of quality. The judge does not run on the follow-up answer.
+- **End-of-intake recap (optional).** Before submission, the assistant posts a one-paragraph summary of what it captured: "Here's what I'll send to the board — anything to add or correct?" This catches gaps gracefully without ever interrupting mid-flow.
+- **Inline "example of a strong answer"** (optional) collapsible hint on heavy questions so users self-correct *before* answering, reducing the need for follow-ups in the first place.
+
+## Where it lives (technical)
+
+- New edge function `supabase/functions/check-answer-quality/index.ts` — Lovable AI judge with structured JSON output and per-question rubric.
+- Extend the `scenarioQuestions` data shape in `src/components/ChatInterface.tsx` so each question can carry an optional `rubric: string` (presence = eligible, absence = exempt).
+- In `ChatInterface.tsx`, between the user's answer and advancing to the next question:
+  - If question is exempt OR follow-up cap hit → advance immediately.
+  - Else call the edge function; if it returns a `followUp`, inject it as an assistant message with a "Skip" button, then advance after the next user reply.
+- Track `followUpsUsed` in component state, capped at 2.
+
+## Open questions before I build
+
+1. **Hard cap per intake — 2 or 3?** (Recommending 2.)
+2. **End-of-intake recap** — include now, or save for a separate pass?
+3. **Inline "example of a strong answer" hints** — include now, or save for a separate pass?
