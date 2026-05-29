@@ -72,7 +72,7 @@ const selectionToScenario: Record<string, string> = {
   "Copilot Agent Publishing Support": "Publishing Copilot Agent",
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
-  "Support in Exploring Existing Tools": "Generic Idea",
+  "Support in Exploring Existing Tools": "Exploring Existing Tools",
   "Client use case / enabler": "Atlas API Provisioning - Client",
   "Experimentation / Learning / Internal Use": "Atlas API Provisioning - Internal",
   "Training Conference Support": "Training Conference Support",
