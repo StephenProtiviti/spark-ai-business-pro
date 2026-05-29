@@ -1122,11 +1122,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   // Progress for the intake phase — drives the canvas progress indicator.
   // Counts every multiple-choice/answer click from the very first step (category selection)
   // through the final scenario question.
-  const totalQuestions = getQuestionsForScenario(
+  const userMessagesForProgress = messages.filter((m) => m.role === "user");
+  const currentQuestionCount = getQuestionsForScenario(
     selectedScenario,
-    messages.filter((m) => m.role === "user")
+    userMessagesForProgress
   ).length;
-  const userMsgCount = messages.filter((m) => m.role === "user").length;
+  const totalQuestions = isQuestionTotalKnown(selectedScenario, userMessagesForProgress)
+    ? currentQuestionCount
+    : getMaxQuestionCountForScenario(selectedScenario);
+  const userMsgCount = userMessagesForProgress.length;
   let totalSteps: number;
   let answeredSteps: number;
   let showStepCount: boolean;
@@ -1134,7 +1138,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     const answeredScenarioQuestions = Math.max(userMsgCount - 1, 0);
     totalSteps = routingStepCount + totalQuestions;
     answeredSteps = Math.min(routingStepCount + answeredScenarioQuestions, totalSteps);
-    showStepCount = true;
+    showStepCount = isQuestionTotalKnown(selectedScenario, userMessagesForProgress);
   } else {
     // Pre-scenario phase: scale progress to button clicks so far, capped below 100%.
     // We don't know total steps yet, so hide the "X of Y" label.
