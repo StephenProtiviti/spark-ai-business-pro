@@ -1532,7 +1532,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaArea("Design Thinking Workshop");
                       handleSend("Design Thinking Workshop");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Lightbulb className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1549,7 +1549,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaArea("Pursuit Enablement Support");
                       handleSend("Pursuit Enablement Support");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Rocket className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1566,7 +1566,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaArea("Training Conference Support");
                       handleSend("Training Conference Support");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1582,7 +1582,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaCategory("Support");
                       setIdeaArea("Protiviti Atlas API Support");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <BarChart3 className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1599,7 +1599,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaArea("Copilot Agent Publishing Support");
                       handleSend("Copilot Agent Publishing Support");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Rocket className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1616,7 +1616,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setIdeaArea("Support in Promoting Enablers");
                       handleSend("Support in Promoting Enablers");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Package className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1651,7 +1651,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       recordRoutingStep();
                       setIdeaCategory("Client Delivery");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <TrendingUp className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1666,7 +1666,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       recordRoutingStep();
                       setIdeaCategory("Internal Operations");
                     }}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Shield className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
@@ -1715,7 +1715,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             handleSend(label);
                           }
                         }}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                        className="flex items-center gap-3 p-3 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                       >
                         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                           <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
@@ -1769,7 +1769,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                            handleSend(label);
                          }
                        }}
-                      className="flex items-center gap-3 p-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
+                      className="flex items-center gap-3 p-3 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                         <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
