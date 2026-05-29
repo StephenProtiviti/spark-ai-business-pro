@@ -737,6 +737,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setIdeaArea(null);
     setRoutingStepCount(0);
     setAwaitingDifferentiationAnswer(false);
+    setFollowUpsUsed(0);
+    setPendingFollowUp(false);
     evaluationTargetIdRef.current = null;
   };
 
