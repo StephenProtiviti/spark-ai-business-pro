@@ -18,7 +18,7 @@ interface Message {
 // ── Decision Tree Areas ──
 const clientAreas = [
   { label: "AI Studio", icon: Cpu, description: "AI showcases, workshops, and prototypes" },
-  { label: "Custom Agent", icon: Bot, description: "Custom agent development and publishing" },
+  { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
   { label: "Enabler Development", icon: Wrench, description: "Using Atlas and other enabling technologies" },
   { label: "Other generic ideas", icon: Sparkles, description: "Other client delivery ideas" },
 ];
