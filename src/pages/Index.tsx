@@ -88,16 +88,18 @@ const Index = () => {
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="mb-8"
+            className="mb-8 flex justify-center"
           >
-            <img src={sparkLogo} alt="Spark" className="h-24 sm:h-32 mx-auto rounded-lg" />
+            <span className="inline-flex items-center bg-white rounded-xl px-6 py-4 shadow-xl">
+              <img src={sparkLogo} alt="Spark" className="h-16 sm:h-20 w-auto" />
+            </span>
           </motion.div>
 
           <h1 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight text-white">
-            The AI-Driven Idea Engine
+            Submit ideas. Request support. Accelerate innovation at Protiviti.
           </h1>
           <p className="text-white/80 mb-10 max-w-xl mx-auto">
-            Submit ideas through a conversational AI intake and proactively receive recommendations about existing solutions and enablers.
+            Spark is Protiviti's AI-guided intake hub. Submit a new idea for the innovation board to review, or request hands-on support for existing Protiviti tools like Atlas, ProGPT, Copilot agents, and Power Platform — all through a single conversational experience.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
