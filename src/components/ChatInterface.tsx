@@ -1492,6 +1492,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 <div className="grid grid-cols-1 gap-3 w-full">
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Design Thinking Workshop");
                       handleSend("Design Thinking Workshop");
@@ -1508,6 +1509,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Pursuit Enablement Support");
                       handleSend("Pursuit Enablement Support");
@@ -1524,6 +1526,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Training Conference Support");
                       handleSend("Training Conference Support");
