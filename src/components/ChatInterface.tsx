@@ -255,6 +255,15 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "Last one: **Who is the MD sponsor?** Please share the name of the MD championing it.",
     ],
   },
+  "Exploring Existing Tools": {
+    greeting: "Support in Exploring Existing Tools — let's capture the details of your training or demo request.",
+    questions: [
+      "**Please provide the details of the training or demo request.** (Example: Support in developing a Power Automate Flow, demo of a ProGPT Agent, etc.)",
+      "**Who is the key point of contact?**",
+      "**What is the target audience size?**",
+      "Last one: **What is the expected timeline?**",
+    ],
+  },
   "Atlas Use Case Development": {
     greeting: "Use Case Development on Protiviti Atlas — let's capture the details so we can scope and prioritize this properly.",
     questions: [
