@@ -1097,22 +1097,18 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     messages.filter((m) => m.role === "user")
   ).length;
   const userMsgCount = messages.filter((m) => m.role === "user").length;
-  // Pre-scenario clicks that don't add user messages (category / area picks)
-  const preScenarioSelections = (ideaCategory ? 1 : 0) + (ideaArea ? 1 : 0);
   let totalSteps: number;
   let answeredSteps: number;
   let showStepCount: boolean;
   if (selectedScenario && totalQuestions > 0) {
-    const preScenarioClicks = Math.max(userMsgCount - questionIndex, 0);
-    totalSteps = preScenarioClicks + totalQuestions;
-    answeredSteps = Math.min(userMsgCount, totalSteps);
+    totalSteps = routingStepCount + totalQuestions;
+    answeredSteps = Math.min(routingStepCount + userMsgCount, totalSteps);
     showStepCount = true;
   } else {
     // Pre-scenario phase: scale progress to button clicks so far, capped below 100%.
     // We don't know total steps yet, so hide the "X of Y" label.
-    const clicks = preScenarioSelections + userMsgCount;
-    totalSteps = clicks;
-    answeredSteps = clicks;
+    totalSteps = routingStepCount;
+    answeredSteps = routingStepCount;
     showStepCount = false;
   }
   const progressPct = selectedScenario && totalSteps > 0
