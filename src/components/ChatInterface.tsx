@@ -1088,20 +1088,27 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     messages.filter((m) => m.role === "user")
   ).length;
   const userMsgCount = messages.filter((m) => m.role === "user").length;
+  // Pre-scenario clicks that don't add user messages (category / area picks)
+  const preScenarioSelections = (ideaCategory ? 1 : 0) + (ideaArea ? 1 : 0);
   let totalSteps: number;
   let answeredSteps: number;
+  let showStepCount: boolean;
   if (selectedScenario && totalQuestions > 0) {
     const preScenarioClicks = Math.max(userMsgCount - questionIndex, 0);
     totalSteps = preScenarioClicks + totalQuestions;
     answeredSteps = Math.min(userMsgCount, totalSteps);
+    showStepCount = true;
   } else {
-    // Pre-scenario phase: estimate so the bar moves forward with each click but never hits 100%.
-    totalSteps = Math.max(userMsgCount + 6, 8);
-    answeredSteps = userMsgCount;
+    // Pre-scenario phase: scale progress to button clicks so far, capped below 100%.
+    // We don't know total steps yet, so hide the "X of Y" label.
+    const clicks = preScenarioSelections + userMsgCount;
+    totalSteps = clicks;
+    answeredSteps = clicks;
+    showStepCount = false;
   }
-  const progressPct = totalSteps > 0
-    ? Math.min(Math.round((answeredSteps / totalSteps) * 100), selectedScenario ? 100 : 95)
-    : 0;
+  const progressPct = selectedScenario && totalSteps > 0
+    ? Math.min(Math.round((answeredSteps / totalSteps) * 100), 100)
+    : Math.min(answeredSteps * 8, 24); // 0%, ~8%, ~16% as user picks category/area
   const inQuestionPhase = !isViewing && !submitted && !evaluationHtml &&
     !isGeneratingEvaluation && !conversationDone;
 
@@ -2181,9 +2188,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         </div>
                         <h3 className="text-base font-semibold text-foreground/80 mb-1">Canvas</h3>
                         <p className="text-xs text-muted-foreground mb-6">
-                          Building your Innovation Idea Brief — {answeredSteps} of {totalSteps} steps completed
-
+                          {showStepCount
+                            ? `Building your Innovation Idea Brief — ${answeredSteps} of ${totalSteps} steps completed`
+                            : "Building your Innovation Idea Brief"}
                         </p>
+
                       </div>
                     );
                   })()
