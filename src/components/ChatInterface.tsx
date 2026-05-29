@@ -560,6 +560,36 @@ const getQuestionsForScenario = (
   return scenarioQuestions[scenario]?.questions || fallback;
 };
 
+const getMaxQuestionCountForScenario = (scenario: string | null): number => {
+  if (!scenario) return scenarioQuestions["Generic Idea"]?.questions.length || 0;
+  if (scenario === "Design Thinking Workshop") return 11;
+  return scenarioQuestions[scenario]?.questions.length || scenarioQuestions["Generic Idea"]?.questions.length || 0;
+};
+
+const isQuestionTotalKnown = (
+  scenario: string | null,
+  userMessages: { role: string; content: string }[]
+): boolean => {
+  if (!scenario) return false;
+  const answers = userMessages.slice(1).map((m) => m.content.toLowerCase().trim());
+
+  if (scenario === "Design Thinking Workshop") {
+    if (!answers[0]) return false;
+    if (answers[0].startsWith("n")) return true;
+    return Boolean(answers[1]);
+  }
+  if (scenario === "Pursuit Enablement Support" || scenario === "Training Conference Support") {
+    return Boolean(answers[0]);
+  }
+  if (scenario === "Atlas API Provisioning - Client") {
+    return Boolean(answers[3]);
+  }
+  if (scenario === "Agent Development - Client") {
+    return Boolean(answers[4]);
+  }
+  return true;
+};
+
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
