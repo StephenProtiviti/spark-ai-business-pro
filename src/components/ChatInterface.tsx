@@ -988,7 +988,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     (async () => {
       // Recompute the question list against the updated answers so dynamic
       // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
-      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
       const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
 
       // Smart follow-up gate: only on a real answer (not on a reply to a prior follow-up),
