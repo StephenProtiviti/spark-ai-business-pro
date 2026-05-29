@@ -45,6 +45,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Publishing a copilot agent", icon: Package, description: "Help publish a Copilot agent" },
   ],
+  // Note: "Custom Agent Development" intentionally has no sub-areas — flows directly into Agent Development questions.
   "Protiviti Atlas API Support": [
     { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Protiviti Atlas API" },
     { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Support for an existing Protiviti Atlas API provisioning" },
