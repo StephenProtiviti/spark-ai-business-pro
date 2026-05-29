@@ -13,6 +13,10 @@ import { getRecommendations, Accelerator } from "@/data/mockAccelerators";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  // Marks a user message that is a clarifying reply to a smart follow-up question.
+  // These bubbles are shown in the transcript but excluded from answer extraction,
+  // so positional question→answer mapping stays correct.
+  followUpReply?: boolean;
 }
 
 // ── Decision Tree Areas ──
@@ -635,6 +639,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
   const [routingStepCount, setRoutingStepCount] = useState(0);
 
+  // Smart follow-ups: when the AI judge decides an open-ended answer doesn't address
+  // the question, we inject ONE clarifying question. Capped at 2 per intake. Skippable.
+  const FOLLOW_UP_CAP = 2;
+  const [followUpsUsed, setFollowUpsUsed] = useState(0);
+  const [pendingFollowUp, setPendingFollowUp] = useState(false);
+
   const hasStarted = messages.length > 0;
 
   const recordRoutingStep = () => setRoutingStepCount((count) => count + 1);
@@ -731,6 +741,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setIdeaArea(null);
     setRoutingStepCount(0);
     setAwaitingDifferentiationAnswer(false);
+    setFollowUpsUsed(0);
+    setPendingFollowUp(false);
     evaluationTargetIdRef.current = null;
   };
 
@@ -781,7 +793,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   };
 
   const extractAnswers = (): Record<string, string> => {
-    const userMsgs = messages.filter((m) => m.role === "user");
+    // Exclude clarifying follow-up replies — they're already merged into the preceding answer.
+    const userMsgs = messages.filter((m) => m.role === "user" && !m.followUpReply);
     const scenario = selectedScenario || "Generic Idea";
     const qs = getQuestionsForScenario(scenario, userMsgs);
     const result: Record<string, string> = {};
@@ -793,6 +806,63 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       result[q] = userMsgs[i + 1]?.content || "";
     }
     return result;
+  };
+
+  // Quick heuristic — true for clearly factual / closed-ended questions we never want to
+  // second-guess. Keeps the AI judge from being called on names, dates, yes/no, and
+  // multiple-choice questions. This is NOT a length check.
+  const isFactualQuestion = (q: string): boolean => {
+    const clean = q.toLowerCase().replace(/\*\*/g, "");
+    if (/\(yes\s*\/\s*no\)/.test(clean)) return true;
+    if (/\bselect (all|one)\b/.test(clean)) return true;
+    if (/\b(name|date|timeline|audience size|point of contact|md sponsor|sponsor\?|email|phone|client name|project id|deadline)\b/.test(clean)) return true;
+    return false;
+  };
+
+  const judgeAnswer = async (question: string, answer: string, scenario: string | null): Promise<string | null> => {
+    if (followUpsUsed >= FOLLOW_UP_CAP) return null;
+    if (isFactualQuestion(question)) return null;
+    try {
+      const { data, error } = await supabase.functions.invoke("check-answer-quality", {
+        body: { question, answer, scenario: scenario || "Idea intake" },
+      });
+      if (error) return null;
+      if (data && data.sufficient === false && typeof data.followUp === "string" && data.followUp.trim()) {
+        return data.followUp.trim();
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const handleSkipFollowUp = () => {
+    if (!pendingFollowUp || isTyping) return;
+    setPendingFollowUp(false);
+    setIsTyping(true);
+    const scenario = selectedScenario;
+    const skipMsg: Message = { role: "user", content: "(skipped)", followUpReply: true };
+    const updatedMessages = [...messages, skipMsg];
+    setMessages(updatedMessages);
+    (async () => {
+      await new Promise((r) => setTimeout(r, 300));
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
+      const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+      if (questionIndex < dynamicQuestions.length) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant" as const, content: dynamicQuestions[questionIndex] },
+        ]);
+        setQuestionIndex((i) => i + 1);
+      } else {
+        setShowRecommendations(false);
+        setRecommendationsDismissed(true);
+        setCanvasView("evaluation");
+        handleProceedWithSubmission(updatedMessages);
+        setConversationDone(true);
+      }
+      setIsTyping(false);
+    })();
   };
 
   const handleSend = (text?: string) => {
@@ -903,25 +973,73 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       return;
     }
 
-    // Not first message — add answer and ask next question
-    const updatedMessages = [...messages, userMsg];
-    setMessages(updatedMessages);
+    // Not first message — handle either a normal answer or a reply to a smart follow-up.
     setInput("");
     setIsTyping(true);
 
-    // Update idea title with the first real answer (the idea description)
-    const userMsgCount = updatedMessages.filter(m => m.role === "user").length;
-    if (userMsgCount === 2 && draftIdeaId) {
-      // Second user message is the first real answer — use as title
+    let updatedMessages: Message[];
+    const wasFollowUpAnswer = pendingFollowUp;
+
+    if (wasFollowUpAnswer) {
+      // Merge the clarifying detail into the previous user answer so the answer
+      // positions stay aligned with the question list. No extra user message added.
+      const lastUserIdx = (() => {
+        for (let i = messages.length - 1; i >= 0; i--) {
+          if (messages[i].role === "user") return i;
+        }
+        return -1;
+      })();
+      const followUpBubble: Message = { ...userMsg, followUpReply: true };
+      if (lastUserIdx === -1) {
+        updatedMessages = [...messages, followUpBubble];
+      } else {
+        updatedMessages = messages.map((m, i) =>
+          i === lastUserIdx ? { ...m, content: `${m.content}\n\n${value}` } : m
+        );
+        // Show the clarifying reply as a separate bubble for transcript readability,
+        // but flag it so answer extraction skips it.
+        updatedMessages = [...updatedMessages, followUpBubble];
+      }
+      setMessages(updatedMessages);
+      setPendingFollowUp(false);
+    } else {
+      updatedMessages = [...messages, userMsg];
+      setMessages(updatedMessages);
+    }
+
+    // Update idea title with the first real answer (the idea description).
+    // Clarifying follow-up replies don't count as real answers.
+    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply).length;
+    if (!wasFollowUpAnswer && realUserMsgCount === 2 && draftIdeaId) {
       const betterTitle = value.slice(0, 60) || "Untitled Idea";
       updateIdea(draftIdeaId, { title: betterTitle });
     }
 
-    setTimeout(() => {
+    (async () => {
       // Recompute the question list against the updated answers so dynamic
       // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
-      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
       const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+
+      // Smart follow-up gate: only on a real answer (not on a reply to a prior follow-up),
+      // only while under cap, only on open-ended questions. AI judges by meaning, not length.
+      if (!wasFollowUpAnswer && questionIndex >= 1) {
+        const lastQuestion = dynamicQuestions[questionIndex - 1] ?? "";
+        const followUpText = await judgeAnswer(lastQuestion, value, scenario);
+        if (followUpText) {
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant" as const, content: `${followUpText}\n\n*This is optional — feel free to skip if you'd rather move on.*` },
+          ]);
+          setFollowUpsUsed((n) => n + 1);
+          setPendingFollowUp(true);
+          setIsTyping(false);
+          return;
+        }
+      }
+
+      // Advance to next question, or wrap up.
+      await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
       if (questionIndex < dynamicQuestions.length) {
         setMessages((prev) => [
           ...prev,
@@ -929,7 +1047,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
-        // All questions answered — go straight to evaluation report
         setShowRecommendations(false);
         setRecommendationsDismissed(true);
         setCanvasView("evaluation");
@@ -937,7 +1054,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         setConversationDone(true);
       }
       setIsTyping(false);
-    }, 1000 + Math.random() * 600);
+    })();
   };
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
@@ -1127,7 +1244,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   // Progress for the intake phase — drives the canvas progress indicator.
   // Counts every multiple-choice/answer click from the very first step (category selection)
   // through the final scenario question.
-  const userMessagesForProgress = messages.filter((m) => m.role === "user");
+  const userMessagesForProgress = messages.filter((m) => m.role === "user" && !m.followUpReply);
   const currentQuestionCount = getQuestionsForScenario(
     selectedScenario,
     userMessagesForProgress
@@ -1921,6 +2038,18 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </div>
               ) : null;
             })()}
+            {pendingFollowUp && !isViewing && !conversationDone && (
+              <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-1.5">
+                <span className="text-[11px] text-sidebar-foreground/70">Optional clarification — add detail or skip.</span>
+                <button
+                  onClick={handleSkipFollowUp}
+                  disabled={isTyping}
+                  className="text-[11px] font-medium text-primary hover:underline disabled:opacity-50"
+                >
+                  Skip
+                </button>
+              </div>
+            )}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
                 value={input}
