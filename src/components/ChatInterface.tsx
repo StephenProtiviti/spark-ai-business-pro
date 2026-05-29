@@ -1716,6 +1716,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             // Skip sub-area picker — go straight to Use Case Development
                             setIdeaArea(label);
                             handleSend("Use Case Development");
+                          } else if (label === "Custom Agent Development") {
+                            // Skip sub-area picker — go straight to New Agent Development questions
+                            setIdeaArea(label);
+                            handleSend("New Agent Development");
                           } else if (hasSubArea) {
                             setIdeaArea(label);
                           } else {
