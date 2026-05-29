@@ -1214,7 +1214,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   // Progress for the intake phase — drives the canvas progress indicator.
   // Counts every multiple-choice/answer click from the very first step (category selection)
   // through the final scenario question.
-  const userMessagesForProgress = messages.filter((m) => m.role === "user");
+  const userMessagesForProgress = messages.filter((m) => m.role === "user" && !m.followUpReply);
   const currentQuestionCount = getQuestionsForScenario(
     selectedScenario,
     userMessagesForProgress
