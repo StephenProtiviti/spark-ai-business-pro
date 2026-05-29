@@ -960,15 +960,16 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         }
         return -1;
       })();
+      const followUpBubble: Message = { ...userMsg, followUpReply: true };
       if (lastUserIdx === -1) {
-        updatedMessages = [...messages, userMsg];
+        updatedMessages = [...messages, followUpBubble];
       } else {
         updatedMessages = messages.map((m, i) =>
           i === lastUserIdx ? { ...m, content: `${m.content}\n\n${value}` } : m
         );
-        // Still show the user's clarifying reply in the transcript as a separate bubble
-        // for readability, but it won't be counted as a new answer.
-        updatedMessages = [...updatedMessages, userMsg];
+        // Show the clarifying reply as a separate bubble for transcript readability,
+        // but flag it so answer extraction skips it.
+        updatedMessages = [...updatedMessages, followUpBubble];
       }
       setMessages(updatedMessages);
       setPendingFollowUp(false);
@@ -978,8 +979,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     }
 
     // Update idea title with the first real answer (the idea description).
-    // Count "real" answers only — clarifying follow-up replies don't count.
-    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user").length - (wasFollowUpAnswer ? 1 : 0);
+    // Clarifying follow-up replies don't count as real answers.
+    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply).length;
     if (!wasFollowUpAnswer && realUserMsgCount === 2 && draftIdeaId) {
       const betterTitle = value.slice(0, 60) || "Untitled Idea";
       updateIdea(draftIdeaId, { title: betterTitle });
