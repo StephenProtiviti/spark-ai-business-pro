@@ -2181,7 +2181,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         </div>
                         <h3 className="text-base font-semibold text-foreground/80 mb-1">Canvas</h3>
                         <p className="text-xs text-muted-foreground mb-6">
-                          Building your Innovation Idea Brief — {answeredQuestions} of {totalQuestions} questions answered
+                          Building your Innovation Idea Brief — {answeredSteps} of {totalSteps} steps completed
+
                         </p>
                       </div>
                     );
