@@ -26,7 +26,7 @@ const clientAreas = [
 const internalAreas = [
   { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
   { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
-  { label: "Support in Exploring Existing Tools", icon: Wrench, description: "ProGPT, Power Platforms for engagement delivery acceleration" },
+  
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
 ];
 
@@ -72,7 +72,7 @@ const selectionToScenario: Record<string, string> = {
   "Copilot Agent Publishing Support": "Publishing Copilot Agent",
   "Design Thinking Workshop": "Design Thinking Workshop",
   "Pursuit Enablement Support": "Pursuit Enablement Support",
-  "Support in Exploring Existing Tools": "Generic Idea",
+  "Support in Exploring Existing Tools": "Exploring Existing Tools",
   "Client use case / enabler": "Atlas API Provisioning - Client",
   "Experimentation / Learning / Internal Use": "Atlas API Provisioning - Internal",
   "Training Conference Support": "Training Conference Support",
@@ -253,6 +253,15 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What needs does your idea fulfill?** Describe the gap or pain point it addresses.",
       "**What are your expected outcomes from this idea?** How will it deliver value?",
       "Last one: **Who is the MD sponsor?** Please share the name of the MD championing it.",
+    ],
+  },
+  "Exploring Existing Tools": {
+    greeting: "Support in Exploring Existing Tools — let's capture the details of your training or demo request.",
+    questions: [
+      "**Please provide the details of the training or demo request.** (Example: Support in developing a Power Automate Flow, demo of a ProGPT Agent, etc.)",
+      "**Who is the key point of contact?**",
+      "**What is the target audience size?**",
+      "Last one: **What is the expected timeline?**",
     ],
   },
   "Atlas Use Case Development": {
@@ -1596,6 +1605,23 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <div>
                       <span className="text-sm font-semibold text-sidebar-foreground block">Protiviti Atlas API Support</span>
                       <span className="text-[11px] text-sidebar-foreground/50 leading-tight">New and Existing Protiviti Atlas API provisioning support</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Support");
+                      setIdeaArea("Support in Exploring Existing Tools");
+                      handleSend("Support in Exploring Existing Tools");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Wrench className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Support in Exploring Existing Tools</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">ProGPT, Power Platforms training and demos</span>
                     </div>
                   </button>
                   <button
