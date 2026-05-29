@@ -831,7 +831,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     }
   };
 
-  // Handle differentiation follow-up answer for "Client Other"
   const handleSend = (text?: string) => {
     const value = text || input;
     if (!value.trim() || isTyping) return;
