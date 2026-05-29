@@ -939,25 +939,72 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       return;
     }
 
-    // Not first message — add answer and ask next question
-    const updatedMessages = [...messages, userMsg];
-    setMessages(updatedMessages);
+    // Not first message — handle either a normal answer or a reply to a smart follow-up.
     setInput("");
     setIsTyping(true);
 
-    // Update idea title with the first real answer (the idea description)
-    const userMsgCount = updatedMessages.filter(m => m.role === "user").length;
-    if (userMsgCount === 2 && draftIdeaId) {
-      // Second user message is the first real answer — use as title
+    let updatedMessages: Message[];
+    const wasFollowUpAnswer = pendingFollowUp;
+
+    if (wasFollowUpAnswer) {
+      // Merge the clarifying detail into the previous user answer so the answer
+      // positions stay aligned with the question list. No extra user message added.
+      const lastUserIdx = (() => {
+        for (let i = messages.length - 1; i >= 0; i--) {
+          if (messages[i].role === "user") return i;
+        }
+        return -1;
+      })();
+      if (lastUserIdx === -1) {
+        updatedMessages = [...messages, userMsg];
+      } else {
+        updatedMessages = messages.map((m, i) =>
+          i === lastUserIdx ? { ...m, content: `${m.content}\n\n${value}` } : m
+        );
+        // Still show the user's clarifying reply in the transcript as a separate bubble
+        // for readability, but it won't be counted as a new answer.
+        updatedMessages = [...updatedMessages, userMsg];
+      }
+      setMessages(updatedMessages);
+      setPendingFollowUp(false);
+    } else {
+      updatedMessages = [...messages, userMsg];
+      setMessages(updatedMessages);
+    }
+
+    // Update idea title with the first real answer (the idea description).
+    // Count "real" answers only — clarifying follow-up replies don't count.
+    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user").length - (wasFollowUpAnswer ? 1 : 0);
+    if (!wasFollowUpAnswer && realUserMsgCount === 2 && draftIdeaId) {
       const betterTitle = value.slice(0, 60) || "Untitled Idea";
       updateIdea(draftIdeaId, { title: betterTitle });
     }
 
-    setTimeout(() => {
+    (async () => {
       // Recompute the question list against the updated answers so dynamic
       // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
       const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
       const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
+
+      // Smart follow-up gate: only on a real answer (not on a reply to a prior follow-up),
+      // only while under cap, only on open-ended questions. AI judges by meaning, not length.
+      if (!wasFollowUpAnswer && questionIndex >= 1) {
+        const lastQuestion = dynamicQuestions[questionIndex - 1] ?? "";
+        const followUpText = await judgeAnswer(lastQuestion, value, scenario);
+        if (followUpText) {
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant" as const, content: `${followUpText}\n\n*This is optional — feel free to skip if you'd rather move on.*` },
+          ]);
+          setFollowUpsUsed((n) => n + 1);
+          setPendingFollowUp(true);
+          setIsTyping(false);
+          return;
+        }
+      }
+
+      // Advance to next question, or wrap up.
+      await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
       if (questionIndex < dynamicQuestions.length) {
         setMessages((prev) => [
           ...prev,
@@ -965,7 +1012,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         ]);
         setQuestionIndex((i) => i + 1);
       } else {
-        // All questions answered — go straight to evaluation report
         setShowRecommendations(false);
         setRecommendationsDismissed(true);
         setCanvasView("evaluation");
@@ -973,7 +1019,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         setConversationDone(true);
       }
       setIsTyping(false);
-    }, 1000 + Math.random() * 600);
+    })();
   };
 
   const handleProceedWithSubmission = (msgOverride?: Message[]) => {
