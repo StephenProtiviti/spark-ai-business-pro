@@ -635,6 +635,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
   const [routingStepCount, setRoutingStepCount] = useState(0);
 
+  // Smart follow-ups: when the AI judge decides an open-ended answer doesn't address
+  // the question, we inject ONE clarifying question. Capped at 2 per intake. Skippable.
+  const FOLLOW_UP_CAP = 2;
+  const [followUpsUsed, setFollowUpsUsed] = useState(0);
+  const [pendingFollowUp, setPendingFollowUp] = useState(false);
+
   const hasStarted = messages.length > 0;
 
   const recordRoutingStep = () => setRoutingStepCount((count) => count + 1);
