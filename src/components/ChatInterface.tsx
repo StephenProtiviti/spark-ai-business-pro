@@ -848,7 +848,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         mappedScenario = "Agent Development - Client";
       }
       if (value === "New Agent Development" && ideaCategory === "Internal Operations") {
-        mappedScenario = "Agent Development - Internal";
+        // Use the same question set as Client Delivery for Custom Agent Development
+        mappedScenario = "Agent Development - Client";
       }
       if (value === "New Protiviti Atlas API Provisioning" && ideaCategory === "Client Delivery") {
         mappedScenario = "Atlas API Provisioning - Client";
