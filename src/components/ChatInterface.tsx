@@ -1611,6 +1611,22 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     onClick={() => {
                       recordRoutingStep();
                       setIdeaCategory("Support");
+                      setIdeaArea("Support in Exploring Existing Tools");
+                      handleSend("Support in Exploring Existing Tools");
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent hover:border-primary hover:bg-sidebar-accent/80 shadow-sm hover:shadow-md transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Wrench className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-semibold text-sidebar-foreground block">Support in Exploring Existing Tools</span>
+                      <span className="text-[11px] text-sidebar-foreground/50 leading-tight">ProGPT, Power Platforms training and demos</span>
+                    </div>
+                  <button
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Support");
                       setIdeaArea("Copilot Agent Publishing Support");
                       handleSend("Copilot Agent Publishing Support");
                     }}
