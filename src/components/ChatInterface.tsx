@@ -560,6 +560,36 @@ const getQuestionsForScenario = (
   return scenarioQuestions[scenario]?.questions || fallback;
 };
 
+const getMaxQuestionCountForScenario = (scenario: string | null): number => {
+  if (!scenario) return scenarioQuestions["Generic Idea"]?.questions.length || 0;
+  if (scenario === "Design Thinking Workshop") return 11;
+  return scenarioQuestions[scenario]?.questions.length || scenarioQuestions["Generic Idea"]?.questions.length || 0;
+};
+
+const isQuestionTotalKnown = (
+  scenario: string | null,
+  userMessages: { role: string; content: string }[]
+): boolean => {
+  if (!scenario) return false;
+  const answers = userMessages.slice(1).map((m) => m.content.toLowerCase().trim());
+
+  if (scenario === "Design Thinking Workshop") {
+    if (!answers[0]) return false;
+    if (answers[0].startsWith("n")) return true;
+    return Boolean(answers[1]);
+  }
+  if (scenario === "Pursuit Enablement Support" || scenario === "Training Conference Support") {
+    return Boolean(answers[0]);
+  }
+  if (scenario === "Atlas API Provisioning - Client") {
+    return Boolean(answers[3]);
+  }
+  if (scenario === "Agent Development - Client") {
+    return Boolean(answers[4]);
+  }
+  return true;
+};
+
 
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
@@ -607,8 +637,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
+  const [routingStepCount, setRoutingStepCount] = useState(0);
 
   const hasStarted = messages.length > 0;
+
+  const recordRoutingStep = () => setRoutingStepCount((count) => count + 1);
+  const removeRoutingStep = () => setRoutingStepCount((count) => Math.max(0, count - 1));
 
   const toggleListening = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -699,6 +733,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setDraftIdeaId(null);
     setIdeaCategory(null);
     setIdeaArea(null);
+    setRoutingStepCount(0);
     setAwaitingDifferentiationAnswer(false);
     evaluationTargetIdRef.current = null;
   };
@@ -719,15 +754,19 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         setQuestionIndex(0);
         setSelectedScenario(null);
         setConversationDone(false);
+        removeRoutingStep();
       }
     } else if (ideaArea && subAreas[ideaArea]) {
       // In sub-area selection — go back to area
       setIdeaArea(null);
+      removeRoutingStep();
     } else if (ideaArea) {
       setIdeaArea(null);
+      removeRoutingStep();
     } else if (ideaCategory) {
       // In area selection — go back to category
       setIdeaCategory(null);
+      removeRoutingStep();
     } else {
       // At the top of the chat flow — go back to the homepage
       navigate("/");
@@ -1083,27 +1122,28 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   // Progress for the intake phase — drives the canvas progress indicator.
   // Counts every multiple-choice/answer click from the very first step (category selection)
   // through the final scenario question.
-  const totalQuestions = getQuestionsForScenario(
+  const userMessagesForProgress = messages.filter((m) => m.role === "user");
+  const currentQuestionCount = getQuestionsForScenario(
     selectedScenario,
-    messages.filter((m) => m.role === "user")
+    userMessagesForProgress
   ).length;
-  const userMsgCount = messages.filter((m) => m.role === "user").length;
-  // Pre-scenario clicks that don't add user messages (category / area picks)
-  const preScenarioSelections = (ideaCategory ? 1 : 0) + (ideaArea ? 1 : 0);
+  const totalQuestions = isQuestionTotalKnown(selectedScenario, userMessagesForProgress)
+    ? currentQuestionCount
+    : getMaxQuestionCountForScenario(selectedScenario);
+  const userMsgCount = userMessagesForProgress.length;
   let totalSteps: number;
   let answeredSteps: number;
   let showStepCount: boolean;
   if (selectedScenario && totalQuestions > 0) {
-    const preScenarioClicks = Math.max(userMsgCount - questionIndex, 0);
-    totalSteps = preScenarioClicks + totalQuestions;
-    answeredSteps = Math.min(userMsgCount, totalSteps);
-    showStepCount = true;
+    const answeredScenarioQuestions = Math.max(userMsgCount - 1, 0);
+    totalSteps = routingStepCount + totalQuestions;
+    answeredSteps = Math.min(routingStepCount + answeredScenarioQuestions, totalSteps);
+    showStepCount = isQuestionTotalKnown(selectedScenario, userMessagesForProgress);
   } else {
     // Pre-scenario phase: scale progress to button clicks so far, capped below 100%.
     // We don't know total steps yet, so hide the "X of Y" label.
-    const clicks = preScenarioSelections + userMsgCount;
-    totalSteps = clicks;
-    answeredSteps = clicks;
+    totalSteps = routingStepCount;
+    answeredSteps = routingStepCount;
     showStepCount = false;
   }
   const progressPct = selectedScenario && totalSteps > 0
@@ -1487,6 +1527,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 <div className="grid grid-cols-1 gap-3 w-full">
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Design Thinking Workshop");
                       handleSend("Design Thinking Workshop");
@@ -1503,6 +1544,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Pursuit Enablement Support");
                       handleSend("Pursuit Enablement Support");
@@ -1519,6 +1561,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Training Conference Support");
                       handleSend("Training Conference Support");
@@ -1535,6 +1578,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Protiviti Atlas API Support");
                     }}
@@ -1550,6 +1594,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Copilot Agent Publishing Support");
                       handleSend("Copilot Agent Publishing Support");
@@ -1566,6 +1611,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   </button>
                   <button
                     onClick={() => {
+                      recordRoutingStep();
                       setIdeaCategory("Support");
                       setIdeaArea("Support in Promoting Enablers");
                       handleSend("Support in Promoting Enablers");
@@ -1601,7 +1647,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </p>
                 <div className="grid grid-cols-1 gap-3 w-full">
                   <button
-                    onClick={() => setIdeaCategory("Client Delivery")}
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Client Delivery");
+                    }}
                     className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -1613,7 +1662,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     </div>
                   </button>
                   <button
-                    onClick={() => setIdeaCategory("Internal Operations")}
+                    onClick={() => {
+                      recordRoutingStep();
+                      setIdeaCategory("Internal Operations");
+                    }}
                     className="flex items-center gap-3 p-4 rounded-lg border border-sidebar-border bg-sidebar-accent/50 hover:border-primary/40 hover:bg-sidebar-accent transition-all text-left group"
                   >
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -1650,6 +1702,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <button
                         key={label}
                         onClick={() => {
+                          recordRoutingStep();
                           if (label === "Protiviti Atlas") {
                             // Skip sub-area picker — go straight to Use Case Development
                             setIdeaArea(label);
@@ -1676,7 +1729,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   })}
                 </div>
                 <button
-                  onClick={() => setIdeaCategory(null)}
+                  onClick={() => {
+                    removeRoutingStep();
+                    setIdeaCategory(null);
+                  }}
                    className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
                  >
                    ← Back to category selection
@@ -1706,6 +1762,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                      <button
                        key={label}
                        onClick={() => {
+                          recordRoutingStep();
                          if (subAreas[label]) {
                            setIdeaArea(label);
                          } else {
@@ -1725,7 +1782,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setIdeaArea(null)}
+                  onClick={() => {
+                    removeRoutingStep();
+                    setIdeaArea(null);
+                  }}
                    className="mt-4 text-xs text-sidebar-foreground/40 hover:text-sidebar-foreground/70 transition-colors"
                  >
                    ← Back to area selection
