@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { scenario, idea, answers, recommendations, refinement, currentHtml } = await req.json();
+    const { scenario, idea, answers, recommendations, refinement, currentHtml, submissionDate } = await req.json();
 
     const isRefinement = refinement && currentHtml;
 
