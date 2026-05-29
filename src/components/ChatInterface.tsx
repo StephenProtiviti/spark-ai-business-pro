@@ -743,24 +743,30 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       // During Q&A: remove last user msg + last assistant question to go back one step
       const lastUserIdx = messages.map((m, i) => ({ role: m.role, i })).filter(m => m.role === "user").pop()?.i;
       if (lastUserIdx !== undefined && lastUserIdx > 0) {
-        // Remove messages from lastUserIdx onward, and the assistant question before it
         const assistantBefore = messages.slice(0, lastUserIdx).map((m, i) => ({ role: m.role, i })).filter(m => m.role === "assistant").pop()?.i;
         const cutPoint = assistantBefore !== undefined ? assistantBefore : lastUserIdx;
         setMessages(messages.slice(0, cutPoint));
         setQuestionIndex(Math.max(0, questionIndex - 1));
       } else {
-        // Only one user message — go back to selection
+        // Returning from Q&A to the selection screen that triggered this scenario.
         setMessages([]);
         setQuestionIndex(0);
         setSelectedScenario(null);
         setConversationDone(false);
         removeRoutingStep();
+        if (mode === "support" || ideaCategory === "Support") {
+          // Support flow: return to the support welcome (no category/area)
+          setIdeaCategory(null);
+          setIdeaArea(null);
+        } else if (ideaArea && subAreas[ideaArea]) {
+          // The scenario was launched from a sub-area picker — keep parent so picker re-renders.
+        } else if (ideaArea) {
+          // Terminal area click launched the scenario — clear area so the area picker re-renders.
+          setIdeaArea(null);
+        }
       }
-    } else if (ideaArea && subAreas[ideaArea]) {
-      // In sub-area selection — go back to area
-      setIdeaArea(null);
-      removeRoutingStep();
     } else if (ideaArea) {
+      // In sub-area or area selection — go back to area / category
       setIdeaArea(null);
       removeRoutingStep();
     } else if (ideaCategory) {
