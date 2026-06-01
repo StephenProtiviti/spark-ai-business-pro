@@ -918,39 +918,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setIsTyping(true);
 
     let updatedMessages: Message[];
-    const wasFollowUpAnswer = pendingFollowUp;
-
-    if (wasFollowUpAnswer) {
-      // Merge the clarifying detail into the previous user answer so the answer
-      // positions stay aligned with the question list. No extra user message added.
-      const lastUserIdx = (() => {
-        for (let i = messages.length - 1; i >= 0; i--) {
-          if (messages[i].role === "user") return i;
-        }
-        return -1;
-      })();
-      const followUpBubble: Message = { ...userMsg, followUpReply: true };
-      if (lastUserIdx === -1) {
-        updatedMessages = [...messages, followUpBubble];
-      } else {
-        updatedMessages = messages.map((m, i) =>
-          i === lastUserIdx ? { ...m, content: `${m.content}\n\n${value}` } : m
-        );
-        // Show the clarifying reply as a separate bubble for transcript readability,
-        // but flag it so answer extraction skips it.
-        updatedMessages = [...updatedMessages, followUpBubble];
-      }
-      setMessages(updatedMessages);
-      setPendingFollowUp(false);
-    } else {
-      updatedMessages = [...messages, userMsg];
-      setMessages(updatedMessages);
-    }
+    updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
 
     // Update idea title with the first real answer (the idea description).
-    // Clarifying follow-up replies don't count as real answers.
-    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply).length;
-    if (!wasFollowUpAnswer && realUserMsgCount === 2 && draftIdeaId) {
+    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user").length;
+    if (realUserMsgCount === 2 && draftIdeaId) {
       const betterTitle = value.slice(0, 60) || "Untitled Idea";
       updateIdea(draftIdeaId, { title: betterTitle });
     }
@@ -958,25 +931,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     (async () => {
       // Recompute the question list against the updated answers so dynamic
       // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
-      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
       const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
-
-      // Smart follow-up gate: only on a real answer (not on a reply to a prior follow-up),
-      // only while under cap, only on open-ended questions. AI judges by meaning, not length.
-      if (!wasFollowUpAnswer && questionIndex >= 1) {
-        const lastQuestion = dynamicQuestions[questionIndex - 1] ?? "";
-        const followUpText = await judgeAnswer(lastQuestion, value, scenario);
-        if (followUpText) {
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant" as const, content: followUpText },
-          ]);
-          setFollowUpsUsed((n) => n + 1);
-          setPendingFollowUp(true);
-          setIsTyping(false);
-          return;
-        }
-      }
 
       // Advance to next question, or wrap up.
       await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
