@@ -28,7 +28,7 @@ const clientAreas = [
 ];
 
 const internalAreas = [
-  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas Platform Use Case" },
   { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
   
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
