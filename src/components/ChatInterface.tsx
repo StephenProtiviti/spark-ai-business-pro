@@ -1222,7 +1222,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations, attachments]);
+  }, [messages, selectedScenario, recommendations, attachments, mode]);
 
 
   const handleRefinement = (text: string) => {
