@@ -96,17 +96,17 @@ Rules:
 
 
 
-      const userPrompt = `Generate an idea evaluation document for the review board:
+      const userPrompt = `Generate a ${isSupportRequest ? "support request briefing" : "idea evaluation document"} for the review board:
 
 **Scenario Type:** ${scenario}
 
-**Idea:** ${idea}
+**${isSupportRequest ? "Request" : "Idea"}:** ${idea}
 
 **Submitter's Answers:**
 ${Object.entries(answers || {}).map(([q, a]) => `- ${q}: ${a}`).join("\n")}
 
 **Existing Solutions Shown:** ${recommendations?.length ? recommendations.map((r: any) => r.name).join(", ") : "None"}
-**Submitter Chose to Proceed:** Yes (submitted as new idea)
+**Submitter Chose to Proceed:** Yes (${isSupportRequest ? "submitted as a support request" : "submitted as new idea"})
 
 Create a thorough qualitative evaluation (no numeric scores) that helps the review board make an informed decision.`;
 
@@ -197,7 +197,8 @@ Create a thorough qualitative evaluation (no numeric scores) that helps the revi
     }
 
     if (!html.includes("<!DOCTYPE html>")) {
-      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Innovation Idea Brief</title></head><body>${html}</body></html>`;
+      const fallbackTitle = requestType === "support" ? "Submission Support Request" : "Innovation Idea Brief";
+      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${fallbackTitle}</title></head><body>${html}</body></html>`;
     }
 
     return new Response(JSON.stringify({ html }), {
