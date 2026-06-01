@@ -1228,7 +1228,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-    const assistantMsg: Message = { role: "assistant", content: "Got it! Updating the Innovation Idea Brief..." };
+    const refineLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const assistantMsg: Message = { role: "assistant", content: `Got it! Updating the ${refineLabel}...` };
 
     if (isViewing && viewingIdea) {
       setViewingMessages((prev) => [...prev, userMsg, assistantMsg]);
