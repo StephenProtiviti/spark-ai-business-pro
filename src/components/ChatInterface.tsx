@@ -1979,13 +1979,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   <p className="text-xs text-sidebar-foreground/60 mb-3">
                     You can track your status through the dashboard.
                   </p>
-                  <button
-                    onClick={() => navigate("/")}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors mb-3"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    {isSupportMode ? "See your request in the dashboard" : "See your idea in the dashboard"}
-                  </button>
                   {selectedScenario && directTriageScenarios.includes(selectedScenario) && (
                     <div className="rounded-lg border border-accent/30 bg-accent/10 p-2 mb-3">
                       <p className="text-[11px] text-accent font-medium">
