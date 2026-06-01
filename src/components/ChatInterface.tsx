@@ -1081,9 +1081,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setCanvasView("evaluation");
 
 
+    const briefLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
     const proceedMsg: Message = {
       role: "assistant",
-      content: "Generating your **Innovation Idea Brief** — preparing a qualitative summary for the review board...",
+      content: `Generating your **${briefLabel}** — preparing a qualitative summary for the review board...`,
     };
     const msgsToUse = msgOverride || messages;
     setMessages((prev) => [...prev, proceedMsg]);
