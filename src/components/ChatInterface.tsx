@@ -1297,6 +1297,9 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const inQuestionPhase = !isViewing && !submitted && !evaluationHtml &&
     !isGeneratingEvaluation && !conversationDone;
 
+  const canvasBriefLabel = mode === "support" ? "Support Request" : "Innovation Idea Brief";
+  const generatedBriefLabel = mode === "support" ? "Submission Support Request" : "Innovation Idea Brief";
+
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -1647,7 +1650,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "evaluation" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      Innovation Idea Brief
+                      {canvasBriefLabel}
                     </button>
                   </div>
                 </div>
