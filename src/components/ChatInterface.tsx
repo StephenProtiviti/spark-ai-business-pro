@@ -590,6 +590,62 @@ const isQuestionTotalKnown = (
 // Triage mapping — which scenarios go directly to IT/AI Studio
 const directTriageScenarios = ["AI Studio Support", "AI Studio - Client Workshop", "AI Studio - AI Showcase"];
 
+// ── Rule-based triage routing ──
+// Returns { group, rationale } for one of: "AI Studio" | "Innovation Group" | "IT Group"
+const mentionsClient = (text: string): boolean => /\bclient(s|'s)?\b/i.test(text || "");
+
+const computeTriageRecommendation = (
+  mode: "idea" | "support",
+  category: string | null,
+  area: string | null,
+  answersText: string,
+): { group: "AI Studio" | "Innovation Group" | "IT Group"; rationale: string } | null => {
+  // Request Support paths → IT
+  if (mode === "support") {
+    return {
+      group: "IT Group",
+      rationale: "Per routing rules, all Request Support paths (Design Thinking Workshop, Pursuit Enablement, Training/Conference Support, Protiviti Atlas API Support, Exploring Existing Tools, Copilot Agent Publishing) route to the IT Group.",
+    };
+  }
+
+  const clientFound = mentionsClient(answersText);
+
+  // Idea to support client delivery
+  if (category === "Client Delivery") {
+    if (area === "AI Studio") {
+      return { group: "AI Studio", rationale: "Client delivery ideas under the AI Studio path route directly to AI Studio across all three sub-paths (Client Workshop, Prototype Development, AI Showcase)." };
+    }
+    if (area === "Custom Agent Development") {
+      return { group: "Innovation Group", rationale: clientFound ? "Custom Agent Development for client delivery with explicit client context routes to the Innovation Group." : "Custom Agent Development under client delivery routes to the Innovation Group." };
+    }
+    if (area === "Enabler Development") {
+      return { group: "Innovation Group", rationale: clientFound ? "Enabler Development for client delivery with explicit client context routes to the Innovation Group." : "Enabler Development under client delivery routes to the Innovation Group." };
+    }
+    if (area === "Other generic ideas") {
+      return { group: "Innovation Group", rationale: "Other generic client delivery ideas route to the Innovation Group." };
+    }
+  }
+
+  // Internal Operations
+  if (category === "Internal Operations") {
+    if (area === "Protiviti Atlas") {
+      return clientFound
+        ? { group: "Innovation Group", rationale: "Internal Ops → Protiviti Atlas mentions client context, routing to the Innovation Group." }
+        : { group: "IT Group", rationale: "Internal Ops → Protiviti Atlas with no client context routes to the IT Group." };
+    }
+    if (area === "Custom Agent Development") {
+      return clientFound
+        ? { group: "Innovation Group", rationale: "Internal Ops → Custom Agent Development mentions client context, routing to the Innovation Group." }
+        : { group: "IT Group", rationale: "Internal Ops → Custom Agent Development with no client context routes to the IT Group." };
+    }
+    if (area === "Other generic ideas") {
+      return { group: "IT Group", rationale: "Other generic Internal Operations ideas route to the IT Group by default." };
+    }
+  }
+
+  return null;
+};
+
 interface ChatInterfaceProps {
   viewingIdea?: RecentIdea | null;
   mode?: "idea" | "support";
