@@ -1081,9 +1081,10 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setCanvasView("evaluation");
 
 
+    const briefLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
     const proceedMsg: Message = {
       role: "assistant",
-      content: "Generating your **Innovation Idea Brief** — preparing a qualitative summary for the review board...",
+      content: `Generating your **${briefLabel}** — preparing a qualitative summary for the review board...`,
     };
     const msgsToUse = msgOverride || messages;
     setMessages((prev) => [...prev, proceedMsg]);
@@ -1102,7 +1103,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     try {
       let body: Record<string, any>;
       if (refinement && currentHtml) {
-        body = { refinement, currentHtml };
+        body = { refinement, currentHtml, requestType: mode };
       } else {
         const answers = extractAnswers();
         const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
@@ -1112,6 +1113,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           answers,
           recommendations: recommendations.map((r) => ({ name: r.name, category: r.category })),
           submissionDate: today,
+          requestType: mode,
         };
       }
 
@@ -1140,7 +1142,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error("Failed to generate Innovation Idea Brief");
+        toast.error(`Failed to generate ${mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief"}`);
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
@@ -1195,11 +1197,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         }
         setEvaluationHtml(html);
         setEvaluationReady(true);
+        const readyLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant" as const,
-            content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
+            content: `Your **${readyLabel}** is ready! Review it on the right panel. You can request changes or submit for review.`,
           },
         ]);
       } else if (refinement && previousHtml) {
@@ -1219,13 +1222,14 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations, attachments]);
+  }, [messages, selectedScenario, recommendations, attachments, mode]);
 
 
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-    const assistantMsg: Message = { role: "assistant", content: "Got it! Updating the Innovation Idea Brief..." };
+    const refineLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const assistantMsg: Message = { role: "assistant", content: `Got it! Updating the ${refineLabel}...` };
 
     if (isViewing && viewingIdea) {
       setViewingMessages((prev) => [...prev, userMsg, assistantMsg]);
