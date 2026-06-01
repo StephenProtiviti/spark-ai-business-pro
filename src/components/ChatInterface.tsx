@@ -900,9 +900,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       setAwaitingDifferentiationAnswer(false);
       setIsTyping(true);
       setTimeout(() => {
+        const reviewText = isSupportMode
+          ? "Thanks for sharing the details! Generating your support request for review now..."
+          : "Thanks for explaining what makes your idea unique! Generating your idea to review for submission now...";
         setMessages((prev) => [
           ...prev,
-          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your idea to review for submission now..." },
+          { role: "assistant" as const, content: reviewText },
         ]);
         setIsTyping(false);
         // Now proceed with actual submission
@@ -972,7 +975,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         role: "assistant",
         content: isScenarioClick
           ? followUps.greeting + " I'll ask you a few questions to understand your needs."
-          : followUps.greeting + ` Let me help you shape **"${value}"** into a structured submission.`,
+          : followUps.greeting + ` Let me help you shape **"${value}"** into a structured ${isSupportMode ? "support request" : "submission"}.`,
       };
       const firstQuestion: Message = {
         role: "assistant",
