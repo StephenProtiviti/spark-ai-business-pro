@@ -2146,7 +2146,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ) : (
                     <>
                       <FileText className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-foreground">Innovation Idea Brief</h3>
+                      <h3 className="font-semibold text-sm text-foreground">{canvasBriefLabel}</h3>
                     </>
                   )}
                 </div>
@@ -2344,7 +2344,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             </div>
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-foreground">Generating Innovation Idea Brief...</p>
+                            <p className="text-sm font-semibold text-foreground">Generating {generatedBriefLabel}...</p>
                             <p className="text-xs text-muted-foreground mt-1">Summarizing your submission</p>
                           </div>
                         </div>
@@ -2352,13 +2352,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     ) : (evaluationHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
                       <iframe
                         srcDoc={evaluationHtml || viewingIdea?.businessPlanHtml}
-                        title="Innovation Idea Brief"
+                        title={generatedBriefLabel}
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">Innovation Idea Brief will appear here after you proceed.</p>
+                        <p className="text-sm text-muted-foreground">{generatedBriefLabel} will appear here after you proceed.</p>
                       </div>
                     )}
                   </>
@@ -2427,8 +2427,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         <h3 className="text-base font-semibold text-foreground/80 mb-1">Canvas</h3>
                         <p className="text-xs text-muted-foreground mb-6">
                           {showStepCount
-                            ? `Building your Innovation Idea Brief — ${answeredSteps} of ${totalSteps} steps completed`
-                            : "Building your Innovation Idea Brief"}
+                            ? `Building your ${generatedBriefLabel} — ${answeredSteps} of ${totalSteps} steps completed`
+                            : `Building your ${generatedBriefLabel}`}
                         </p>
 
                       </div>
@@ -2441,7 +2441,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     </div>
                     <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
                     <p className="text-sm text-muted-foreground max-w-xs">
-                      Recommendations and your Innovation Idea Brief will appear here.
+                      Recommendations and your {generatedBriefLabel} will appear here.
                     </p>
                   </div>
                 )}
