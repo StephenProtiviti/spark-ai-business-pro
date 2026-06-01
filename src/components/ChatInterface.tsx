@@ -1088,7 +1088,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setCanvasView("evaluation");
 
 
-    const briefLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const briefLabel = generatedBriefLabel;
     const proceedMsg: Message = {
       role: "assistant",
       content: `Generating your **${briefLabel}** — preparing a qualitative summary for the review board...`,
@@ -1149,7 +1149,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error(`Failed to generate ${mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief"}`);
+        toast.error(`Failed to generate ${generatedBriefLabel}`);
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
@@ -1168,7 +1168,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (html.trim()) {
 
         // Append attachments section so any documents uploaded in chat are
-        // accessible from within the Innovation Idea Brief.
+        // accessible from within the generated brief.
         if (attachments.length > 0) {
           const items = attachments.map((a) => {
             const isImage = a.type.startsWith("image/");
@@ -1204,7 +1204,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         }
         setEvaluationHtml(html);
         setEvaluationReady(true);
-        const readyLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+        const readyLabel = generatedBriefLabel;
         setMessages((prev) => [
           ...prev,
           {
@@ -1235,7 +1235,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-    const refineLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const refineLabel = generatedBriefLabel;
     const assistantMsg: Message = { role: "assistant", content: `Got it! Updating the ${refineLabel}...` };
 
     if (isViewing && viewingIdea) {
