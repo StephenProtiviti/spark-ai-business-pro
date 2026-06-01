@@ -61,7 +61,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 const selectionToScenario: Record<string, string> = {
   "Client Workshop": "AI Studio - Client Workshop",
   "Prototype Development": "AI Studio - Prototype Development",
-  "Idea for an AI Showcase": "AI Studio - AI Showcase",
+  "Idea for AI Showcase": "AI Studio - AI Showcase",
   "Use Case Development": "Atlas Use Case Development",
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
