@@ -96,7 +96,7 @@ const Index = () => {
           </motion.div>
 
           <h1 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight text-white">
-            Submit ideas. Request support. Accelerate innovation at Protiviti.
+            Accelerate innovation at Protiviti.
           </h1>
           <p className="text-white/80 mb-10 max-w-xl mx-auto">
             Spark is Protiviti's AI-guided intake hub. Submit a new idea for the innovation board to review, or request hands-on support for existing Protiviti tools like Atlas, ProGPT, Copilot agents, and Power Platform — all through a single conversational experience.

@@ -40,11 +40,8 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
     { label: "Prototype Development", icon: Wrench, description: "Build a proof of concept or prototype" },
     { label: "Idea for an AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
   ],
-  "Protiviti Atlas": [
-    { label: "Use Case Development", icon: Lightbulb, description: "Develop a new use case on Atlas" },
-    { label: "New Protiviti Atlas API Provisioning", icon: Rocket, description: "Provision a new Atlas API" },
-    { label: "Existing Protiviti Atlas API Provisioning", icon: Workflow, description: "Provision an existing Atlas API" },
-  ],
+  // Note: "Protiviti Atlas" intentionally has no sub-areas — clicking it skips
+  // straight into the Use Case Development question flow.
   "Custom Agent": [
     { label: "New Agent Development", icon: Bot, description: "Build a new custom agent" },
     { label: "Support in Publishing a copilot agent", icon: Package, description: "Help publish a Copilot agent" },
