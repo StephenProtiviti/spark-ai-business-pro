@@ -1229,7 +1229,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations, attachments, mode]);
+  }, [messages, selectedScenario, recommendations, attachments, mode, generatedBriefLabel]);
 
 
   const handleRefinement = (text: string) => {
@@ -1970,9 +1970,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-4">
                 <div className="rounded-lg border-2 border-accent/40 bg-sidebar-accent p-4 text-center">
                   <CheckCircle2 className="w-10 h-10 text-accent mx-auto mb-2" />
-                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">Submitted for Review!</h3>
+                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">{isSupportMode ? "Support Request Submitted!" : "Submitted for Review!"}</h3>
                   <p className="text-xs text-sidebar-foreground/60 mb-2">
-                    Your idea has been submitted. Congratulations. The team will review it and assign it to either the AI studio, the innovation team, or the IT group.
+                    {isSupportMode
+                      ? "Your support request has been submitted. The team will review it and route it to the right support group."
+                      : "Your idea has been submitted. Congratulations. The team will review it and assign it to either the AI studio, the innovation team, or the IT group."}
                   </p>
                   <p className="text-xs text-sidebar-foreground/60 mb-3">
                     You can track your status through the dashboard.
@@ -1982,7 +1984,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors mb-3"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    See your idea in the dashboard
+                    {isSupportMode ? "See your request in the dashboard" : "See your idea in the dashboard"}
                   </button>
                   {selectedScenario && directTriageScenarios.includes(selectedScenario) && (
                     <div className="rounded-lg border border-accent/30 bg-accent/10 p-2 mb-3">
