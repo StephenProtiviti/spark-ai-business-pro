@@ -1040,6 +1040,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       } else {
         const answers = extractAnswers();
         const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+        const answersText = Object.values(answers).join(" \n ");
+        const triage = computeTriageRecommendation(mode, ideaCategory, ideaArea, answersText);
         body = {
           scenario: selectedScenario || "Generic Idea",
           idea: answers["Idea Description"] || messages.find((m) => m.role === "user")?.content || "",
@@ -1047,6 +1049,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           recommendations: recommendations.map((r) => ({ name: r.name, category: r.category })),
           submissionDate: today,
           requestType: mode,
+          triageRecommendation: triage,
         };
       }
 
