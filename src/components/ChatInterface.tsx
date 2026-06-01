@@ -2462,15 +2462,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       <AlertDialog open={showCancelModal} onOpenChange={setShowCancelModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel Submission?</AlertDialogTitle>
+            <AlertDialogTitle>{isSupportMode ? "Cancel Request?" : "Cancel Submission?"}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to cancel this submission? All progress will be lost and you'll return to the start.
+              Are you sure you want to cancel this {isSupportMode ? "request" : "submission"}? All progress will be lost and you'll return to the start.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Continue Editing</AlertDialogCancel>
             <AlertDialogAction onClick={handleCancelSubmission} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Yes, Cancel Submission
+              {isSupportMode ? "Yes, Cancel Request" : "Yes, Cancel Submission"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
