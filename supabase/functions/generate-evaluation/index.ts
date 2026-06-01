@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { scenario, idea, answers, recommendations, refinement, currentHtml, submissionDate, requestType } = await req.json();
+    const { scenario, idea, answers, recommendations, refinement, currentHtml, submissionDate, requestType, triageRecommendation } = await req.json();
 
     const isRefinement = refinement && currentHtml;
     const isSupportRequest = requestType === "support";
@@ -82,11 +82,11 @@ Rules:
 2. **Pros / Strengths** — 3-5 bullet points highlighting strategic fit, differentiation, potential value, and alignment with stated organizational priorities. Frame each as an evaluative observation, not a sales pitch.
 3. **Cons / Weaknesses** — 3-5 bullet points covering gaps, risks, unanswered questions, and areas where the ${intakeType} lacks supporting detail. Be candid; this is the board's risk lens.
 4. **Tangible Metrics & Considerations** — Qualitative indicators: estimated effort (Low/Medium/High), time-to-value, required resources, key dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
-5. **Triage Routing** — Recommend which of the organization's three groups this ${titleType} should be routed to. The three groups are:
-   - **AI Studio** — focuses on AI enhancers, accelerators, and AI models (custom model development, prototypes, AI-specific tooling, GenAI use cases).
-   - **Innovation Group** — focuses on overall innovation across the firm (cross-functional ideas, new offerings, broader transformation efforts, strategic concepts that aren't strictly AI or IT execution).
-   - **IT Group** — implements Microsoft stack and other existing internal operations technology (Power Platform, Copilot rollouts, SharePoint, integrations, internal systems work).
-   Provide a primary recommended group, a brief 1-2 sentence rationale, and — when relevant — a secondary group to consider. Acknowledge explicitly that AI Studio and Innovation Group often overlap, and call out any subtleties or judgment calls. End the section with a clear statement that this is a recommendation only and the final routing decision rests with the team.
+5. **Triage Routing** — The routing recommendation has ALREADY been determined by a deterministic rule-based system based on the intake path the submitter took. The three groups are:
+   - **AI Studio** — AI enhancers, accelerators, custom model dev, prototypes, AI-specific tooling, GenAI use cases.
+   - **Innovation Group** — cross-functional ideas, new offerings, broader transformation efforts, strategic concepts.
+   - **IT Group** — Microsoft stack and internal operations technology (Power Platform, Copilot rollouts, SharePoint, integrations).
+   ${triageRecommendation ? `**Rule-based recommendation for this ${titleType}: ${triageRecommendation.group}.** Rationale: ${triageRecommendation.rationale}\n   You MUST present "${triageRecommendation.group}" as the recommended group exactly as given — do NOT override, re-evaluate, or substitute a different group. Restate the rationale above in clear prose. You may add 1-2 sentences of supporting context tied to the submitter's specific answers, but the recommended group is fixed.` : `Recommend a primary group with a 1-2 sentence rationale and optionally a secondary group.`} End the section with a clear statement that this is a recommendation only and the final routing decision rests with the team.
 
 - IMPORTANT: Do NOT include any numeric scores, ratings out of 10/100, score bars, or overall score summaries anywhere in the document. Focus only on qualitative analysis, pros/cons, and tangible descriptive metrics.
 - Do NOT include a Risk Analysis section, an Existing Solutions Considered section, or a Recommended Next Steps section.
