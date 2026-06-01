@@ -1197,11 +1197,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         }
         setEvaluationHtml(html);
         setEvaluationReady(true);
+        const readyLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant" as const,
-            content: "Your **Innovation Idea Brief** is ready! Review it on the right panel. You can request changes or submit for review.",
+            content: `Your **${readyLabel}** is ready! Review it on the right panel. You can request changes or submit for review.`,
           },
         ]);
       } else if (refinement && previousHtml) {
