@@ -1301,10 +1301,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const inQuestionPhase = !isViewing && !submitted && !evaluationHtml &&
     !isGeneratingEvaluation && !conversationDone;
 
-  const canvasBriefLabel = mode === "support" ? "Support Request" : "Innovation Idea Brief";
-  const generatedBriefLabel = mode === "support" ? "Submission Support Request" : "Innovation Idea Brief";
-
-
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
       {/* ===== LEFT PANEL — Chat ===== */}
