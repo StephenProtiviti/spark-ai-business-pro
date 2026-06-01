@@ -454,7 +454,6 @@ const buildDTWQuestions = (answers: string[]): string[] => {
 
   if (a1.startsWith("n")) {
     list.push("**Briefly describe your big idea and/or workshop request.**");
-    list.push(...common);
     return list;
   }
 
