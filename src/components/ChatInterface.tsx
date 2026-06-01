@@ -28,7 +28,7 @@ const clientAreas = [
 ];
 
 const internalAreas = [
-  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas platform use cases and API provisioning" },
+  { label: "Protiviti Atlas", icon: BarChart3, description: "Atlas Platform Use Case" },
   { label: "Custom Agent Development", icon: Bot, description: "Build a new custom agent" },
   
   { label: "Other generic ideas", icon: Sparkles, description: "Other internal operations ideas" },
@@ -38,7 +38,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
   "AI Studio": [
     { label: "Client Workshop", icon: TrendingUp, description: "Schedule or run a client workshop" },
     { label: "Prototype Development", icon: Wrench, description: "Build a proof of concept or prototype" },
-    { label: "Idea for an AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
+    { label: "Idea for AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
   ],
   // Note: "Protiviti Atlas" intentionally has no sub-areas — clicking it skips
   // straight into the Use Case Development question flow.
@@ -61,7 +61,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
 const selectionToScenario: Record<string, string> = {
   "Client Workshop": "AI Studio - Client Workshop",
   "Prototype Development": "AI Studio - Prototype Development",
-  "Idea for an AI Showcase": "AI Studio - AI Showcase",
+  "Idea for AI Showcase": "AI Studio - AI Showcase",
   "Use Case Development": "Atlas Use Case Development",
   "New Protiviti Atlas API Provisioning": "Enabler Development",
   "Existing Protiviti Atlas API Provisioning": "Enabler Development",
