@@ -1102,7 +1102,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     try {
       let body: Record<string, any>;
       if (refinement && currentHtml) {
-        body = { refinement, currentHtml };
+        body = { refinement, currentHtml, requestType: mode };
       } else {
         const answers = extractAnswers();
         const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
@@ -1112,6 +1112,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
           answers,
           recommendations: recommendations.map((r) => ({ name: r.name, category: r.category })),
           submissionDate: today,
+          requestType: mode,
         };
       }
 
