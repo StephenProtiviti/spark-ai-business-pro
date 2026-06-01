@@ -82,7 +82,7 @@ Rules:
 2. **Pros / Strengths** — 3-5 bullet points highlighting strategic fit, differentiation, potential value, and alignment with stated organizational priorities. Frame each as an evaluative observation, not a sales pitch.
 3. **Cons / Weaknesses** — 3-5 bullet points covering gaps, risks, unanswered questions, and areas where the ${intakeType} lacks supporting detail. Be candid; this is the board's risk lens.
 4. **Tangible Metrics & Considerations** — Qualitative indicators: estimated effort (Low/Medium/High), time-to-value, required resources, key dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
-5. **Triage Routing** — Recommend which of the organization's three groups this idea should be routed to. The three groups are:
+5. **Triage Routing** — Recommend which of the organization's three groups this ${titleType} should be routed to. The three groups are:
    - **AI Studio** — focuses on AI enhancers, accelerators, and AI models (custom model development, prototypes, AI-specific tooling, GenAI use cases).
    - **Innovation Group** — focuses on overall innovation across the firm (cross-functional ideas, new offerings, broader transformation efforts, strategic concepts that aren't strictly AI or IT execution).
    - **IT Group** — implements Microsoft stack and other existing internal operations technology (Power Platform, Copilot rollouts, SharePoint, integrations, internal systems work).
@@ -199,12 +199,13 @@ Create a thorough qualitative evaluation (no numeric scores) that helps the revi
 
     if (isSupportRequest) {
       html = html
-        .replace(/Innovation Idea Brief/g, "Submission Support Request")
-        .replace(/Idea Brief/g, "Support Request")
-        .replace(/Submission Overview/g, "Request Overview")
-        .replace(/idea submission/g, "support request")
-        .replace(/idea submissions/g, "support requests")
-        .replace(/new idea/g, "support request");
+        .replace(/Innovation Idea Brief/gi, "Submission Support Request")
+        .replace(/Idea Submission Brief/gi, "Submission Support Request")
+        .replace(/Idea Brief/gi, "Support Request")
+        .replace(/Submission Overview/gi, "Request Overview")
+        .replace(/idea submission/gi, "support request")
+        .replace(/idea submissions/gi, "support requests")
+        .replace(/new idea/gi, "support request");
     }
 
     if (!html.includes("<!DOCTYPE html>")) {
