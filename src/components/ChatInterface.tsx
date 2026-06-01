@@ -598,6 +598,10 @@ interface ChatInterfaceProps {
 const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const navigate = useNavigate();
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
+  const isSupportMode = mode === "support";
+  const canvasBriefLabel = isSupportMode ? "Support Request" : "Innovation Idea Brief";
+  const generatedBriefLabel = isSupportMode ? "Submission Support Request" : "Innovation Idea Brief";
+  const shortBriefLabel = isSupportMode ? "Support Request" : "Idea Brief";
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
   const [input, setInput] = useState("");
@@ -896,9 +900,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       setAwaitingDifferentiationAnswer(false);
       setIsTyping(true);
       setTimeout(() => {
+        const reviewText = isSupportMode
+          ? "Thanks for sharing the details! Generating your support request for review now..."
+          : "Thanks for explaining what makes your idea unique! Generating your idea to review for submission now...";
         setMessages((prev) => [
           ...prev,
-          { role: "assistant" as const, content: "Thanks for explaining what makes your idea unique! Generating your idea to review for submission now..." },
+          { role: "assistant" as const, content: reviewText },
         ]);
         setIsTyping(false);
         // Now proceed with actual submission
@@ -968,7 +975,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         role: "assistant",
         content: isScenarioClick
           ? followUps.greeting + " I'll ask you a few questions to understand your needs."
-          : followUps.greeting + ` Let me help you shape **"${value}"** into a structured submission.`,
+          : followUps.greeting + ` Let me help you shape **"${value}"** into a structured ${isSupportMode ? "support request" : "submission"}.`,
       };
       const firstQuestion: Message = {
         role: "assistant",
@@ -1081,7 +1088,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setCanvasView("evaluation");
 
 
-    const briefLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const briefLabel = generatedBriefLabel;
     const proceedMsg: Message = {
       role: "assistant",
       content: `Generating your **${briefLabel}** — preparing a qualitative summary for the review board...`,
@@ -1142,7 +1149,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error(`Failed to generate ${mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief"}`);
+        toast.error(`Failed to generate ${generatedBriefLabel}`);
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
@@ -1161,7 +1168,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       if (html.trim()) {
 
         // Append attachments section so any documents uploaded in chat are
-        // accessible from within the Innovation Idea Brief.
+        // accessible from within the generated brief.
         if (attachments.length > 0) {
           const items = attachments.map((a) => {
             const isImage = a.type.startsWith("image/");
@@ -1197,7 +1204,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         }
         setEvaluationHtml(html);
         setEvaluationReady(true);
-        const readyLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+        const readyLabel = generatedBriefLabel;
         setMessages((prev) => [
           ...prev,
           {
@@ -1222,13 +1229,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     } finally {
       setIsGeneratingEvaluation(false);
     }
-  }, [messages, selectedScenario, recommendations, attachments, mode]);
+  }, [messages, selectedScenario, recommendations, attachments, mode, generatedBriefLabel]);
 
 
   const handleRefinement = (text: string) => {
     if (!text.trim() || isGeneratingEvaluation) return;
     const userMsg: Message = { role: "user", content: text };
-    const refineLabel = mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief";
+    const refineLabel = generatedBriefLabel;
     const assistantMsg: Message = { role: "assistant", content: `Got it! Updating the ${refineLabel}...` };
 
     if (isViewing && viewingIdea) {
@@ -1296,7 +1303,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     : Math.min(answeredSteps * 8, 24); // 0%, ~8%, ~16% as user picks category/area
   const inQuestionPhase = !isViewing && !submitted && !evaluationHtml &&
     !isGeneratingEvaluation && !conversationDone;
-
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -1622,7 +1628,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   className="flex items-center gap-2 rounded-lg bg-secondary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
                 >
                   <Rocket className="w-4 h-4" />
-                  Proceed with New Submission
+                  {isSupportMode ? "Proceed with Support Request" : "Proceed with New Submission"}
                 </button>
               </motion.div>
             )}
@@ -1647,7 +1653,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${canvasView === "evaluation" ? "text-primary-foreground bg-primary/80 px-2 py-1 rounded" : "text-sidebar-primary-foreground hover:text-primary px-2 py-1"}`}
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      Innovation Idea Brief
+                      {canvasBriefLabel}
                     </button>
                   </div>
                 </div>
@@ -1964,9 +1970,11 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-4">
                 <div className="rounded-lg border-2 border-accent/40 bg-sidebar-accent p-4 text-center">
                   <CheckCircle2 className="w-10 h-10 text-accent mx-auto mb-2" />
-                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">Submitted for Review!</h3>
+                  <h3 className="font-semibold text-sidebar-foreground text-base mb-1">{isSupportMode ? "Support Request Submitted!" : "Submitted for Review!"}</h3>
                   <p className="text-xs text-sidebar-foreground/60 mb-2">
-                    Your idea has been submitted. Congratulations. The team will review it and assign it to either the AI studio, the innovation team, or the IT group.
+                    {isSupportMode
+                      ? "Your support request has been submitted. The team will review it and route it to the right support group."
+                      : "Your idea has been submitted. Congratulations. The team will review it and assign it to either the AI studio, the innovation team, or the IT group."}
                   </p>
                   <p className="text-xs text-sidebar-foreground/60 mb-3">
                     You can track your status through the dashboard.
@@ -1976,7 +1984,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors mb-3"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    See your idea in the dashboard
+                    {isSupportMode ? "See your request in the dashboard" : "See your idea in the dashboard"}
                   </button>
                   {selectedScenario && directTriageScenarios.includes(selectedScenario) && (
                     <div className="rounded-lg border border-accent/30 bg-accent/10 p-2 mb-3">
@@ -2083,15 +2091,17 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 }}
                 placeholder={
                   isGeneratingEvaluation
-                    ? "Generating brief..."
+                    ? `Generating ${shortBriefLabel.toLowerCase()}...`
                     : isViewing
-                    ? "Describe changes to the brief..."
+                    ? `Describe changes to the ${shortBriefLabel.toLowerCase()}...`
                     : conversationDone && evaluationReady
-                    ? "Request changes to the brief..."
+                    ? `Request changes to the ${shortBriefLabel.toLowerCase()}...`
                     : conversationDone && !evaluationReady
-                    ? "Generating Innovation Idea Brief..."
+                    ? `Generating ${generatedBriefLabel}...`
                     : hasStarted
                     ? "Type your answer..."
+                    : isSupportMode
+                    ? "Describe your support request..."
                     : "Describe your idea..."
                 }
                 className="flex-1 bg-transparent outline-none text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/40"
@@ -2143,7 +2153,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   ) : (
                     <>
                       <FileText className="w-4 h-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-foreground">Innovation Idea Brief</h3>
+                      <h3 className="font-semibold text-sm text-foreground">{canvasBriefLabel}</h3>
                     </>
                   )}
                 </div>
@@ -2213,7 +2223,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <div className="mb-4">
                       <h3 className="text-lg font-bold text-foreground mb-1">Recommended Existing Solutions</h3>
                       <p className="text-sm text-muted-foreground">
-                        These solutions may already address your needs. Explore them or proceed with your new submission.
+                        These solutions may already address your needs. Explore them or proceed with your {isSupportMode ? "support request" : "new submission"}.
                       </p>
                     </div>
 
@@ -2268,7 +2278,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <div className="text-center py-12">
                         <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
                         <p className="text-sm text-muted-foreground">No matching solutions found.</p>
-                        <p className="text-xs text-muted-foreground/60 mt-1">Your idea will be evaluated as a new submission.</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">Your {isSupportMode ? "support request will be reviewed by the team" : "idea will be evaluated as a new submission"}.</p>
                       </div>
                     )}
 
@@ -2341,21 +2351,21 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             </div>
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-foreground">Generating Innovation Idea Brief...</p>
-                            <p className="text-xs text-muted-foreground mt-1">Summarizing your submission</p>
+                            <p className="text-sm font-semibold text-foreground">Generating {generatedBriefLabel}...</p>
+                            <p className="text-xs text-muted-foreground mt-1">Summarizing your {isSupportMode ? "support request" : "submission"}</p>
                           </div>
                         </div>
                       </div>
                     ) : (evaluationHtml || (isViewing && viewingIdea?.businessPlanHtml)) ? (
                       <iframe
                         srcDoc={evaluationHtml || viewingIdea?.businessPlanHtml}
-                        title="Innovation Idea Brief"
+                        title={generatedBriefLabel}
                         className="w-full h-full border-0"
                         sandbox="allow-scripts allow-forms allow-modals allow-popups"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center">
-                        <p className="text-sm text-muted-foreground">Innovation Idea Brief will appear here after you proceed.</p>
+                        <p className="text-sm text-muted-foreground">{generatedBriefLabel} will appear here after you proceed.</p>
                       </div>
                     )}
                   </>
@@ -2387,7 +2397,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
                   >
                     <Ban className="w-3 h-3" />
-                    Cancel Submission
+                    {isSupportMode ? "Cancel Request" : "Cancel Submission"}
                   </button>
                 </div>
               )}
@@ -2424,8 +2434,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         <h3 className="text-base font-semibold text-foreground/80 mb-1">Canvas</h3>
                         <p className="text-xs text-muted-foreground mb-6">
                           {showStepCount
-                            ? `Building your Innovation Idea Brief — ${answeredSteps} of ${totalSteps} steps completed`
-                            : "Building your Innovation Idea Brief"}
+                            ? `Building your ${generatedBriefLabel} — ${answeredSteps} of ${totalSteps} steps completed`
+                            : `Building your ${generatedBriefLabel}`}
                         </p>
 
                       </div>
@@ -2438,7 +2448,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     </div>
                     <h3 className="text-lg font-semibold text-foreground/60 mb-1">Canvas</h3>
                     <p className="text-sm text-muted-foreground max-w-xs">
-                      Recommendations and your Innovation Idea Brief will appear here.
+                      Recommendations and your {generatedBriefLabel} will appear here.
                     </p>
                   </div>
                 )}
@@ -2452,15 +2462,15 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
       <AlertDialog open={showCancelModal} onOpenChange={setShowCancelModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel Submission?</AlertDialogTitle>
+            <AlertDialogTitle>{isSupportMode ? "Cancel Request?" : "Cancel Submission?"}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to cancel this submission? All progress will be lost and you'll return to the start.
+              Are you sure you want to cancel this {isSupportMode ? "request" : "submission"}? All progress will be lost and you'll return to the start.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Continue Editing</AlertDialogCancel>
             <AlertDialogAction onClick={handleCancelSubmission} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Yes, Cancel Submission
+              {isSupportMode ? "Yes, Cancel Request" : "Yes, Cancel Submission"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

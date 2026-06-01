@@ -15,6 +15,7 @@ serve(async (req) => {
     const { scenario, idea, answers, recommendations, refinement, currentHtml, submissionDate, requestType } = await req.json();
 
     const isRefinement = refinement && currentHtml;
+    const isSupportRequest = requestType === "support";
 
     if (!isRefinement && !idea) {
       return new Response(JSON.stringify({ error: "No idea provided" }), {
@@ -41,6 +42,7 @@ Rules:
 - Output a COMPLETE document starting with <!DOCTYPE html>.
 - Keep all existing styling and structure intact unless the refinement specifically asks to change it.
 - Apply the requested changes precisely and thoroughly.
+- If this is a support request, preserve support-language labels: use "Submission Support Request" / "Support Request" and do not use "Innovation Idea Brief".
 - The HTML must be fully self-contained (inline styles, no external dependencies).`,
         },
         {
@@ -49,12 +51,17 @@ Rules:
         },
       ];
     } else {
-      const isSupportRequest = requestType === "support";
-      const documentLabel = isSupportRequest ? "Idea Support Brief" : "Innovation Idea Brief";
+      const documentLabel = isSupportRequest ? "Submission Support Request" : "Innovation Idea Brief";
       const boardLabel = isSupportRequest ? "Innovation Review Board — Support Request" : "Innovation Review Board — Idea Brief";
-      const documentStructureLabel = isSupportRequest ? "an Idea Support Brief" : "an Innovation Idea Brief";
+      const documentStructureLabel = isSupportRequest ? "a Submission Support Request" : "an Innovation Idea Brief";
+      const intakeType = isSupportRequest ? "support request" : "idea submission";
+      const titleType = isSupportRequest ? "request" : "idea";
+      const overviewHeading = isSupportRequest ? "Request Overview" : "Submission Overview";
+      const boardPurpose = isSupportRequest
+        ? "review incoming support requests and decide how to route, scope, and fulfill them"
+        : "evaluate incoming idea submissions and decide whether to advance, redirect, or decline them";
 
-      const systemPrompt = `You are a senior innovation analyst preparing a briefing for the Innovation Review Board — a cross-functional panel of senior leaders (innovation, technology, operations, strategy, and finance) who evaluate incoming idea submissions and decide whether to advance, redirect, or decline them. Your audience is time-constrained, analytical, and outcome-oriented. They are not the submitter, and they have not seen the raw intake conversation.
+      const systemPrompt = `You are a senior innovation analyst preparing a briefing for the Innovation Review Board — a cross-functional panel of senior leaders (innovation, technology, operations, strategy, and finance) who ${boardPurpose}. Your audience is time-constrained, analytical, and outcome-oriented. They are not the submitter, and they have not seen the raw intake conversation.
 
 Audience & Tone:
 - Write in the third person, referring to the submitter as "the submitter" or by role — never "you" or "your idea."
@@ -67,14 +74,15 @@ Rules:
 - Output ONLY valid HTML. No markdown, no code fences, no explanation text.
 - Output a COMPLETE document starting with <!DOCTYPE html>.
 - Use inline CSS with a professional, executive-ready design. Use system-ui font, clean typography, and a muted color palette (#1e3a5f navy, #f97316 accent orange, #f8fafc backgrounds).
-- The main title/header of the document should be the specific idea title derived from the submission — NOT a generic "${documentLabel.toUpperCase()}" heading. Use the idea name/title as the prominent H1 header at the top. Include a small subtitle/eyebrow above or below the H1 reading "${boardLabel}".
+- For ${isSupportRequest ? "support requests" : "idea submissions"}, the top-of-document label, eyebrow, and browser title must use "${documentLabel}" / "Support Request" language, not "Innovation Idea Brief" language.
+- The main title/header of the document should be the specific ${titleType} title derived from the ${intakeType} — NOT a generic "${documentLabel.toUpperCase()}" heading. Use the ${titleType} name/title as the prominent H1 header at the top. Include a small subtitle/eyebrow above or below the H1 reading "${boardLabel}".
 - The document should be structured as ${documentStructureLabel} containing these sections:
 
-1. **Submission Overview** — Scenario type, idea title, submission date, and a 2-3 sentence executive summary written for the board (what the idea is and why it warrants review). The date MUST be exactly: ${submissionDate || "the current date"}. Do NOT use any other date.
+1. **${overviewHeading}** — Scenario type, ${titleType} title, submission date, and a 2-3 sentence executive summary written for the board (what the ${titleType} is and why it warrants review). The date MUST be exactly: ${submissionDate || "the current date"}. Do NOT use any other date.
 2. **Pros / Strengths** — 3-5 bullet points highlighting strategic fit, differentiation, potential value, and alignment with stated organizational priorities. Frame each as an evaluative observation, not a sales pitch.
-3. **Cons / Weaknesses** — 3-5 bullet points covering gaps, risks, unanswered questions, and areas where the submission lacks supporting detail. Be candid; this is the board's risk lens.
+3. **Cons / Weaknesses** — 3-5 bullet points covering gaps, risks, unanswered questions, and areas where the ${intakeType} lacks supporting detail. Be candid; this is the board's risk lens.
 4. **Tangible Metrics & Considerations** — Qualitative indicators: estimated effort (Low/Medium/High), time-to-value, required resources, key dependencies, and target audience/impact scope. Use descriptive labels — DO NOT assign numeric scores.
-5. **Triage Routing** — Recommend which of the organization's three groups this idea should be routed to. The three groups are:
+5. **Triage Routing** — Recommend which of the organization's three groups this ${titleType} should be routed to. The three groups are:
    - **AI Studio** — focuses on AI enhancers, accelerators, and AI models (custom model development, prototypes, AI-specific tooling, GenAI use cases).
    - **Innovation Group** — focuses on overall innovation across the firm (cross-functional ideas, new offerings, broader transformation efforts, strategic concepts that aren't strictly AI or IT execution).
    - **IT Group** — implements Microsoft stack and other existing internal operations technology (Power Platform, Copilot rollouts, SharePoint, integrations, internal systems work).
@@ -89,17 +97,17 @@ Rules:
 
 
 
-      const userPrompt = `Generate an idea evaluation document for the review board:
+      const userPrompt = `Generate a ${isSupportRequest ? "support request briefing" : "idea evaluation document"} for the review board:
 
 **Scenario Type:** ${scenario}
 
-**Idea:** ${idea}
+**${isSupportRequest ? "Request" : "Idea"}:** ${idea}
 
 **Submitter's Answers:**
 ${Object.entries(answers || {}).map(([q, a]) => `- ${q}: ${a}`).join("\n")}
 
 **Existing Solutions Shown:** ${recommendations?.length ? recommendations.map((r: any) => r.name).join(", ") : "None"}
-**Submitter Chose to Proceed:** Yes (submitted as new idea)
+**Submitter Chose to Proceed:** Yes (${isSupportRequest ? "submitted as a support request" : "submitted as new idea"})
 
 Create a thorough qualitative evaluation (no numeric scores) that helps the review board make an informed decision.`;
 
@@ -189,8 +197,20 @@ Create a thorough qualitative evaluation (no numeric scores) that helps the revi
       html = htmlMatch[1].trim();
     }
 
+    if (isSupportRequest) {
+      html = html
+        .replace(/Innovation Idea Brief/gi, "Submission Support Request")
+        .replace(/Idea Submission Brief/gi, "Submission Support Request")
+        .replace(/Idea Brief/gi, "Support Request")
+        .replace(/Submission Overview/gi, "Request Overview")
+        .replace(/idea submission/gi, "support request")
+        .replace(/idea submissions/gi, "support requests")
+        .replace(/new idea/gi, "support request");
+    }
+
     if (!html.includes("<!DOCTYPE html>")) {
-      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Innovation Idea Brief</title></head><body>${html}</body></html>`;
+      const fallbackTitle = requestType === "support" ? "Submission Support Request" : "Innovation Idea Brief";
+      html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${fallbackTitle}</title></head><body>${html}</body></html>`;
     }
 
     return new Response(JSON.stringify({ html }), {
