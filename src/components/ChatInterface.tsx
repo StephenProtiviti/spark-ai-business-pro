@@ -38,7 +38,7 @@ const subAreas: Record<string, { label: string; icon: any; description: string }
   "AI Studio": [
     { label: "Client Workshop", icon: TrendingUp, description: "Schedule or run a client workshop" },
     { label: "Prototype Development", icon: Wrench, description: "Build a proof of concept or prototype" },
-    { label: "Idea for an AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
+    { label: "Idea for AI Showcase", icon: Sparkles, description: "Submit an idea for the AI Showcase" },
   ],
   // Note: "Protiviti Atlas" intentionally has no sub-areas — clicking it skips
   // straight into the Use Case Development question flow.
