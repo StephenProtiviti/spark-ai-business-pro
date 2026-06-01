@@ -1048,7 +1048,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         if (followUpText) {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant" as const, content: `${followUpText}\n\n*This is optional — feel free to skip if you'd rather move on.*` },
+            { role: "assistant" as const, content: followUpText },
           ]);
           setFollowUpsUsed((n) => n + 1);
           setPendingFollowUp(true);
