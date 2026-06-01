@@ -197,6 +197,16 @@ Create a thorough qualitative evaluation (no numeric scores) that helps the revi
       html = htmlMatch[1].trim();
     }
 
+    if (isSupportRequest) {
+      html = html
+        .replace(/Innovation Idea Brief/g, "Submission Support Request")
+        .replace(/Idea Brief/g, "Support Request")
+        .replace(/Submission Overview/g, "Request Overview")
+        .replace(/idea submission/g, "support request")
+        .replace(/idea submissions/g, "support requests")
+        .replace(/new idea/g, "support request");
+    }
+
     if (!html.includes("<!DOCTYPE html>")) {
       const fallbackTitle = requestType === "support" ? "Submission Support Request" : "Innovation Idea Brief";
       html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${fallbackTitle}</title></head><body>${html}</body></html>`;
