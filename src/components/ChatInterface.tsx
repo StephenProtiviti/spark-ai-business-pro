@@ -598,6 +598,10 @@ interface ChatInterfaceProps {
 const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const navigate = useNavigate();
   const { submitIdea, createDraftIdea, updateIdea, recentIdeas } = useIdeas();
+  const isSupportMode = mode === "support";
+  const canvasBriefLabel = isSupportMode ? "Support Request" : "Innovation Idea Brief";
+  const generatedBriefLabel = isSupportMode ? "Submission Support Request" : "Innovation Idea Brief";
+  const shortBriefLabel = isSupportMode ? "Support Request" : "Idea Brief";
   const [messages, setMessages] = useState<Message[]>([]);
   const [draftIdeaId, setDraftIdeaId] = useState<string | null>(null);
   const [input, setInput] = useState("");
