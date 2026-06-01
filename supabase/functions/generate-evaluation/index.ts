@@ -15,6 +15,7 @@ serve(async (req) => {
     const { scenario, idea, answers, recommendations, refinement, currentHtml, submissionDate, requestType } = await req.json();
 
     const isRefinement = refinement && currentHtml;
+    const isSupportRequest = requestType === "support";
 
     if (!isRefinement && !idea) {
       return new Response(JSON.stringify({ error: "No idea provided" }), {
@@ -41,6 +42,7 @@ Rules:
 - Output a COMPLETE document starting with <!DOCTYPE html>.
 - Keep all existing styling and structure intact unless the refinement specifically asks to change it.
 - Apply the requested changes precisely and thoroughly.
+- If this is a support request, preserve support-language labels: use "Submission Support Request" / "Support Request" and do not use "Innovation Idea Brief".
 - The HTML must be fully self-contained (inline styles, no external dependencies).`,
         },
         {
@@ -49,7 +51,6 @@ Rules:
         },
       ];
     } else {
-      const isSupportRequest = requestType === "support";
       const documentLabel = isSupportRequest ? "Submission Support Request" : "Innovation Idea Brief";
       const boardLabel = isSupportRequest ? "Innovation Review Board — Support Request" : "Innovation Review Board — Idea Brief";
       const documentStructureLabel = isSupportRequest ? "a Submission Support Request" : "an Innovation Idea Brief";
