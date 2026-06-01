@@ -639,11 +639,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
   const [routingStepCount, setRoutingStepCount] = useState(0);
 
-  // Smart follow-ups: when the AI judge decides an open-ended answer doesn't address
-  // the question, we inject ONE clarifying question. Capped at 2 per intake. Skippable.
-  const FOLLOW_UP_CAP = 2;
-  const [followUpsUsed, setFollowUpsUsed] = useState(0);
-  const [pendingFollowUp, setPendingFollowUp] = useState(false);
 
   const hasStarted = messages.length > 0;
 
@@ -741,8 +736,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setIdeaArea(null);
     setRoutingStepCount(0);
     setAwaitingDifferentiationAnswer(false);
-    setFollowUpsUsed(0);
-    setPendingFollowUp(false);
     evaluationTargetIdRef.current = null;
   };
 
@@ -808,85 +801,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     return result;
   };
 
-  // Quick heuristic — true for clearly factual / closed-ended questions we never want to
-  // second-guess. Keeps the AI judge from being called on names, dates, yes/no, and
-  // multiple-choice questions. This is NOT a length check.
-  // Questions that are factual, yes/no, or category selections — never judged.
-  const isFactualQuestion = (q: string): boolean => {
-    const clean = q.toLowerCase().replace(/\*\*/g, "");
-    if (/\(yes\s*\/\s*no\)/.test(clean)) return true;
-    if (/\b(yes or no|y\/n)\b/.test(clean)) return true;
-    if (/\bselect (all|one|the|a |an )\b/.test(clean)) return true;
-    if (/\bchoose (one|a |an |from)\b/.test(clean)) return true;
-    if (/\b(which of the following|pick one|do you have|is there|are there|will there|has |have you)\b/.test(clean)) return true;
-    if (/\b(name|date|timeline|audience size|point of contact|md sponsor|sponsor\?|email|phone|client name|project id|deadline|due date|budget|how many|how much)\b/.test(clean)) return true;
-    return false;
-  };
-
-  // Only judge questions that clearly invite a detailed, multi-sentence answer.
-  const isOpenEndedQuestion = (q: string): boolean => {
-    const clean = q.toLowerCase().replace(/\*\*/g, "");
-    return /\b(describe|explain|elaborate|walk (me|us) through|tell (me|us) about|what problem|what challenge|what outcome|what impact|what benefit|what is the (goal|vision|idea|use case|approach)|why|how (does|do|would|will|might) (this|it|you|the)|proposed solution|proposed approach|deliverables|success criteria|expected outcomes|big idea)\b/.test(clean);
-  };
-
-  // Trivial answers (single word, yes/no, a number, a short category pick) are exempt.
-  const isTrivialAnswer = (a: string): boolean => {
-    const trimmed = a.trim();
-    if (!trimmed) return true;
-    const words = trimmed.split(/\s+/).filter(Boolean);
-    if (words.length <= 2) return true;
-    if (/^(yes|no|y|n|yep|nope|sure|maybe|n\/a|na|none|tbd|idk)[.!]?$/i.test(trimmed)) return true;
-    if (/^[\d.,$%\-+/\s]+$/.test(trimmed)) return true;
-    return false;
-  };
-
-  const judgeAnswer = async (question: string, answer: string, scenario: string | null): Promise<string | null> => {
-    if (followUpsUsed >= FOLLOW_UP_CAP) return null;
-    if (isFactualQuestion(question)) return null;
-    if (!isOpenEndedQuestion(question)) return null;
-    if (isTrivialAnswer(answer)) return null;
-    try {
-      const { data, error } = await supabase.functions.invoke("check-answer-quality", {
-        body: { question, answer, scenario: scenario || "Idea intake" },
-      });
-      if (error) return null;
-      if (data && data.sufficient === false && typeof data.followUp === "string" && data.followUp.trim()) {
-        return data.followUp.trim();
-      }
-      return null;
-    } catch (_) {
-      return null;
-    }
-  };
-
-  const handleSkipFollowUp = () => {
-    if (!pendingFollowUp || isTyping) return;
-    setPendingFollowUp(false);
-    setIsTyping(true);
-    const scenario = selectedScenario;
-    const skipMsg: Message = { role: "user", content: "(skipped)", followUpReply: true };
-    const updatedMessages = [...messages, skipMsg];
-    setMessages(updatedMessages);
-    (async () => {
-      await new Promise((r) => setTimeout(r, 300));
-      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
-      const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
-      if (questionIndex < dynamicQuestions.length) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant" as const, content: dynamicQuestions[questionIndex] },
-        ]);
-        setQuestionIndex((i) => i + 1);
-      } else {
-        setShowRecommendations(false);
-        setRecommendationsDismissed(true);
-        setCanvasView("evaluation");
-        handleProceedWithSubmission(updatedMessages);
-        setConversationDone(true);
-      }
-      setIsTyping(false);
-    })();
-  };
 
   const handleSend = (text?: string) => {
     const value = text || input;
@@ -1004,39 +918,12 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     setIsTyping(true);
 
     let updatedMessages: Message[];
-    const wasFollowUpAnswer = pendingFollowUp;
-
-    if (wasFollowUpAnswer) {
-      // Merge the clarifying detail into the previous user answer so the answer
-      // positions stay aligned with the question list. No extra user message added.
-      const lastUserIdx = (() => {
-        for (let i = messages.length - 1; i >= 0; i--) {
-          if (messages[i].role === "user") return i;
-        }
-        return -1;
-      })();
-      const followUpBubble: Message = { ...userMsg, followUpReply: true };
-      if (lastUserIdx === -1) {
-        updatedMessages = [...messages, followUpBubble];
-      } else {
-        updatedMessages = messages.map((m, i) =>
-          i === lastUserIdx ? { ...m, content: `${m.content}\n\n${value}` } : m
-        );
-        // Show the clarifying reply as a separate bubble for transcript readability,
-        // but flag it so answer extraction skips it.
-        updatedMessages = [...updatedMessages, followUpBubble];
-      }
-      setMessages(updatedMessages);
-      setPendingFollowUp(false);
-    } else {
-      updatedMessages = [...messages, userMsg];
-      setMessages(updatedMessages);
-    }
+    updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
 
     // Update idea title with the first real answer (the idea description).
-    // Clarifying follow-up replies don't count as real answers.
-    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply).length;
-    if (!wasFollowUpAnswer && realUserMsgCount === 2 && draftIdeaId) {
+    const realUserMsgCount = updatedMessages.filter((m) => m.role === "user").length;
+    if (realUserMsgCount === 2 && draftIdeaId) {
       const betterTitle = value.slice(0, 60) || "Untitled Idea";
       updateIdea(draftIdeaId, { title: betterTitle });
     }
@@ -1044,25 +931,8 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
     (async () => {
       // Recompute the question list against the updated answers so dynamic
       // scenarios (e.g. Design Thinking Workshop) can branch on user answers.
-      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user" && !m.followUpReply);
+      const updatedUserMsgs = updatedMessages.filter((m) => m.role === "user");
       const dynamicQuestions = getQuestionsForScenario(scenario, updatedUserMsgs);
-
-      // Smart follow-up gate: only on a real answer (not on a reply to a prior follow-up),
-      // only while under cap, only on open-ended questions. AI judges by meaning, not length.
-      if (!wasFollowUpAnswer && questionIndex >= 1) {
-        const lastQuestion = dynamicQuestions[questionIndex - 1] ?? "";
-        const followUpText = await judgeAnswer(lastQuestion, value, scenario);
-        if (followUpText) {
-          setMessages((prev) => [
-            ...prev,
-            { role: "assistant" as const, content: followUpText },
-          ]);
-          setFollowUpsUsed((n) => n + 1);
-          setPendingFollowUp(true);
-          setIsTyping(false);
-          return;
-        }
-      }
 
       // Advance to next question, or wrap up.
       await new Promise((r) => setTimeout(r, 400 + Math.random() * 400));
@@ -2062,15 +1932,6 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </div>
               ) : null;
             })()}
-            {pendingFollowUp && !isViewing && !conversationDone && (
-              <button
-                onClick={handleSkipFollowUp}
-                disabled={isTyping}
-                className="mb-2 self-end text-[11px] font-medium text-sidebar-foreground/60 hover:text-primary hover:underline disabled:opacity-50"
-              >
-                Skip
-              </button>
-            )}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
                 value={input}
