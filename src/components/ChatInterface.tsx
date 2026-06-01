@@ -807,17 +807,40 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   // Quick heuristic — true for clearly factual / closed-ended questions we never want to
   // second-guess. Keeps the AI judge from being called on names, dates, yes/no, and
   // multiple-choice questions. This is NOT a length check.
+  // Questions that are factual, yes/no, or category selections — never judged.
   const isFactualQuestion = (q: string): boolean => {
     const clean = q.toLowerCase().replace(/\*\*/g, "");
     if (/\(yes\s*\/\s*no\)/.test(clean)) return true;
-    if (/\bselect (all|one)\b/.test(clean)) return true;
-    if (/\b(name|date|timeline|audience size|point of contact|md sponsor|sponsor\?|email|phone|client name|project id|deadline)\b/.test(clean)) return true;
+    if (/\b(yes or no|y\/n)\b/.test(clean)) return true;
+    if (/\bselect (all|one|the|a |an )\b/.test(clean)) return true;
+    if (/\bchoose (one|a |an |from)\b/.test(clean)) return true;
+    if (/\b(which of the following|pick one|do you have|is there|are there|will there|has |have you)\b/.test(clean)) return true;
+    if (/\b(name|date|timeline|audience size|point of contact|md sponsor|sponsor\?|email|phone|client name|project id|deadline|due date|budget|how many|how much)\b/.test(clean)) return true;
+    return false;
+  };
+
+  // Only judge questions that clearly invite a detailed, multi-sentence answer.
+  const isOpenEndedQuestion = (q: string): boolean => {
+    const clean = q.toLowerCase().replace(/\*\*/g, "");
+    return /\b(describe|explain|elaborate|walk (me|us) through|tell (me|us) about|what problem|what challenge|what outcome|what impact|what benefit|what is the (goal|vision|idea|use case|approach)|why|how (does|do|would|will|might) (this|it|you|the)|proposed solution|proposed approach|deliverables|success criteria|expected outcomes|big idea)\b/.test(clean);
+  };
+
+  // Trivial answers (single word, yes/no, a number, a short category pick) are exempt.
+  const isTrivialAnswer = (a: string): boolean => {
+    const trimmed = a.trim();
+    if (!trimmed) return true;
+    const words = trimmed.split(/\s+/).filter(Boolean);
+    if (words.length <= 2) return true;
+    if (/^(yes|no|y|n|yep|nope|sure|maybe|n\/a|na|none|tbd|idk)[.!]?$/i.test(trimmed)) return true;
+    if (/^[\d.,$%\-+/\s]+$/.test(trimmed)) return true;
     return false;
   };
 
   const judgeAnswer = async (question: string, answer: string, scenario: string | null): Promise<string | null> => {
     if (followUpsUsed >= FOLLOW_UP_CAP) return null;
     if (isFactualQuestion(question)) return null;
+    if (!isOpenEndedQuestion(question)) return null;
+    if (isTrivialAnswer(answer)) return null;
     try {
       const { data, error } = await supabase.functions.invoke("check-answer-quality", {
         body: { question, answer, scenario: scenario || "Idea intake" },
@@ -1025,7 +1048,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
         if (followUpText) {
           setMessages((prev) => [
             ...prev,
-            { role: "assistant" as const, content: `${followUpText}\n\n*This is optional — feel free to skip if you'd rather move on.*` },
+            { role: "assistant" as const, content: followUpText },
           ]);
           setFollowUpsUsed((n) => n + 1);
           setPendingFollowUp(true);
@@ -2035,16 +2058,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ) : null;
             })()}
             {pendingFollowUp && !isViewing && !conversationDone && (
-              <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-1.5">
-                <span className="text-[11px] text-sidebar-foreground/70">Optional clarification — add detail or skip.</span>
-                <button
-                  onClick={handleSkipFollowUp}
-                  disabled={isTyping}
-                  className="text-[11px] font-medium text-primary hover:underline disabled:opacity-50"
-                >
-                  Skip
-                </button>
-              </div>
+              <button
+                onClick={handleSkipFollowUp}
+                disabled={isTyping}
+                className="mb-2 self-end text-[11px] font-medium text-sidebar-foreground/60 hover:text-primary hover:underline disabled:opacity-50"
+              >
+                Skip
+              </button>
             )}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
