@@ -1142,7 +1142,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
 
       if (error) {
         console.error("Evaluation generation failed:", error);
-        toast.error("Failed to generate Innovation Idea Brief");
+        toast.error(`Failed to generate ${mode === "support" ? "Idea Support Brief" : "Innovation Idea Brief"}`);
         if (refinement && previousHtml) {
           setEvaluationHtml(previousHtml);
           setEvaluationReady(true);
