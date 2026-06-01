@@ -2091,15 +2091,17 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 }}
                 placeholder={
                   isGeneratingEvaluation
-                    ? "Generating brief..."
+                    ? `Generating ${shortBriefLabel.toLowerCase()}...`
                     : isViewing
-                    ? "Describe changes to the brief..."
+                    ? `Describe changes to the ${shortBriefLabel.toLowerCase()}...`
                     : conversationDone && evaluationReady
-                    ? "Request changes to the brief..."
+                    ? `Request changes to the ${shortBriefLabel.toLowerCase()}...`
                     : conversationDone && !evaluationReady
-                    ? "Generating Innovation Idea Brief..."
+                    ? `Generating ${generatedBriefLabel}...`
                     : hasStarted
                     ? "Type your answer..."
+                    : isSupportMode
+                    ? "Describe your support request..."
                     : "Describe your idea..."
                 }
                 className="flex-1 bg-transparent outline-none text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/40"
