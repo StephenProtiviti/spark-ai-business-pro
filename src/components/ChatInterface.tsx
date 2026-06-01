@@ -2058,16 +2058,13 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ) : null;
             })()}
             {pendingFollowUp && !isViewing && !conversationDone && (
-              <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-1.5">
-                <span className="text-[11px] text-sidebar-foreground/70">Optional clarification — add detail or skip.</span>
-                <button
-                  onClick={handleSkipFollowUp}
-                  disabled={isTyping}
-                  className="text-[11px] font-medium text-primary hover:underline disabled:opacity-50"
-                >
-                  Skip
-                </button>
-              </div>
+              <button
+                onClick={handleSkipFollowUp}
+                disabled={isTyping}
+                className="mb-2 self-end text-[11px] font-medium text-sidebar-foreground/60 hover:text-primary hover:underline disabled:opacity-50"
+              >
+                Skip
+              </button>
             )}
             <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
               <input
