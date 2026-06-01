@@ -1628,7 +1628,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   className="flex items-center gap-2 rounded-lg bg-secondary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-secondary/90 transition-colors"
                 >
                   <Rocket className="w-4 h-4" />
-                  Proceed with New Submission
+                  {isSupportMode ? "Proceed with Support Request" : "Proceed with New Submission"}
                 </button>
               </motion.div>
             )}
@@ -2223,7 +2223,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <div className="mb-4">
                       <h3 className="text-lg font-bold text-foreground mb-1">Recommended Existing Solutions</h3>
                       <p className="text-sm text-muted-foreground">
-                        These solutions may already address your needs. Explore them or proceed with your new submission.
+                        These solutions may already address your needs. Explore them or proceed with your {isSupportMode ? "support request" : "new submission"}.
                       </p>
                     </div>
 
@@ -2278,7 +2278,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <div className="text-center py-12">
                         <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
                         <p className="text-sm text-muted-foreground">No matching solutions found.</p>
-                        <p className="text-xs text-muted-foreground/60 mt-1">Your idea will be evaluated as a new submission.</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">Your {isSupportMode ? "support request will be reviewed by the team" : "idea will be evaluated as a new submission"}.</p>
                       </div>
                     )}
 
@@ -2352,7 +2352,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-foreground">Generating {generatedBriefLabel}...</p>
-                            <p className="text-xs text-muted-foreground mt-1">Summarizing your submission</p>
+                            <p className="text-xs text-muted-foreground mt-1">Summarizing your {isSupportMode ? "support request" : "submission"}</p>
                           </div>
                         </div>
                       </div>
@@ -2397,7 +2397,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     className="flex items-center gap-1 text-xs font-medium text-destructive hover:text-destructive/80 transition-colors"
                   >
                     <Ban className="w-3 h-3" />
-                    Cancel Submission
+                    {isSupportMode ? "Cancel Request" : "Cancel Submission"}
                   </button>
                 </div>
               )}
