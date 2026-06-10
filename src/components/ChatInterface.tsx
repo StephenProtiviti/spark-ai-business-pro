@@ -1409,7 +1409,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                           }`}
                         >
-                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                             isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                           }`}>
                             {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1431,7 +1431,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                         selectedDeliverables.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                       }`}>
                         {selectedDeliverables.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1485,7 +1485,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                           }`}
                         >
-                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                             isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                           }`}>
                             {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1507,7 +1507,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                         selectedDeliveryFormats.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                       }`}>
                         {selectedDeliveryFormats.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1588,7 +1588,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                           }`}
                         >
-                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                             isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                           }`}>
                             {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1610,7 +1610,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                         selectedSupportDelivery.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                       }`}>
                         {selectedSupportDelivery.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1671,7 +1671,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                                 : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                             }`}
                           >
-                            <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                            <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                               isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                             }`}>
                               {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1693,7 +1693,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                         }`}
                       >
-                        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                        <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                           selectedIndustries.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                         }`}>
                           {selectedIndustries.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1848,7 +1848,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                           }`}
                         >
-                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                             isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                           }`}>
                             {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
@@ -1870,7 +1870,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
                       }`}
                     >
-                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
                         selectedAtlasRequestTypes.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
                       }`}>
                         {selectedAtlasRequestTypes.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
