@@ -696,6 +696,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [selectedDeliverables, setSelectedDeliverables] = useState<string[]>([]);
   const [selectedDeliveryFormats, setSelectedDeliveryFormats] = useState<string[]>([]);
   const [selectedSupportDelivery, setSelectedSupportDelivery] = useState<string[]>([]);
+  const [selectedAtlasRequestTypes, setSelectedAtlasRequestTypes] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
   const [routingStepCount, setRoutingStepCount] = useState(0);
 
