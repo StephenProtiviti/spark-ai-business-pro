@@ -696,6 +696,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
   const [selectedDeliverables, setSelectedDeliverables] = useState<string[]>([]);
   const [selectedDeliveryFormats, setSelectedDeliveryFormats] = useState<string[]>([]);
   const [selectedSupportDelivery, setSelectedSupportDelivery] = useState<string[]>([]);
+  const [selectedAtlasRequestTypes, setSelectedAtlasRequestTypes] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Array<{ name: string; type: string; dataUrl: string }>>([]);
   const [routingStepCount, setRoutingStepCount] = useState(0);
 
@@ -1814,6 +1815,81 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       <span className="font-semibold block">{label}</span>
                     </button>
                   ))}
+                </motion.div>
+              );
+            })()}
+
+            {/* Quick-reply choices for Existing Atlas API Provisioning: request type multi-select */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("what type of request are you submitting for an existing Protiviti Atlas API key/project")) return null;
+              const options = [
+                "Add new user(s) and request API key(s) to an already approved existing project",
+                "Update IP address(es) for an existing API key/project",
+                "Other / Not sure",
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                    {options.map((label) => {
+                      const isSelected = selectedAtlasRequestTypes.includes(label);
+                      return (
+                        <button
+                          key={label}
+                          onClick={() => {
+                            setSelectedAtlasRequestTypes((prev) =>
+                              isSelected ? prev.filter((l) => l !== label) : [...prev, label]
+                            );
+                          }}
+                          className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                            isSelected
+                              ? "border-primary bg-primary/10 text-primary-foreground"
+                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                            isSelected ? "bg-primary border-primary" : "border-sidebar-foreground/40"
+                          }`}>
+                            {isSelected && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
+                          </div>
+                          <span className="font-semibold block">{label}</span>
+                        </button>
+                      );
+                    })}
+                    <div className="border-t border-sidebar-border my-1" />
+                    <button
+                      onClick={() => {
+                        setSelectedAtlasRequestTypes((prev) =>
+                          prev.length === options.length ? [] : options
+                        );
+                      }}
+                      className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                        selectedAtlasRequestTypes.length === options.length
+                          ? "border-primary bg-primary/10 text-primary-foreground"
+                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                        selectedAtlasRequestTypes.length === options.length ? "bg-primary border-primary" : "border-sidebar-foreground/40"
+                      }`}>
+                        {selectedAtlasRequestTypes.length === options.length && <CheckCircle2 className="w-3 h-3 text-primary-foreground" />}
+                      </div>
+                      <span className="font-semibold block">Select All</span>
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (selectedAtlasRequestTypes.length === 0) return;
+                      const combined = selectedAtlasRequestTypes.join(", ");
+                      handleSend(combined);
+                      setSelectedAtlasRequestTypes([]);
+                    }}
+                    disabled={selectedAtlasRequestTypes.length === 0}
+                    className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Submit Selection
+                  </button>
                 </motion.div>
               );
             })()}
