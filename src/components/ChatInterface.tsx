@@ -1450,6 +1450,32 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               );
             })()}
 
+            {/* Quick-reply choices for format or channel of delivery question */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("format or channel of delivery")) return null;
+              const options = [
+                { label: "Live meeting presentation" },
+                { label: "Email delivery" },
+                { label: "Portal upload" },
+                { label: "Leave-behind deck only" },
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {options.map((o) => (
+                    <button
+                      key={o.label}
+                      onClick={() => handleSend(o.label)}
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                    >
+                      <span className="font-semibold block">{o.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
+
             {/* Quick-reply choices for Training Conference Support: type of support question */}
             {(() => {
               const last = displayMessages[displayMessages.length - 1];
