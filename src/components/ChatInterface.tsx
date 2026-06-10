@@ -1348,6 +1348,30 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               );
             })()}
 
+            {/* Quick-reply choices for live client opportunity question */}
+            {(() => {
+              const last = displayMessages[displayMessages.length - 1];
+              if (!last || last.role !== "assistant" || isTyping || conversationDone) return null;
+              if (!last.content.includes("tied to a live client opportunity")) return null;
+              const options = [
+                { label: "Yes — active pursuit" },
+                { label: "No — prep, reuse asset, or internal readiness" },
+              ];
+              return (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
+                  {options.map((o) => (
+                    <button
+                      key={o.label}
+                      onClick={() => handleSend(o.label)}
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                    >
+                      <span className="font-semibold block">{o.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              );
+            })()}
+
             {/* Quick-reply choices for Training Conference Support: type of support question */}
             {(() => {
               const last = displayMessages[displayMessages.length - 1];
