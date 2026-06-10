@@ -208,8 +208,7 @@ const scenarioQuestions: Record<string, { greeting: string; questions: string[] 
       "**What industry team(s) does this apply to?** Select all that apply:",
       "**Who is the intended end user?** (Client / Protiviti)",
       "**Who is the competitor?** (Consulting Firm / Third Party Vendor)",
-      "**What does the Market Demand look like?** Select the timeframe that best fits:",
-      "Last one: **Has this idea been validated by the client or anyone in Protiviti?** If yes, please share who validated it.",
+      "Last one: **What does the Market Demand look like?** Select the timeframe that best fits:",
     ],
   },
 
