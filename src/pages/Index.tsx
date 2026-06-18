@@ -152,11 +152,21 @@ const Index = () => {
       </section>
 
       {/* Projects Section */}
-      <section className="bg-[hsl(var(--spark-navy))] py-10 px-6">
+      <section className="bg-[hsl(var(--spark-navy))] py-16 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-white">Your Ideas</h2>
-            <p className="text-white/50 text-sm">Pick up where you left off.</p>
+          <div className="mb-10 flex items-end justify-between flex-wrap gap-4">
+            <div>
+              <p className="text-[hsl(var(--spark-teal))] font-semibold uppercase tracking-[0.25em] text-xs mb-3">
+                Innovation Pipeline
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extralight text-white">Your Ideas</h2>
+              <p className="text-white/50 text-sm mt-2">Pick up where you left off.</p>
+            </div>
+            {recentIdeas.length > 6 && (
+              <Link to="/dashboard" className="text-white font-semibold border-b-2 border-secondary pb-1 hover:text-secondary transition-colors text-sm">
+                View All Spark Ideas
+              </Link>
+            )}
           </div>
 
           {recentIdeas.length > 0 ? (
