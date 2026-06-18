@@ -90,9 +90,7 @@ const Index = () => {
             transition={{ delay: 0.2, type: "spring" }}
             className="mb-8 flex justify-center"
           >
-            <span className="inline-flex items-center bg-white rounded-xl px-6 py-4 shadow-xl">
-              <img src={sparkLogo} alt="Spark" className="h-16 sm:h-20 w-auto" />
-            </span>
+            <img src={sparkLogo} alt="Spark" className="h-20 sm:h-24 w-auto drop-shadow-2xl" />
           </motion.div>
 
           <h1 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight text-white">

@@ -10,9 +10,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#000D1F] border-b border-[#000D1F]">
       <div className="container mx-auto flex items-center justify-between h-14 px-6">
         <Link to="/" className="flex items-center gap-2">
-          <span className="inline-flex items-center bg-white rounded-md px-2 py-1">
-            <img src={sparkLogo} alt="Spark" className="h-7 w-auto" />
-          </span>
+          <img src={sparkLogo} alt="Spark" className="h-8 w-auto" />
         </Link>
 
         {!isDashboard && (
