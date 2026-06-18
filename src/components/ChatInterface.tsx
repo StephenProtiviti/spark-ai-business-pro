@@ -1392,7 +1392,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ];
               return (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
-                  <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                  <div className="w-full rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-3 space-y-2">
                     {options.map((label) => {
                       const isSelected = selectedDeliverables.includes(label);
                       return (
@@ -1468,7 +1468,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ];
               return (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
-                  <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                  <div className="w-full rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-3 space-y-2">
                     {options.map((label) => {
                       const isSelected = selectedDeliveryFormats.includes(label);
                       return (
@@ -1571,7 +1571,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ];
               return (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
-                  <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                  <div className="w-full rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-3 space-y-2">
                     {options.map((label) => {
                       const isSelected = selectedSupportDelivery.includes(label);
                       return (
@@ -1654,7 +1654,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 ];
                 return (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
-                    <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                    <div className="w-full rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-3 space-y-2">
                       {options.map((label) => {
                         const isSelected = selectedIndustries.includes(label);
                         return (
@@ -1831,7 +1831,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
               ];
               return (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-2 items-start w-[85%]">
-                  <div className="w-full rounded-lg border border-sidebar-border bg-sidebar-accent p-3 space-y-2">
+                  <div className="w-full rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-3 space-y-2">
                     {options.map((label) => {
                       const isSelected = selectedAtlasRequestTypes.includes(label);
                       return (
@@ -2346,7 +2346,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                 </div>
               ) : null;
             })()}
-            <div className="flex items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-accent p-2">
+            <div className="flex items-center gap-2 rounded-none border border-sidebar-border border-l-2 border-l-[hsl(var(--spark-teal))] bg-sidebar-accent p-2">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
