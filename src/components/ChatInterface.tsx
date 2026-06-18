@@ -1317,7 +1317,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(`${o.label}: ${o.desc}`)}
-                      className="max-w-[85%] text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="max-w-[85%] text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                       <span className="block text-xs opacity-80 mt-0.5">{o.desc}</span>
@@ -1344,7 +1344,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1369,7 +1369,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1406,7 +1406,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
-                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                           }`}
                         >
                           <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1428,7 +1428,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedDeliverables.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
-                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1447,7 +1447,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setSelectedDeliverables([]);
                     }}
                     disabled={selectedDeliverables.length === 0}
-                    className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="rounded-none bg-secondary text-secondary-foreground font-semibold text-sm px-5 py-2.5 hover:bg-secondary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Submit Selection
                   </button>
@@ -1482,7 +1482,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
-                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                           }`}
                         >
                           <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1504,7 +1504,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedDeliveryFormats.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
-                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1523,7 +1523,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setSelectedDeliveryFormats([]);
                     }}
                     disabled={selectedDeliveryFormats.length === 0}
-                    className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="rounded-none bg-secondary text-secondary-foreground font-semibold text-sm px-5 py-2.5 hover:bg-secondary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Submit Selection
                   </button>
@@ -1548,7 +1548,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1585,7 +1585,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
-                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                           }`}
                         >
                           <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1607,7 +1607,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedSupportDelivery.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
-                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1626,7 +1626,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setSelectedSupportDelivery([]);
                     }}
                     disabled={selectedSupportDelivery.length === 0}
-                    className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="rounded-none bg-secondary text-secondary-foreground font-semibold text-sm px-5 py-2.5 hover:bg-secondary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Submit Selection
                   </button>
@@ -1668,7 +1668,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                               isSelected
                                 ? "border-primary bg-primary/10 text-primary-foreground"
-                                : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                                : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                             }`}
                           >
                             <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1690,7 +1690,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                           selectedIndustries.length === options.length
                             ? "border-primary bg-primary/10 text-primary-foreground"
-                            : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                            : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                         }`}
                       >
                         <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1709,7 +1709,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                         setSelectedIndustries([]);
                       }}
                       disabled={selectedIndustries.length === 0}
-                      className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="rounded-none bg-secondary text-secondary-foreground font-semibold text-sm px-5 py-2.5 hover:bg-secondary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       Submit Selection
                     </button>
@@ -1789,7 +1789,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{label}</span>
                     </button>
@@ -1810,7 +1810,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{label}</span>
                     </button>
@@ -1845,7 +1845,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
-                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                              : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                           }`}
                         >
                           <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1867,7 +1867,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedAtlasRequestTypes.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
-                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                          : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
                       }`}
                     >
                       <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
@@ -1886,7 +1886,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                       setSelectedAtlasRequestTypes([]);
                     }}
                     disabled={selectedAtlasRequestTypes.length === 0}
-                    className="rounded-lg bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="rounded-none bg-secondary text-secondary-foreground font-semibold text-sm px-5 py-2.5 hover:bg-secondary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Submit Selection
                   </button>
@@ -2394,7 +2394,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                   else if (!conversationDone) handleSend();
                 }}
                 disabled={!input.trim() || isTyping || isGeneratingEvaluation}
-                className="p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-none bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
               </button>
