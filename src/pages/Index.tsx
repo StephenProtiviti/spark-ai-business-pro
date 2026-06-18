@@ -209,7 +209,7 @@ const Index = () => {
                   <div className="relative">
                     {renamingId === idea.id ? (
                       <div className="block">
-                        <div className="relative border-l-2 border-l-[hsl(var(--spark-teal))] border-y border-r border-white/10 bg-white/[0.04] p-5 aspect-square flex flex-col ring-1 ring-secondary/40">
+                        <div className="relative border-l-2 border-l-white/80 border-y border-r border-white/10 bg-white/[0.04] p-5 aspect-square flex flex-col ring-1 ring-secondary/40">
                           <div className="absolute top-0 right-0 h-0.5 w-10 bg-secondary" />
                           {(idea.businessPlanHtml || idea.wireframeHtml) ? (
                             <div className="w-full flex-1 mb-3 overflow-hidden bg-white border border-white/5">
@@ -248,7 +248,7 @@ const Index = () => {
                       </div>
                     ) : (
                       <Link to={`/submit/${idea.id}`} className="block group">
-                        <div className="relative border-l-2 border-l-[hsl(var(--spark-teal))] border-y border-r border-white/10 bg-white/[0.04] p-5 hover:bg-white/[0.08] hover:border-l-secondary transition-all aspect-square flex flex-col">
+                        <div className="relative border-l-2 border-l-white/80 border-y border-r border-white/10 bg-white/[0.04] p-5 hover:bg-white/[0.08] hover:border-l-secondary transition-all aspect-square flex flex-col">
                           <div className="absolute top-0 right-0 h-0.5 w-0 bg-secondary group-hover:w-16 transition-all duration-300" />
                           {(idea.businessPlanHtml || idea.wireframeHtml) ? (
                             <div className="w-full flex-1 mb-3 overflow-hidden bg-white border border-white/5">
