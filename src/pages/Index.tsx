@@ -197,7 +197,8 @@ const Index = () => {
                   <div className="relative">
                     {renamingId === idea.id ? (
                       <div className="block">
-                        <div className="rounded-xl border border-secondary/40 bg-white/5 p-5 aspect-square flex flex-col">
+                        <div className="relative border-l-2 border-l-[hsl(var(--spark-teal))] border-y border-r border-white/10 bg-white/[0.04] p-5 aspect-square flex flex-col ring-1 ring-secondary/40">
+                          <div className="absolute top-0 right-0 h-0.5 w-10 bg-secondary" />
                           {(idea.businessPlanHtml || idea.wireframeHtml) ? (
                             <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white border border-white/5">
                               <iframe
