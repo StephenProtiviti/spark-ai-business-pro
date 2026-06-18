@@ -75,9 +75,12 @@ const Index = () => {
           src={heroImage}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover opacity-25"
+          className="absolute inset-0 w-full h-full object-cover opacity-55"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--spark-navy))]/70 via-[hsl(var(--spark-navy))]/80 to-[hsl(var(--spark-navy))]" />
+        {/* Readability + scroll-darken gradient: lighter at top so people show through, deep navy at bottom for smooth transition into the cards section */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--spark-navy))]/30 via-[hsl(var(--spark-navy))]/75 to-[#04070F]" />
+        {/* Subtle vignette so headline copy stays readable over faces */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--spark-navy)/0.55)_70%)]" />
 
         {/* Teal flowing particle motif */}
         <div className="absolute inset-0 opacity-50 pointer-events-none">
