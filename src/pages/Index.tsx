@@ -134,6 +134,15 @@ const Index = () => {
                     "radial-gradient(closest-side, hsl(var(--spark-orange) / 0.75), hsl(var(--spark-orange) / 0.25) 55%, transparent 80%)",
                 }}
               />
+              {/* Center white hot spot */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 -m-6 rounded-full blur-xl opacity-75"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, hsl(0 0% 100% / 0.9), hsl(0 0% 100% / 0.35) 40%, transparent 70%)",
+                }}
+              />
               <img
                 src={sparkLogo}
                 alt="Spark"
@@ -265,7 +274,7 @@ const Index = () => {
                               <FileText className="w-6 h-6 text-white/20" />
                             </div>
                           )}
-                          <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-[hsl(var(--spark-teal))] transition-colors line-clamp-2 mb-2">
+                          <h3 className="text-white font-semibold text-sm leading-tight line-clamp-2 mb-2">
                             {idea.title}
                           </h3>
                           <div className="flex items-center gap-2 text-white/40 text-[11px] mt-auto">
