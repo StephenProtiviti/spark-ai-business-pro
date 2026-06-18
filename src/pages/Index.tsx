@@ -200,7 +200,7 @@ const Index = () => {
                         <div className="relative border-l-2 border-l-[hsl(var(--spark-teal))] border-y border-r border-white/10 bg-white/[0.04] p-5 aspect-square flex flex-col ring-1 ring-secondary/40">
                           <div className="absolute top-0 right-0 h-0.5 w-10 bg-secondary" />
                           {(idea.businessPlanHtml || idea.wireframeHtml) ? (
-                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white border border-white/5">
+                            <div className="w-full flex-1 mb-3 overflow-hidden bg-white border border-white/5">
                               <iframe
                                 srcDoc={idea.businessPlanHtml || idea.wireframeHtml}
                                 title="Document preview"
@@ -210,7 +210,7 @@ const Index = () => {
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
+                            <div className="w-full flex-1 mb-3 bg-white/5 border border-white/5 flex items-center justify-center">
                               <FileText className="w-6 h-6 text-white/20" />
                             </div>
                           )}
@@ -239,7 +239,7 @@ const Index = () => {
                         <div className="relative border-l-2 border-l-[hsl(var(--spark-teal))] border-y border-r border-white/10 bg-white/[0.04] p-5 hover:bg-white/[0.08] hover:border-l-secondary transition-all aspect-square flex flex-col">
                           <div className="absolute top-0 right-0 h-0.5 w-0 bg-secondary group-hover:w-16 transition-all duration-300" />
                           {(idea.businessPlanHtml || idea.wireframeHtml) ? (
-                            <div className="w-full flex-1 mb-3 rounded-md overflow-hidden bg-white border border-white/5">
+                            <div className="w-full flex-1 mb-3 overflow-hidden bg-white border border-white/5">
                               <iframe
                                 srcDoc={idea.businessPlanHtml || idea.wireframeHtml}
                                 title="Document preview"
@@ -249,11 +249,11 @@ const Index = () => {
                               />
                             </div>
                           ) : (
-                            <div className="w-full flex-1 mb-3 rounded-md bg-white/5 border border-white/5 flex items-center justify-center">
+                            <div className="w-full flex-1 mb-3 bg-white/5 border border-white/5 flex items-center justify-center">
                               <FileText className="w-6 h-6 text-white/20" />
                             </div>
                           )}
-                          <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-secondary transition-colors line-clamp-2 mb-2">
+                          <h3 className="text-white font-semibold text-sm leading-tight group-hover:text-[hsl(var(--spark-teal))] transition-colors line-clamp-2 mb-2">
                             {idea.title}
                           </h3>
                           <div className="flex items-center gap-2 text-white/40 text-[11px] mt-auto">
