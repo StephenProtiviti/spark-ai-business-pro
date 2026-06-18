@@ -1317,7 +1317,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(`${o.label}: ${o.desc}`)}
-                      className="max-w-[85%] text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="max-w-[85%] text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                       <span className="block text-xs opacity-80 mt-0.5">{o.desc}</span>
@@ -1344,7 +1344,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1369,7 +1369,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1403,7 +1403,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               isSelected ? prev.filter((l) => l !== label) : [...prev, label]
                             );
                           }}
-                          className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                          className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1425,7 +1425,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           prev.length === options.length ? [] : options
                         );
                       }}
-                      className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                      className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedDeliverables.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1479,7 +1479,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               isSelected ? prev.filter((l) => l !== label) : [...prev, label]
                             );
                           }}
-                          className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                          className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1501,7 +1501,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           prev.length === options.length ? [] : options
                         );
                       }}
-                      className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                      className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedDeliveryFormats.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1548,7 +1548,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={o.label}
                       onClick={() => handleSend(o.label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{o.label}</span>
                     </button>
@@ -1582,7 +1582,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               isSelected ? prev.filter((l) => l !== label) : [...prev, label]
                             );
                           }}
-                          className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                          className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1604,7 +1604,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           prev.length === options.length ? [] : options
                         );
                       }}
-                      className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                      className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedSupportDelivery.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1665,7 +1665,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                                 isSelected ? prev.filter((l) => l !== label) : [...prev, label]
                               );
                             }}
-                            className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                            className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                               isSelected
                                 ? "border-primary bg-primary/10 text-primary-foreground"
                                 : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1687,7 +1687,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                             prev.length === options.length ? [] : options
                           );
                         }}
-                        className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                        className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                           selectedIndustries.length === options.length
                             ? "border-primary bg-primary/10 text-primary-foreground"
                             : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1789,7 +1789,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{label}</span>
                     </button>
@@ -1810,7 +1810,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                     <button
                       key={label}
                       onClick={() => handleSend(label)}
-                      className="w-full text-left rounded-lg border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
+                      className="w-full text-left rounded-none border-2 border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary shadow-sm hover:shadow-md transition-all px-3 py-2.5 text-sm"
                     >
                       <span className="font-semibold block">{label}</span>
                     </button>
@@ -1842,7 +1842,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                               isSelected ? prev.filter((l) => l !== label) : [...prev, label]
                             );
                           }}
-                          className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                          className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                             isSelected
                               ? "border-primary bg-primary/10 text-primary-foreground"
                               : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
@@ -1864,7 +1864,7 @@ const ChatInterface = ({ viewingIdea, mode = "idea" }: ChatInterfaceProps) => {
                           prev.length === options.length ? [] : options
                         );
                       }}
-                      className={`w-full text-left rounded-md border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
+                      className={`w-full text-left rounded-none border px-3 py-2 text-sm flex items-center gap-2 transition-colors ${
                         selectedAtlasRequestTypes.length === options.length
                           ? "border-primary bg-primary/10 text-primary-foreground"
                           : "border-sidebar-border bg-sidebar text-sidebar-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary"
