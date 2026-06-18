@@ -304,8 +304,8 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* How It Works — alternating rows */}
-      <section className="py-24 px-6 bg-background">
+      {/* How It Works — alternating editorial rows */}
+      <section className="py-28 px-6 bg-[hsl(210_20%_97%)] border-y border-slate-200">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0 }}
@@ -313,9 +313,13 @@ const Index = () => {
             viewport={{ once: true }}
             className="text-center mb-20"
           >
-            <p className="text-secondary font-semibold text-sm uppercase tracking-widest mb-2">The Process</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">How Spark Works</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
+            <p className="text-[hsl(var(--spark-teal))] font-semibold uppercase tracking-[0.25em] text-xs mb-4">
+              The Process
+            </p>
+            <h2 className="text-4xl sm:text-5xl font-extralight text-[hsl(var(--spark-navy))] mb-4">
+              How Spark Works
+            </h2>
+            <p className="text-muted-foreground font-light max-w-lg mx-auto">
               From spark to strategy in three intelligent steps — no templates, no guesswork.
             </p>
           </motion.div>
@@ -330,31 +334,30 @@ const Index = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ duration: 0.6 }}
-                  className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12`}
+                  className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-16`}
                 >
                   {/* Image */}
                   <div className="flex-1 flex justify-center">
                     <div className="relative">
-                      <div className="absolute -inset-4 bg-primary/5 rounded-2xl -rotate-3" />
                       <img
                         src={step.image}
                         alt={step.alt}
-                        className="relative w-64 sm:w-80 rounded-xl shadow-lg"
+                        className="relative w-72 sm:w-96 shadow-2xl"
                         loading="lazy"
                       />
+                      <div className="absolute -bottom-4 -right-4 w-24 h-24 border-l-2 border-b-2 border-[hsl(var(--spark-teal))]" />
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 max-w-md">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-4xl font-bold text-primary/15 font-mono-display">{step.num}</span>
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <step.icon className="w-5 h-5 text-primary" />
-                      </div>
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                    <span className="block text-7xl sm:text-8xl font-extralight text-[hsl(var(--spark-teal))]/20 leading-none mb-4 font-mono-display">
+                      {step.num}
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-light text-[hsl(var(--spark-navy))] mb-4">
+                      {step.title}
+                    </h3>
+                    <p className="text-slate-600 font-light leading-relaxed">{step.description}</p>
                   </div>
                 </motion.div>
               );
@@ -363,31 +366,35 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA section */}
-      <section className="py-20 px-6 bg-[hsl(var(--spark-navy))]">
+      {/* Final CTA — navy with angled top */}
+      <section className="relative py-32 px-6 bg-[hsl(var(--spark-navy))] overflow-hidden">
+        <div
+          className="absolute top-0 left-0 w-full h-24 bg-[hsl(210_20%_97%)]"
+          style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
+        />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto text-center"
+          className="relative z-10 max-w-3xl mx-auto text-center pt-12"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-            Ready to bring your ideas to life?
+          <h2 className="text-3xl sm:text-5xl font-extralight text-white mb-6 leading-tight">
+            Ready to bring your ideas <span className="font-normal">to life?</span>
           </h2>
-          <p className="text-white/60 mb-8 max-w-md mx-auto">
+          <p className="text-white/60 font-light mb-12 max-w-md mx-auto">
             Submit a new idea for the innovation board, or request hands-on support for existing Protiviti tools.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/submit"
-              className="group inline-flex items-center gap-2 px-10 py-4 rounded-lg bg-secondary text-white font-semibold text-base hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/30"
+              className="group inline-flex items-center gap-2 px-10 py-4 bg-secondary text-white font-semibold text-base hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/20 hover:-translate-y-0.5"
             >
               Submit an Idea
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/submit?mode=support"
-              className="group inline-flex items-center gap-2 px-10 py-4 rounded-lg border-2 border-white/30 bg-white/5 text-white font-semibold text-base hover:bg-white/10 hover:border-white/50 transition-all"
+              className="group inline-flex items-center gap-2 px-10 py-4 border border-white/30 text-white font-medium text-base hover:bg-white/10 hover:border-white/60 transition-all"
             >
               Request Support
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
