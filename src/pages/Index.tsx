@@ -112,8 +112,13 @@ const Index = () => {
             transition={{ delay: 0.2 }}
             className="mb-10 flex justify-center"
           >
-            <img src={sparkLogo} alt="Spark" className="h-16 sm:h-20 w-auto drop-shadow-2xl" />
+            <div className="relative inline-flex">
+              <span aria-hidden className="absolute inset-0 -m-10 rounded-full bg-[hsl(var(--spark-teal))]/30 blur-3xl" />
+              <span aria-hidden className="absolute inset-0 -m-6 rounded-full bg-white/10 blur-2xl" />
+              <img src={sparkLogo} alt="Spark" className="relative h-16 sm:h-20 w-auto" />
+            </div>
           </motion.div>
+
 
           <p className="text-[hsl(var(--spark-teal))] font-semibold uppercase tracking-[0.25em] text-xs mb-6">
             Protiviti Innovation Hub
