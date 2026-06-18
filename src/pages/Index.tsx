@@ -116,19 +116,28 @@ const Index = () => {
             className="mb-10 flex justify-center"
           >
             <div className="relative">
-              {/* Soft teal glow */}
+              {/* Outer wide ambient teal glow */}
               <div
                 aria-hidden="true"
-                className="absolute inset-0 -m-12 rounded-full blur-3xl opacity-70"
+                className="absolute inset-0 -m-32 rounded-full blur-3xl opacity-90 animate-pulse"
                 style={{
                   background:
-                    "radial-gradient(closest-side, hsl(var(--spark-teal) / 0.55), hsl(var(--spark-orange) / 0.25) 55%, transparent 75%)",
+                    "radial-gradient(closest-side, hsl(var(--spark-teal) / 0.9), hsl(var(--spark-teal) / 0.4) 45%, transparent 75%)",
+                }}
+              />
+              {/* Inner hot orange core */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 -m-16 rounded-full blur-2xl opacity-80"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, hsl(var(--spark-orange) / 0.75), hsl(var(--spark-orange) / 0.25) 55%, transparent 80%)",
                 }}
               />
               <img
                 src={sparkLogo}
                 alt="Spark"
-                className="relative h-16 sm:h-20 w-auto drop-shadow-[0_8px_30px_hsl(var(--spark-teal)/0.45)]"
+                className="relative h-16 sm:h-20 w-auto drop-shadow-[0_0_45px_hsl(var(--spark-teal)/0.9)] [filter:drop-shadow(0_0_20px_hsl(var(--spark-orange)/0.7))_drop-shadow(0_0_60px_hsl(var(--spark-teal)/0.8))]"
               />
             </div>
           </motion.div>
